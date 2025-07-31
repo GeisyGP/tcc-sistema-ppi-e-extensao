@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "lint:backend": "cd backend && npx eslint --fix",
+    "lint:frontend": "cd frontend && npx eslint --fix"
+  },
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx}": "npm run lint:frontend --",
+    "backend/**/*.ts": "npm run lint:backend --"
+  }
+}
