@@ -9,4 +9,5 @@ export interface UserRepositoryInterface {
     getAll(
         dto: GetAllUsersReqDto,
     ): Promise<{ users: User[]; totalItems: number }>
+    delete(id: string): Promise<void>
 }

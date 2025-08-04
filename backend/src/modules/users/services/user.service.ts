@@ -62,4 +62,9 @@ export class UserService {
     ): Promise<User | null> {
         return await this.userRepository.getByRegistration(dto.registration)
     }
+
+    async delete(id: string): Promise<void> {
+        await this.getById(id)
+        await this.userRepository.delete(id)
+    }
 }

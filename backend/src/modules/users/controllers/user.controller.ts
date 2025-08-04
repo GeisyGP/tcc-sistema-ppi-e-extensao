@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common"
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Query,
+} from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
 import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
@@ -46,5 +54,10 @@ export class UserController {
             message: "User found successfully",
             data: user,
         }
+    }
+
+    @Delete(":id")
+    async delete(@Param() param: GetByIdReqDto): Promise<void> {
+        await this.userService.delete(param.id)
     }
 }
