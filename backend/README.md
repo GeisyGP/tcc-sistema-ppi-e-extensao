@@ -36,8 +36,8 @@ $ npm run test:cov
 
 
 [x] Husky
-[] soft delete
+[x] soft delete
 [] Autorização
-[] Autenticação
+[x] Autenticação
 [] Swagger 
-[] Testes
+[x] Testes

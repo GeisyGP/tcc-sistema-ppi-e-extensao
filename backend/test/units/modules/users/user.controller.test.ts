@@ -6,12 +6,14 @@ import { userMock, userResponseMock } from "./mocks/user.mock"
 import { baseResponseMock, paginationMock } from "test/units/mocks"
 import { UserController } from "src/modules/users/controllers/user.controller"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
+import { requestMock } from "../authentication/mocks/authentication.mock"
 
 describe("UserController", () => {
     let userService: UserService
     let userController: UserController
 
     beforeEach(async () => {
+        jest.clearAllMocks()
         const moduleRef = await Test.createTestingModule({
             controllers: [UserController],
             providers: [UserService, UserRepository, PrismaService],
@@ -19,6 +21,10 @@ describe("UserController", () => {
 
         userService = moduleRef.get(UserService)
         userController = moduleRef.get(UserController)
+    })
+
+    afterAll(() => {
+        jest.clearAllMocks()
     })
 
     describe("create", () => {
@@ -80,6 +86,33 @@ describe("UserController", () => {
                     userResponseMock,
                 ),
             )
+        })
+    })
+
+    describe("getCurrent", () => {
+        it("should return an user", async () => {
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(
+                userResponseMock,
+            )
+
+            const result = await userController.getCurrent(requestMock)
+
+            expect(result).toEqual(
+                baseResponseMock<UserResDto>(
+                    "User found successfully",
+                    userResponseMock,
+                ),
+            )
+        })
+    })
+
+    describe("delete", () => {
+        it("should delete an user", async () => {
+            jest.spyOn(userService, "delete").mockResolvedValueOnce()
+
+            const result = await userController.delete({ id: userMock.id })
+
+            expect(result).toBeUndefined()
         })
     })
 })

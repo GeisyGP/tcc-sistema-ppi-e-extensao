@@ -1,13 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { randomUUID } from "crypto"
-
-export const UserRole = {
-    SYSADMIN: "SYSADMIN",
-    COORDINATOR: "COORDINATOR",
-    TEACHER: "TEACHER",
-    STUDENT: "STUDENT",
-} as const
-export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+import { UserRole } from "src/common/enums/user-role.enum"
 
 export class UserResDto {
     @ApiProperty({ type: randomUUID })

@@ -13,6 +13,8 @@ describe("AuthenticationController", () => {
     let authenticationController: AuthenticationController
 
     beforeEach(async () => {
+        jest.clearAllMocks()
+
         const moduleRef = await Test.createTestingModule({
             controllers: [AuthenticationController],
             providers: [
@@ -28,13 +30,17 @@ describe("AuthenticationController", () => {
         authenticationController = moduleRef.get(AuthenticationController)
     })
 
+    afterAll(() => {
+        jest.clearAllMocks()
+    })
+
     describe("login", () => {
         it("should return access token", async () => {
             const dto = {
                 registration: userMock.registration,
                 password: userMock.password,
             }
-            jest.spyOn(authenticationService, "login").mockResolvedValueOnce(
+            jest.spyOn(authenticationService, "login").mockResolvedValue(
                 loginResMock,
             )
 

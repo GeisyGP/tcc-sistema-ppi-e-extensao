@@ -6,6 +6,7 @@ import {
     Param,
     Post,
     Query,
+    Request,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
@@ -15,6 +16,9 @@ import { BaseResDto } from "../../../common/types/dtos/base-res.dto"
 import { GetByIdReqDto } from "../types/dtos/requests/get-by-id-req.dto"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
+import { Roles } from "src/common/decorators/role.decorator"
+import { UserRole } from "src/common/enums/user-role.enum"
+import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
 
 @ApiTags("users")
 @Controller("users")
@@ -22,6 +26,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
+    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
     async create(
         @Body() dto: CreateUserReqDto,
     ): Promise<BaseResDto<UserResDto>> {
@@ -34,6 +39,7 @@ export class UserController {
     }
 
     @Get()
+    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
     async getAll(
         @Query() queryParams: GetAllUsersReqDto,
     ): Promise<BaseResDto<PaginationResDto<UserResDto[]>>> {
@@ -44,7 +50,21 @@ export class UserController {
         }
     }
 
+    @Get("/current")
+    async getCurrent(
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        const userId = request.user.sub
+        const res = await this.userService.getById(userId)
+
+        return {
+            message: "User found successfully",
+            data: res,
+        }
+    }
+
     @Get(":id")
+    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
     async getById(
         @Param() param: GetByIdReqDto,
     ): Promise<BaseResDto<UserResDto>> {
@@ -57,6 +77,7 @@ export class UserController {
     }
 
     @Delete(":id")
+    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
     async delete(@Param() param: GetByIdReqDto): Promise<void> {
         await this.userService.delete(param.id)
     }

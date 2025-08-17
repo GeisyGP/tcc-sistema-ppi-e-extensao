@@ -9,12 +9,18 @@ describe("UserRepository", () => {
     let prismaService: PrismaService
 
     beforeEach(async () => {
+        jest.clearAllMocks()
+
         const moduleRef = await Test.createTestingModule({
             providers: [UserService, UserRepository, PrismaService],
         }).compile()
 
         userRepository = moduleRef.get(UserRepository)
         prismaService = moduleRef.get(PrismaService)
+    })
+
+    afterAll(() => {
+        jest.clearAllMocks()
     })
 
     describe("create", () => {
@@ -111,6 +117,21 @@ describe("UserRepository", () => {
             expect(result).toEqual(userMock)
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: { registration: userMock.registration },
+            })
+        })
+    })
+
+    describe("delete", () => {
+        it("should delete an user", async () => {
+            jest.spyOn(prismaService.user, "delete").mockResolvedValueOnce(
+                userMock,
+            )
+
+            const result = await userRepository.delete(userMock.id)
+
+            expect(result).toBeUndefined()
+            expect(prismaService.user.delete).toHaveBeenCalledWith({
+                where: { id: userMock.id },
             })
         })
     })

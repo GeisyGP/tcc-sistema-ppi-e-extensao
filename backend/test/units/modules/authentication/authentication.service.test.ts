@@ -15,6 +15,7 @@ describe("AuthenticationService", () => {
     let jwtService: JwtService
 
     beforeEach(async () => {
+        jest.clearAllMocks()
         const moduleRef = await Test.createTestingModule({
             providers: [
                 AuthenticationService,
@@ -28,6 +29,10 @@ describe("AuthenticationService", () => {
         authenticationService = moduleRef.get(AuthenticationService)
         userService = moduleRef.get(UserService)
         jwtService = moduleRef.get(JwtService)
+    })
+
+    afterAll(() => {
+        jest.clearAllMocks()
     })
 
     describe("login", () => {
@@ -57,6 +62,7 @@ describe("AuthenticationService", () => {
             expect(jwtService.signAsync).toHaveBeenCalledWith({
                 sub: userMock.id,
                 role: userMock.role,
+                name: userMock.name,
             })
         })
 
