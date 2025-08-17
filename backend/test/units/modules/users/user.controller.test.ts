@@ -7,6 +7,7 @@ import { baseResponseMock, paginationMock } from "test/units/mocks"
 import { UserController } from "src/modules/users/controllers/user.controller"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 
 describe("UserController", () => {
     let userService: UserService
@@ -16,7 +17,12 @@ describe("UserController", () => {
         jest.clearAllMocks()
         const moduleRef = await Test.createTestingModule({
             controllers: [UserController],
-            providers: [UserService, UserRepository, PrismaService],
+            providers: [
+                UserService,
+                UserRepository,
+                PrismaService,
+                CaslAbilityFactory,
+            ],
         }).compile()
 
         userService = moduleRef.get(UserService)

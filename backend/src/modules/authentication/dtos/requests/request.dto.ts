@@ -4,7 +4,7 @@ export class RequestDto {
     user: UserRequestDto
 }
 
-class UserRequestDto {
+export class UserRequestDto {
     sub: string
     role: UserRole
     name: string

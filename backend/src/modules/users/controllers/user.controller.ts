@@ -4,9 +4,11 @@ import {
     Delete,
     Get,
     Param,
+    Patch,
     Post,
     Query,
     Request,
+    UseGuards,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
@@ -16,9 +18,16 @@ import { BaseResDto } from "../../../common/types/dtos/base-res.dto"
 import { GetByIdReqDto } from "../types/dtos/requests/get-by-id-req.dto"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
-import { Roles } from "src/common/decorators/role.decorator"
-import { UserRole } from "src/common/enums/user-role.enum"
 import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
+import { PoliciesGuard } from "src/common/guards/policies.guard"
+import { CheckPolicies } from "src/common/decorators/check-policies.decorator"
+import { AppAbility } from "src/modules/casl/casl-ability.factory"
+import { Action } from "src/common/enums/action.enum"
+import { UserEntity } from "../types/entities/user.entity"
+import {
+    ChangePasswordBodyReqDto,
+    ChangePasswordParamReqDto,
+} from "../types/dtos/requests/change-password-req.dto"
 
 @ApiTags("users")
 @Controller("users")
@@ -26,7 +35,10 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Create, UserEntity),
+    )
     async create(
         @Body() dto: CreateUserReqDto,
     ): Promise<BaseResDto<UserResDto>> {
@@ -39,7 +51,10 @@ export class UserController {
     }
 
     @Get()
-    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Read, UserEntity),
+    )
     async getAll(
         @Query() queryParams: GetAllUsersReqDto,
     ): Promise<BaseResDto<PaginationResDto<UserResDto[]>>> {
@@ -51,6 +66,10 @@ export class UserController {
     }
 
     @Get("/current")
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Read, UserEntity),
+    )
     async getCurrent(
         @Request() request: RequestDto,
     ): Promise<BaseResDto<UserResDto>> {
@@ -64,7 +83,10 @@ export class UserController {
     }
 
     @Get(":id")
-    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Read, UserEntity),
+    )
     async getById(
         @Param() param: GetByIdReqDto,
     ): Promise<BaseResDto<UserResDto>> {
@@ -77,8 +99,28 @@ export class UserController {
     }
 
     @Delete(":id")
-    @Roles(UserRole.COORDINATOR, UserRole.SYSADMIN)
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Delete, UserEntity),
+    )
     async delete(@Param() param: GetByIdReqDto): Promise<void> {
         await this.userService.delete(param.id)
+    }
+
+    @Patch(":id")
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) =>
+        ability.can(Action.Update, UserEntity),
+    )
+    async update(
+        @Request() request: RequestDto,
+        @Param() param: ChangePasswordParamReqDto,
+        @Body() dto: ChangePasswordBodyReqDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        const user = await this.userService.update(param.id, dto, request.user)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
     }
 }

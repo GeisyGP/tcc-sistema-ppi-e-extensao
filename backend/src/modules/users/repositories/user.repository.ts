@@ -67,4 +67,18 @@ export class UserRepository implements UserRepositoryInterface {
     async delete(id: string): Promise<void> {
         await this.prisma.user.delete({ where: { id } })
     }
+
+    async changePassword(
+        id: string,
+        newPassword: string,
+    ): Promise<User | null> {
+        return await this.prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                password: newPassword,
+            },
+        })
+    }
 }

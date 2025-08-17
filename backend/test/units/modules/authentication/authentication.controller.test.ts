@@ -7,6 +7,7 @@ import { userMock } from "../users/mocks/user.mock"
 import { loginResMock } from "./mocks/authentication.mock"
 import { PrismaService } from "src/config/prisma.service"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
+import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 
 describe("AuthenticationController", () => {
     let authenticationService: AuthenticationService
@@ -23,6 +24,7 @@ describe("AuthenticationController", () => {
                 UserRepository,
                 PrismaService,
                 JwtService,
+                CaslAbilityFactory,
             ],
         }).compile()
 

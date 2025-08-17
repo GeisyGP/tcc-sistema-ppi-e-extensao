@@ -3,6 +3,7 @@ import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { PrismaService } from "src/config/prisma.service"
 import { UserService } from "src/modules/users/services/user.service"
 import { userMock } from "./mocks/user.mock"
+import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 
 describe("UserRepository", () => {
     let userRepository: UserRepository
@@ -12,7 +13,12 @@ describe("UserRepository", () => {
         jest.clearAllMocks()
 
         const moduleRef = await Test.createTestingModule({
-            providers: [UserService, UserRepository, PrismaService],
+            providers: [
+                UserService,
+                UserRepository,
+                PrismaService,
+                CaslAbilityFactory,
+            ],
         }).compile()
 
         userRepository = moduleRef.get(UserRepository)

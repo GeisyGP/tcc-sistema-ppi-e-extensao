@@ -7,6 +7,7 @@ import { paginationMock } from "test/units/mocks"
 import { UserExistsException } from "src/common/exceptions/user-exists.exception"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
+import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 
 describe("UserService", () => {
     let userService: UserService
@@ -16,7 +17,12 @@ describe("UserService", () => {
         jest.clearAllMocks()
 
         const moduleRef = await Test.createTestingModule({
-            providers: [UserService, UserRepository, PrismaService],
+            providers: [
+                UserService,
+                UserRepository,
+                PrismaService,
+                CaslAbilityFactory,
+            ],
         }).compile()
 
         userService = moduleRef.get(UserService)
