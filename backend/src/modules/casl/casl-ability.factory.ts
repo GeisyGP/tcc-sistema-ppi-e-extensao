@@ -10,8 +10,9 @@ import { Action } from "src/common/enums/action.enum"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { UserEntity } from "../users/types/entities/user.entity"
 import { UserRequestDto } from "../authentication/dtos/requests/request.dto"
+import { SubjectEntity } from "../subjects/types/entities/subject.entity"
 
-type Subjects = InferSubjects<typeof UserEntity> | "all"
+type Subjects = InferSubjects<typeof UserEntity | typeof SubjectEntity> | "all"
 
 export type AppAbility = MongoAbility<[Action, Subjects]>
 
@@ -33,16 +34,19 @@ export class CaslAbilityFactory {
                 can(Action.Create, UserEntity)
                 can(Action.Delete, UserEntity)
                 can(Action.Update, UserEntity, { id: user.sub })
+                can(Action.Manage, SubjectEntity)
                 break
             }
             case UserRole.TEACHER: {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
+                can(Action.Read, SubjectEntity)
                 break
             }
             case UserRole.STUDENT: {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
+                can(Action.Read, SubjectEntity)
                 break
             }
             default: {

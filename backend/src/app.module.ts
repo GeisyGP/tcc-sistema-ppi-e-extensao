@@ -5,6 +5,7 @@ import { PrismaModule } from "./config/prisma.module"
 import { APP_GUARD } from "@nestjs/core"
 import { AuthGuard } from "./modules/authentication/auth.guard"
 import { CaslModule } from "./modules/casl/casl.module"
+import { SubjectModule } from "./modules/subjects/subject.module"
 
 @Module({
     providers: [
@@ -13,6 +14,12 @@ import { CaslModule } from "./modules/casl/casl.module"
             useClass: AuthGuard,
         },
     ],
-    imports: [PrismaModule, UserModule, AuthenticationModule, CaslModule],
+    imports: [
+        PrismaModule,
+        UserModule,
+        AuthenticationModule,
+        CaslModule,
+        SubjectModule,
+    ],
 })
 export class AppModule {}

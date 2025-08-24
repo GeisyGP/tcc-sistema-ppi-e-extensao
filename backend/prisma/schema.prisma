@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  registration String    @unique
+  id           String     @id @default(uuid())
+  registration String     @unique
   name         String
   role         UserRole
   password     String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   deletedAt    DateTime?
+  subjects     Subject[]
 }
 
 enum UserRole {
@@ -23,4 +24,13 @@ enum UserRole {
   COORDINATOR
   TEACHER
   STUDENT
+}
+
+model Subject {
+  id        String    @id @default(uuid())
+  name      String
+  teachers  User[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
