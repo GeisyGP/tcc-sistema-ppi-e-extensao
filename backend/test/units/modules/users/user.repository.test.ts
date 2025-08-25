@@ -4,6 +4,7 @@ import { PrismaService } from "src/config/prisma.service"
 import { UserService } from "src/modules/users/services/user.service"
 import { userMock } from "./mocks/user.mock"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 describe("UserRepository", () => {
     let userRepository: UserRepository
@@ -61,6 +62,7 @@ describe("UserRepository", () => {
                 limit: 30,
                 name: "",
                 page: 1,
+                role: UserRole.STUDENT,
             }
             jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce([
                 userMock,
@@ -79,6 +81,7 @@ describe("UserRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
+                    role: "STUDENT",
                 },
                 take: dto.limit,
                 skip: dto.limit * (dto.page - 1),
@@ -90,6 +93,7 @@ describe("UserRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
+                    role: "STUDENT",
                 },
             })
         })

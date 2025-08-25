@@ -51,7 +51,7 @@ describe("UserService", () => {
 
             const result = await userService.create(dto)
 
-            expect(result).toEqual(userResponseMock)
+            expect(result).toEqual(userResponseMock())
             expect(userRepository.create).toHaveBeenCalledWith({
                 ...dto,
                 password: "hashedPassword",
@@ -87,10 +87,11 @@ describe("UserService", () => {
                 limit: 30,
                 name: "",
                 page: 1,
+                role: "STUDENT",
             })
 
             expect(result).toEqual(
-                paginationMock<UserResDto>([userResponseMock]),
+                paginationMock<UserResDto>([userResponseMock()]),
             )
         })
     })
@@ -103,7 +104,7 @@ describe("UserService", () => {
 
             const result = await userService.getById(userMock.id)
 
-            expect(result).toEqual(userResponseMock)
+            expect(result).toEqual(userResponseMock())
         })
 
         it("should throw UserNotFoundException", async () => {

@@ -35,6 +35,7 @@ describe("UserController", () => {
 
     describe("create", () => {
         it("should return an user", async () => {
+            const responseMock = userResponseMock()
             const dto = {
                 name: userMock.name,
                 password: userMock.password,
@@ -42,7 +43,7 @@ describe("UserController", () => {
                 role: userMock.role,
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(
-                userResponseMock,
+                responseMock,
             )
 
             const result = await userController.create(dto)
@@ -50,7 +51,7 @@ describe("UserController", () => {
             expect(result).toEqual(
                 baseResponseMock<UserResDto>(
                     "User created successfully",
-                    userResponseMock,
+                    responseMock,
                 ),
             )
             expect(userService.create).toHaveBeenCalledWith(dto)
@@ -59,20 +60,22 @@ describe("UserController", () => {
 
     describe("getAll", () => {
         it("should return an array of users with pagination", async () => {
+            const responseMock = userResponseMock()
             jest.spyOn(userService, "getAll").mockResolvedValueOnce(
-                paginationMock<UserResDto>([userResponseMock]),
+                paginationMock<UserResDto>([responseMock]),
             )
 
             const result = await userController.getAll({
                 limit: 30,
                 name: "",
                 page: 1,
+                role: "STUDENT",
             })
 
             expect(result).toEqual(
                 baseResponseMock(
                     "Users found successfully",
-                    paginationMock<UserResDto>([userResponseMock]),
+                    paginationMock<UserResDto>([responseMock]),
                 ),
             )
         })
@@ -80,8 +83,9 @@ describe("UserController", () => {
 
     describe("getById", () => {
         it("should return an user", async () => {
+            const responseMock = userResponseMock()
             jest.spyOn(userService, "getById").mockResolvedValueOnce(
-                userResponseMock,
+                responseMock,
             )
 
             const result = await userController.getById({ id: userMock.id })
@@ -89,7 +93,7 @@ describe("UserController", () => {
             expect(result).toEqual(
                 baseResponseMock<UserResDto>(
                     "User found successfully",
-                    userResponseMock,
+                    responseMock,
                 ),
             )
         })
@@ -97,8 +101,9 @@ describe("UserController", () => {
 
     describe("getCurrent", () => {
         it("should return an user", async () => {
+            const responseMock = userResponseMock()
             jest.spyOn(userService, "getById").mockResolvedValueOnce(
-                userResponseMock,
+                responseMock,
             )
 
             const result = await userController.getCurrent(requestMock)
@@ -106,7 +111,7 @@ describe("UserController", () => {
             expect(result).toEqual(
                 baseResponseMock<UserResDto>(
                     "User found successfully",
-                    userResponseMock,
+                    responseMock,
                 ),
             )
         })

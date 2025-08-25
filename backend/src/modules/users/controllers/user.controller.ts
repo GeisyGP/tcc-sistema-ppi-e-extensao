@@ -15,7 +15,7 @@ import { UserService } from "../services/user.service"
 import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { UserResDto } from "../types/dtos/responses/user-res.dto"
 import { BaseResDto } from "../../../common/types/dtos/base-res.dto"
-import { GetByIdReqDto } from "../types/dtos/requests/get-by-id-req.dto"
+import { GetUserByIdReqDto } from "../types/dtos/requests/get-by-id-req.dto"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
 import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
@@ -88,7 +88,7 @@ export class UserController {
         ability.can(Action.Read, UserEntity),
     )
     async getById(
-        @Param() param: GetByIdReqDto,
+        @Param() param: GetUserByIdReqDto,
     ): Promise<BaseResDto<UserResDto>> {
         const user = await this.userService.getById(param.id)
 
@@ -103,7 +103,7 @@ export class UserController {
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Delete, UserEntity),
     )
-    async delete(@Param() param: GetByIdReqDto): Promise<void> {
+    async delete(@Param() param: GetUserByIdReqDto): Promise<void> {
         await this.userService.delete(param.id)
     }
 

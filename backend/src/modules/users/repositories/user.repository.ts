@@ -36,6 +36,7 @@ export class UserRepository implements UserRepositoryInterface {
                 contains: dto.name,
                 mode: Prisma.QueryMode.insensitive,
             },
+            role: dto.role,
         }
         const users = await this.prisma.user.findMany({
             where: filter,
