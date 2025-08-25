@@ -1,12 +1,11 @@
 import { Subject } from "@prisma/client"
 import { PaginationResDto } from "../../../common/types/dtos/pagination-res.dto"
-import { SubjectResDto } from "../types/dtos/responses/subject-res.dto"
 import { SubjectWithTeacherResDto } from "../types/dtos/responses/subject-with-teacher-res.dto"
 
+type SubjectWithTeacher = Subject & { teachers: { id: string; name: string }[] }
+
 export class SubjectResBuilder {
-    static build(
-        subject: Subject & { teachers: { id: string; name: string }[] },
-    ): SubjectWithTeacherResDto {
+    static build(subject: SubjectWithTeacher): SubjectWithTeacherResDto {
         return {
             id: subject.id,
             name: subject.name,
@@ -20,18 +19,13 @@ export class SubjectResBuilder {
     }
 
     static buildMany(
-        subjects: Subject[],
+        subjects: SubjectWithTeacher[],
         page: number,
         limit: number,
         totalItems: number,
-    ): PaginationResDto<SubjectResDto[]> {
+    ): PaginationResDto<SubjectWithTeacherResDto[]> {
         return {
-            items: subjects.map((subject) => ({
-                id: subject.id,
-                name: subject.name,
-                createdAt: subject.createdAt,
-                updatedAt: subject.updatedAt,
-            })),
+            items: subjects.map((subject) => this.build(subject)),
             metadata: {
                 page,
                 itemsPerPage: limit,

@@ -4,7 +4,6 @@ import { CreateSubjectReqDto } from "../types/dtos/requests/create-subject-req.d
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
 import { TeacherNotFoundException } from "src/common/exceptions/teacher-not-found.exception"
 import { UserRole } from "src/common/enums/user-role.enum"
-import { SubjectResDto } from "../types/dtos/responses/subject-res.dto"
 import { SubjectRepository } from "../repositories/subject.repository"
 import { SubjectResBuilder } from "../builders/subject-res.builder"
 import { SubjectWithTeacherResDto } from "../types/dtos/responses/subject-with-teacher-res.dto"
@@ -41,7 +40,7 @@ export class SubjectService {
 
     async getAll(
         dto: GetAllSubjectsReqDto,
-    ): Promise<PaginationResDto<SubjectResDto[]>> {
+    ): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
         const { subjects, totalItems } =
             await this.subjectRepository.getAll(dto)
 
@@ -79,7 +78,11 @@ export class SubjectService {
         try {
             const teacher = await this.userService.getById(teacherId)
 
-            if (teacher.role !== UserRole.TEACHER) {
+            const validRoles: UserRole[] = [
+                UserRole.COORDINATOR,
+                UserRole.TEACHER,
+            ]
+            if (!validRoles.includes(teacher.role)) {
                 throw new TeacherNotFoundException()
             }
         } catch (error) {

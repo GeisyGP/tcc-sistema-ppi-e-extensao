@@ -53,7 +53,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
 
     async getAll(
         dto: GetAllSubjectsReqDto,
-    ): Promise<{ subjects: Subject[]; totalItems: number }> {
+    ): Promise<{ subjects: SubjectWithTeacher[]; totalItems: number }> {
         const filter = {
             name: {
                 contains: dto.name,
@@ -69,6 +69,14 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
             orderBy: [{ name: "asc" }],
+            include: {
+                teachers: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
         })
 
         if (!subjects) {

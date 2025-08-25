@@ -65,6 +65,10 @@ export const softDeleteExtension = {
                 args.where.deletedAt = null
                 return query(args)
             },
+            async count({ args, query }: { args: any; query: Function }) {
+                args.where.deletedAt = null
+                return query(args)
+            },
         },
     },
 }
