@@ -1,4 +1,5 @@
 import NextAuth from "next-auth"
+import "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 import { z } from "zod"
 import { jwtDecode, JwtPayload } from "jwt-decode"
@@ -29,7 +30,13 @@ declare module "next-auth" {
     }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+declare module "next-auth/jwt" {
+    interface JWT {
+        accessToken?: string
+    }
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Credentials({
             async authorize(credentials) {
@@ -73,17 +80,31 @@ export const { auth, signIn, signOut } = NextAuth({
             return token
         },
         async session({ session, token }) {
-            session.user.id = token.id as string;
-            session.user.role = token.role as string;
-            session.user.name = token.name as string;
-            session.accessToken = token.accessToken as string;
+            if (token.accessToken) {
+                session.user.id = token.id as string;
+                session.user.role = token.role as string;
+                session.user.name = token.name as string;
+                session.accessToken = token.accessToken as string;
+            }
             return session
-        }
+        },
+        authorized({ auth, request: { nextUrl } }) {
+            const isLoggedIn = !!auth?.user;
+            const isRequiredAuth = !nextUrl.pathname.startsWith('/login') && !nextUrl.pathname.startsWith('/error')
+            if (isRequiredAuth) {
+                return isLoggedIn;
+            } else if (isLoggedIn) {
+                return Response.redirect(new URL('/home', nextUrl));
+            }
+            return true;
+        },
     },
+    experimental: { enableWebAuthn: true },
     session: {
         strategy: "jwt"
     },
     pages: {
         signIn: "/login"
-    }
+    },
+    // basePath: "/auth",
 })

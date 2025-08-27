@@ -22,8 +22,8 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <Link href="/sobre" className="hover:underline hover:underline-offset-4">
-            Sobre
+          <Link href="/disciplinas" className="hover:underline hover:underline-offset-4">
+            Disciplinas
           </Link>
         </li>
         <li>
@@ -58,8 +58,8 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/sobre" className="block hover:underline" onClick={() => setMenuOpen(false)}>
-              Sobre
+            <Link href="/disciplinas" className="block hover:underline" onClick={() => setMenuOpen(false)}>
+              Disciplinas
             </Link>
           </li>
           <li>
