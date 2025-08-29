@@ -17,3 +17,8 @@ export interface GetAllSubjectsReq {
     page?: number
     limit?: number
 }
+
+export interface SubjectInput {
+    name: string
+    teachers: string[]
+}

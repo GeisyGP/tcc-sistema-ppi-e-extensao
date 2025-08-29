@@ -1,4 +1,4 @@
-import HomeLayout from "@/components/layout/home.layout"
+import HomeLayout from "@/components/home.layout"
 
 export default function home() {
     return <HomeLayout/>

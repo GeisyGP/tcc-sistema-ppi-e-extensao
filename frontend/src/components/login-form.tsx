@@ -8,7 +8,7 @@ import {
 import { useActionState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { authenticate } from '@/actions/authenticate';
-import { Button } from '@/components/global/buttons/default.button';
+import { Button } from '@/components/buttons/default.button';
 
 export default function LoginForm() {
     const searchParams = useSearchParams();
