@@ -28,11 +28,15 @@ import {
     ChangePasswordBodyReqDto,
     ChangePasswordParamReqDto,
 } from "../types/dtos/requests/change-password-req.dto"
+import { CustomLoggerService } from "src/common/logger"
 
 @ApiTags("users")
 @Controller("users")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly loggerService: CustomLoggerService,
+    ) {}
 
     @Post()
     @UseGuards(PoliciesGuard)
@@ -41,7 +45,14 @@ export class UserController {
     )
     async create(
         @Body() dto: CreateUserReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.create.name,
+            `user: ${request.user.sub}`,
+        )
+
         const user = await this.userService.create(dto)
 
         return {
@@ -57,7 +68,14 @@ export class UserController {
     )
     async getAll(
         @Query() queryParams: GetAllUsersReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<PaginationResDto<UserResDto[]>>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.getAll.name,
+            `user: ${request.user.sub}`,
+        )
+
         const response = await this.userService.getAll(queryParams)
         return {
             message: "Users found successfully",
@@ -73,6 +91,12 @@ export class UserController {
     async getCurrent(
         @Request() request: RequestDto,
     ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.getCurrent.name,
+            `user: ${request.user.sub}`,
+        )
+
         const userId = request.user.sub
         const res = await this.userService.getById(userId)
 
@@ -89,7 +113,14 @@ export class UserController {
     )
     async getById(
         @Param() param: GetUserByIdReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.getById.name,
+            `user: ${request.user.sub}`,
+        )
+
         const user = await this.userService.getById(param.id)
 
         return {
@@ -103,7 +134,16 @@ export class UserController {
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Delete, UserEntity),
     )
-    async delete(@Param() param: GetUserByIdReqDto): Promise<void> {
+    async delete(
+        @Param() param: GetUserByIdReqDto,
+        @Request() request: RequestDto,
+    ): Promise<void> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.delete.name,
+            `user: ${request.user.sub}`,
+        )
+
         await this.userService.delete(param.id)
     }
 
@@ -117,6 +157,12 @@ export class UserController {
         @Param() param: ChangePasswordParamReqDto,
         @Body() dto: ChangePasswordBodyReqDto,
     ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.update.name,
+            `user: ${request.user.sub}`,
+        )
+
         const user = await this.userService.update(param.id, dto, request.user)
         return {
             message: "User updated successfully",

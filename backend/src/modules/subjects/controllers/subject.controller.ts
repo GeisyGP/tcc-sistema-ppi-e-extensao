@@ -7,6 +7,7 @@ import {
     Post,
     Put,
     Query,
+    Request,
     UseGuards,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
@@ -28,11 +29,16 @@ import {
 } from "../types/dtos/requests/update-subject-req.dto"
 import { DeleteSubjectReqDto } from "../types/dtos/requests/delete-subject-req.dto"
 import { SubjectEntity } from "../types/entities/subject.entity"
+import { CustomLoggerService } from "src/common/logger"
+import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
 
 @ApiTags("subjects")
 @Controller("subjects")
 export class SubjectController {
-    constructor(private readonly subjectService: SubjectService) {}
+    constructor(
+        private readonly subjectService: SubjectService,
+        private readonly loggerService: CustomLoggerService,
+    ) {}
 
     @Post()
     @UseGuards(PoliciesGuard)
@@ -41,7 +47,14 @@ export class SubjectController {
     )
     async create(
         @Body() dto: CreateSubjectReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.create.name,
+            `user: ${request.user.sub}`,
+        )
+
         const subject = await this.subjectService.create(dto)
 
         return {
@@ -57,7 +70,14 @@ export class SubjectController {
     )
     async getById(
         @Param() param: GetByIdSubjectReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.getById.name,
+            `user: ${request.user.sub}`,
+        )
+
         const subject = await this.subjectService.getById(param.id)
 
         return {
@@ -73,7 +93,14 @@ export class SubjectController {
     )
     async getAll(
         @Query() queryParams: GetAllSubjectsReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<PaginationResDto<SubjectResDto[]>>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.getAll.name,
+            `user: ${request.user.sub}`,
+        )
+
         const response = await this.subjectService.getAll(queryParams)
         return {
             message: "Subjects found successfully",
@@ -89,7 +116,14 @@ export class SubjectController {
     async update(
         @Param() param: UpdateSubjectParamsReqDto,
         @Body() dto: UpdateSubjectReqDto,
+        @Request() request: RequestDto,
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.update.name,
+            `user: ${request.user.sub}`,
+        )
+
         const subject = await this.subjectService.updateById(param.id, dto)
 
         return {
@@ -103,7 +137,16 @@ export class SubjectController {
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Delete, SubjectEntity),
     )
-    async delete(@Param() param: DeleteSubjectReqDto): Promise<void> {
+    async delete(
+        @Param() param: DeleteSubjectReqDto,
+        @Request() request: RequestDto,
+    ): Promise<void> {
+        this.loggerService.info(
+            this.constructor.name,
+            this.delete.name,
+            `user: ${request.user.sub}`,
+        )
+
         await this.subjectService.delete(param.id)
     }
 }

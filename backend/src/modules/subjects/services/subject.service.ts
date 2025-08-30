@@ -11,65 +11,117 @@ import { SubjectNotFoundException } from "src/common/exceptions/subject-not-foun
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
 import { GetAllSubjectsReqDto } from "../types/dtos/requests/get-all-subjects-req.dto"
 import { UpdateSubjectReqDto } from "../types/dtos/requests/update-subject-req.dto"
+import { CustomLoggerService } from "src/common/logger"
 
 @Injectable()
 export class SubjectService {
     constructor(
         private readonly subjectRepository: SubjectRepository,
         private readonly userService: UserService,
+        private readonly loggerService: CustomLoggerService,
     ) {}
 
     async create(dto: CreateSubjectReqDto): Promise<SubjectWithTeacherResDto> {
-        for (const teacherId of dto.teachers) {
-            await this.validateTeacherExistsOrThrow(teacherId)
+        try {
+            for (const teacherId of dto.teachers) {
+                await this.validateTeacherExistsOrThrow(teacherId)
+            }
+
+            const subject = await this.subjectRepository.create(dto)
+
+            return SubjectResBuilder.build(subject)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.create.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
         }
-
-        const subject = await this.subjectRepository.create(dto)
-
-        return SubjectResBuilder.build(subject)
     }
 
     async getById(id: string): Promise<SubjectWithTeacherResDto> {
-        const subject = await this.subjectRepository.getById(id)
-        if (!subject) {
-            throw new SubjectNotFoundException()
-        }
+        try {
+            const subject = await this.subjectRepository.getById(id)
+            if (!subject) {
+                throw new SubjectNotFoundException()
+            }
 
-        return SubjectResBuilder.build(subject)
+            return SubjectResBuilder.build(subject)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.getById.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
+        }
     }
 
     async getAll(
         dto: GetAllSubjectsReqDto,
     ): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
-        const { subjects, totalItems } =
-            await this.subjectRepository.getAll(dto)
+        try {
+            const { subjects, totalItems } =
+                await this.subjectRepository.getAll(dto)
 
-        return SubjectResBuilder.buildMany(
-            subjects,
-            dto.page,
-            dto.limit,
-            totalItems,
-        )
+            return SubjectResBuilder.buildMany(
+                subjects,
+                dto.page,
+                dto.limit,
+                totalItems,
+            )
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.getAll.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
+        }
     }
 
     async updateById(
         id: string,
         dto: UpdateSubjectReqDto,
     ): Promise<SubjectWithTeacherResDto> {
-        await this.getById(id)
+        try {
+            await this.getById(id)
 
-        for (const teacherId of dto.teachers) {
-            await this.validateTeacherExistsOrThrow(teacherId)
+            for (const teacherId of dto.teachers) {
+                await this.validateTeacherExistsOrThrow(teacherId)
+            }
+
+            const subject = await this.subjectRepository.updateById(id, dto)
+
+            return SubjectResBuilder.build(subject)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.updateById.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
         }
-
-        const subject = await this.subjectRepository.updateById(id, dto)
-
-        return SubjectResBuilder.build(subject)
     }
 
     async delete(id: string): Promise<void> {
-        await this.getById(id)
-        await this.subjectRepository.deleteById(id)
+        try {
+            await this.getById(id)
+            await this.subjectRepository.deleteById(id)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.delete.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
+        }
     }
 
     private async validateTeacherExistsOrThrow(
