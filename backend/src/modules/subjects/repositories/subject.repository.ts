@@ -102,7 +102,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             data: {
                 name: dto.name,
                 teachers: {
-                    connect: dto.teachers.map((teacherId: string) => ({
+                    set: dto.teachers.map((teacherId: string) => ({
                         id: teacherId,
                     })),
                 },
