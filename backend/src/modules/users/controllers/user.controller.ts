@@ -10,7 +10,12 @@ import {
     Request,
     UseGuards,
 } from "@nestjs/common"
-import { ApiTags } from "@nestjs/swagger"
+import {
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiOkResponse,
+    ApiTags,
+} from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
 import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { UserResDto } from "../types/dtos/responses/user-res.dto"
@@ -39,6 +44,9 @@ export class UserController {
     ) {}
 
     @Post()
+    @ApiCreatedResponse({
+        type: UserResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Create, UserEntity),
@@ -62,6 +70,9 @@ export class UserController {
     }
 
     @Get()
+    @ApiOkResponse({
+        type: PaginationResDto<UserResDto[]>,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Read, UserEntity),
@@ -84,6 +95,9 @@ export class UserController {
     }
 
     @Get("/current")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Read, UserEntity),
@@ -107,6 +121,9 @@ export class UserController {
     }
 
     @Get(":id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Read, UserEntity),
@@ -130,6 +147,7 @@ export class UserController {
     }
 
     @Delete(":id")
+    @ApiNoContentResponse()
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Delete, UserEntity),
@@ -148,6 +166,9 @@ export class UserController {
     }
 
     @Patch(":id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Update, UserEntity),

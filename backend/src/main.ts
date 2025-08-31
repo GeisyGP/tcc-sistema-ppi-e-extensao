@@ -3,6 +3,8 @@ import { AppModule } from "./app.module"
 import { ValidationPipe } from "@nestjs/common"
 import { ValidationError } from "class-validator"
 import { InvalidInputException } from "./common/exceptions/invalid-input.exception"
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
+import { writeFileSync } from "fs"
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
@@ -22,6 +24,15 @@ async function bootstrap() {
         }),
     )
     app.enableCors()
+
+    const options = new DocumentBuilder()
+        .setTitle("SIPPIE")
+        .setVersion("1.0")
+        .build()
+    const document = SwaggerModule.createDocument(app, options)
+    writeFileSync("./swagger.json", JSON.stringify(document, null, 2))
+
+    SwaggerModule.setup("api", app, document)
 
     await app.listen(process.env.PORT ?? 3000)
 }

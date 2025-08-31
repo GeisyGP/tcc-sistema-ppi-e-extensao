@@ -10,7 +10,12 @@ import {
     Request,
     UseGuards,
 } from "@nestjs/common"
-import { ApiTags } from "@nestjs/swagger"
+import {
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiOkResponse,
+    ApiTags,
+} from "@nestjs/swagger"
 import { BaseResDto } from "../../../common/types/dtos/base-res.dto"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
 import { PoliciesGuard } from "src/common/guards/policies.guard"
@@ -22,7 +27,6 @@ import { CreateSubjectReqDto } from "../types/dtos/requests/create-subject-req.d
 import { SubjectWithTeacherResDto } from "../types/dtos/responses/subject-with-teacher-res.dto"
 import { GetByIdSubjectReqDto } from "../types/dtos/requests/get-by-id-subject.dto"
 import { GetAllSubjectsReqDto } from "../types/dtos/requests/get-all-subjects-req.dto"
-import { SubjectResDto } from "../types/dtos/responses/subject-res.dto"
 import {
     UpdateSubjectParamsReqDto,
     UpdateSubjectReqDto,
@@ -41,6 +45,9 @@ export class SubjectController {
     ) {}
 
     @Post()
+    @ApiCreatedResponse({
+        type: SubjectWithTeacherResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Create, SubjectEntity),
@@ -64,6 +71,9 @@ export class SubjectController {
     }
 
     @Get(":id")
+    @ApiOkResponse({
+        type: SubjectWithTeacherResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Read, SubjectEntity),
@@ -87,6 +97,9 @@ export class SubjectController {
     }
 
     @Get()
+    @ApiOkResponse({
+        type: PaginationResDto<SubjectWithTeacherResDto[]>,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Read, SubjectEntity),
@@ -94,7 +107,7 @@ export class SubjectController {
     async getAll(
         @Query() queryParams: GetAllSubjectsReqDto,
         @Request() request: RequestDto,
-    ): Promise<BaseResDto<PaginationResDto<SubjectResDto[]>>> {
+    ): Promise<BaseResDto<PaginationResDto<SubjectWithTeacherResDto[]>>> {
         this.loggerService.info(
             this.constructor.name,
             this.getAll.name,
@@ -109,6 +122,9 @@ export class SubjectController {
     }
 
     @Put(":id")
+    @ApiOkResponse({
+        type: SubjectWithTeacherResDto,
+    })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Update, SubjectEntity),
@@ -133,6 +149,7 @@ export class SubjectController {
     }
 
     @Delete(":id")
+    @ApiNoContentResponse()
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) =>
         ability.can(Action.Delete, SubjectEntity),

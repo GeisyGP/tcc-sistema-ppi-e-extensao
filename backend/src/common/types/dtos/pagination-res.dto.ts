@@ -1,9 +1,23 @@
+import { ApiProperty } from "@nestjs/swagger"
+
+class MetadataDto {
+    @ApiProperty()
+    page: number
+
+    @ApiProperty()
+    itemsPerPage: number
+
+    @ApiProperty()
+    totalPages: number
+
+    @ApiProperty()
+    totalItems: number
+}
+
 export class PaginationResDto<T> {
+    @ApiProperty({ isArray: true })
     items: T
-    metadata: {
-        page: number
-        itemsPerPage: number
-        totalPages: number
-        totalItems: number
-    }
+
+    @ApiProperty({ type: () => MetadataDto })
+    metadata: MetadataDto
 }

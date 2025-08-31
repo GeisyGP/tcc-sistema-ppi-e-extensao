@@ -1,14 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { randomUUID } from "crypto"
+import { IsUUID } from "class-validator"
 
 export class SubjectWithTeacherResDto {
-    @ApiProperty({ type: randomUUID })
+    @ApiProperty({ format: "uuid" })
+    @IsUUID()
     id: string
 
     @ApiProperty()
     name: string
 
-    @ApiProperty()
+    @ApiProperty({ type: () => TeacherResDto, isArray: true })
     teachers: TeacherResDto[]
 
     @ApiProperty()
@@ -19,7 +20,7 @@ export class SubjectWithTeacherResDto {
 }
 
 class TeacherResDto {
-    @ApiProperty({ type: randomUUID })
+    @ApiProperty({ format: "uuid" })
     id: string
 
     @ApiProperty()
