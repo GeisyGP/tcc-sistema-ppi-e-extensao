@@ -8,6 +8,7 @@ import { UserController } from "src/modules/users/controllers/user.controller"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
 import { requestMock } from "../authentication/mocks/authentication.mock"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
+import { CustomLoggerService } from "src/common/logger"
 
 describe("UserController", () => {
     let userService: UserService
@@ -22,6 +23,13 @@ describe("UserController", () => {
                 UserRepository,
                 PrismaService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 
@@ -46,7 +54,7 @@ describe("UserController", () => {
                 responseMock,
             )
 
-            const result = await userController.create(dto)
+            const result = await userController.create(dto, requestMock)
 
             expect(result).toEqual(
                 baseResponseMock<UserResDto>(
@@ -65,12 +73,15 @@ describe("UserController", () => {
                 paginationMock<UserResDto>([responseMock]),
             )
 
-            const result = await userController.getAll({
-                limit: 30,
-                name: "",
-                page: 1,
-                role: "STUDENT",
-            })
+            const result = await userController.getAll(
+                {
+                    limit: 30,
+                    name: "",
+                    page: 1,
+                    role: "STUDENT",
+                },
+                requestMock,
+            )
 
             expect(result).toEqual(
                 baseResponseMock(
@@ -88,7 +99,10 @@ describe("UserController", () => {
                 responseMock,
             )
 
-            const result = await userController.getById({ id: userMock.id })
+            const result = await userController.getById(
+                { id: userMock.id },
+                requestMock,
+            )
 
             expect(result).toEqual(
                 baseResponseMock<UserResDto>(
@@ -121,7 +135,10 @@ describe("UserController", () => {
         it("should delete an user", async () => {
             jest.spyOn(userService, "delete").mockResolvedValueOnce()
 
-            const result = await userController.delete({ id: userMock.id })
+            const result = await userController.delete(
+                { id: userMock.id },
+                requestMock,
+            )
 
             expect(result).toBeUndefined()
         })

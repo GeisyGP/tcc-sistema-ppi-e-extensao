@@ -9,6 +9,8 @@ import { SubjectService } from "src/modules/subjects/services/subject.service"
 import { subjectMock } from "./mocks/subject.mock"
 import { SubjectController } from "src/modules/subjects/controllers/subject.controller"
 import { SubjectWithTeacherResDto } from "src/modules/subjects/types/dtos/responses/subject-with-teacher-res.dto"
+import { CustomLoggerService } from "src/common/logger"
+import { requestMock } from "../authentication/mocks/authentication.mock"
 
 describe("UserController", () => {
     let subjectService: SubjectService
@@ -26,6 +28,13 @@ describe("UserController", () => {
                 UserRepository,
                 PrismaService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 
@@ -47,7 +56,7 @@ describe("UserController", () => {
                 subjectMock,
             )
 
-            const result = await subjectController.create(dto)
+            const result = await subjectController.create(dto, requestMock)
 
             expect(result).toEqual(
                 baseResponseMock<SubjectWithTeacherResDto>(
@@ -65,12 +74,15 @@ describe("UserController", () => {
                 paginationMock<SubjectWithTeacherResDto>([subjectMock]),
             )
 
-            const result = await subjectController.getAll({
-                limit: 30,
-                name: "",
-                teacherId: "",
-                page: 1,
-            })
+            const result = await subjectController.getAll(
+                {
+                    limit: 30,
+                    name: "",
+                    teacherId: "",
+                    page: 1,
+                },
+                requestMock,
+            )
 
             expect(result).toEqual(
                 baseResponseMock(
@@ -87,9 +99,12 @@ describe("UserController", () => {
                 subjectMock,
             )
 
-            const result = await subjectController.getById({
-                id: subjectMock.id,
-            })
+            const result = await subjectController.getById(
+                {
+                    id: subjectMock.id,
+                },
+                requestMock,
+            )
 
             expect(result).toEqual(
                 baseResponseMock<SubjectWithTeacherResDto>(
@@ -114,6 +129,7 @@ describe("UserController", () => {
             const result = await subjectController.update(
                 { id: subjectMock.id },
                 dto,
+                requestMock,
             )
 
             expect(result).toEqual(
@@ -129,9 +145,12 @@ describe("UserController", () => {
         it("should delete a subject", async () => {
             jest.spyOn(subjectService, "delete").mockResolvedValueOnce()
 
-            const result = await subjectController.delete({
-                id: subjectMock.id,
-            })
+            const result = await subjectController.delete(
+                {
+                    id: subjectMock.id,
+                },
+                requestMock,
+            )
 
             expect(result).toBeUndefined()
         })

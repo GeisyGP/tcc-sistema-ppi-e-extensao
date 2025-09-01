@@ -13,6 +13,7 @@ import { userResponseMock } from "../users/mocks/user.mock"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { TeacherNotFoundException } from "src/common/exceptions/teacher-not-found.exception"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
+import { CustomLoggerService } from "src/common/logger"
 
 describe("SubjectService", () => {
     let userService: UserService
@@ -30,6 +31,13 @@ describe("SubjectService", () => {
                 UserRepository,
                 PrismaService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 

@@ -9,6 +9,7 @@ import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { PrismaService } from "src/config/prisma.service"
 import { UnauthorizedException } from "@nestjs/common"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
+import { CustomLoggerService } from "src/common/logger"
 
 describe("AuthenticationService", () => {
     let authenticationService: AuthenticationService
@@ -25,6 +26,13 @@ describe("AuthenticationService", () => {
                 PrismaService,
                 JwtService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 

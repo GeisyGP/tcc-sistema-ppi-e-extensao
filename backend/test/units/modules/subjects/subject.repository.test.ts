@@ -6,6 +6,7 @@ import { SubjectService } from "src/modules/subjects/services/subject.service"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { UserService } from "src/modules/users/services/user.service"
 import { subjectMock } from "./mocks/subject.mock"
+import { CustomLoggerService } from "src/common/logger"
 
 describe("SubjectRepository", () => {
     let subjectRepository: SubjectRepository
@@ -22,6 +23,13 @@ describe("SubjectRepository", () => {
                 UserRepository,
                 PrismaService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 
@@ -167,7 +175,7 @@ describe("SubjectRepository", () => {
                 data: {
                     name: dto.name,
                     teachers: {
-                        connect: dto.teachers.map((teacherId: string) => ({
+                        set: dto.teachers.map((teacherId: string) => ({
                             id: teacherId,
                         })),
                     },

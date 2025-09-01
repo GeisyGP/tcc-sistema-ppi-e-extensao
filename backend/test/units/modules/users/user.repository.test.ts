@@ -5,6 +5,7 @@ import { UserService } from "src/modules/users/services/user.service"
 import { userMock } from "./mocks/user.mock"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { UserRole } from "src/common/enums/user-role.enum"
+import { CustomLoggerService } from "src/common/logger"
 
 describe("UserRepository", () => {
     let userRepository: UserRepository
@@ -19,6 +20,13 @@ describe("UserRepository", () => {
                 UserRepository,
                 PrismaService,
                 CaslAbilityFactory,
+                {
+                    provide: CustomLoggerService,
+                    useValue: {
+                        info: () => {},
+                        error: () => {},
+                    },
+                },
             ],
         }).compile()
 
