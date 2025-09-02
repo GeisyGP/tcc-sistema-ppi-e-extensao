@@ -1,16 +1,15 @@
 import { GetAllSubjectsReq, SubjectInput, SubjectRes } from "@/types/subject.types"
-import { backendApi } from "./api"
+import backendApi from "./api"
 import { PaginationResDto } from "@/types/pagination.type"
 import { getSession } from "next-auth/react"
 
-export async function createSubjectById(id: string, body: SubjectInput): Promise<SubjectRes | void> {
+export async function createSubject(body: SubjectInput): Promise<SubjectRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.post(`/subjects`, {
-        body,
+    const response = await backendApi.post(`/subjects`, body, {
         headers: {
             "Authorization": `Bearer ${session.accessToken}`
         }
@@ -53,8 +52,7 @@ export async function updateSubjectById(id: string, body: SubjectInput): Promise
         return
     }
 
-    const response = await backendApi.put(`/subjects/${id}`, {
-        body,
+    const response = await backendApi.put(`/subjects/${id}`, body, {
         headers: {
             "Authorization": `Bearer ${session.accessToken}`
         }

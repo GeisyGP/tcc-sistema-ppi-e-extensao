@@ -1,4 +1,4 @@
-import { backendApi } from "./api"
+import backendApi from "./api"
 
 interface LoginPayload {
     registration: string

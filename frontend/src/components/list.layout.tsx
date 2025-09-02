@@ -20,10 +20,11 @@ type ListProps<T extends { id: string | number }> = {
     page: number
     totalPages: number
     onPageChange: (page: number) => void
+    onView?: (item: T) => void
     showDeleteAction?: boolean
     onDelete?: (id: string) => Promise<void>
     showEditAction?: boolean
-    onEdit?: (id: string, item: T) => Promise<void>
+    onEdit?: (item: T) => void
 }
 
 export default function List<T extends { id: string }>({
@@ -35,7 +36,8 @@ export default function List<T extends { id: string }>({
     showDeleteAction = false,
     onDelete,
     showEditAction = false,
-    onEdit
+    onEdit,
+    onView,
 }: ListProps<T>) {
     return (
         <div className="w-full p-6 space-y-4 border rounded-lg bg-gray-50">
@@ -74,15 +76,21 @@ export default function List<T extends { id: string }>({
                             </tr>
                         ) : (
                             data.map((row) => (
-                                <tr key={row.id} className="hover:bg-gray-50">
+                                <tr
+                                    key={row.id}
+                                    className="hover:bg-gray-50 cursor-pointer"
+                                    onClick={(e) => {
+                                        const target = e.target as HTMLElement
+                                        if (target.closest('button')) return
+                                        onView?.(row)
+                                    }}
+                                >
                                     {columns.map((col) => (
                                         <td
                                             key={String(col.key)}
                                             className="px-4 py-3 text-sm text-gray-700"
                                         >
-                                            {col.render
-                                                ? col.render(row[col.key], row)
-                                                : String(row[col.key])}
+                                            {col.render ? col.render(row[col.key], row) : String(row[col.key])}
                                         </td>
                                     ))}
 
@@ -90,7 +98,7 @@ export default function List<T extends { id: string }>({
                                         <td className="px-4 py-3 text-sm text-right space-x-2">
                                             {showEditAction && (
                                                 <button
-                                                    onClick={() => onEdit?.(row.id, row)}
+                                                    onClick={() => onEdit?.(row)}
                                                     className="text-black-400 hover:text-black-900"
                                                 >
                                                     <PencilIcon className="h-5 w-5" />

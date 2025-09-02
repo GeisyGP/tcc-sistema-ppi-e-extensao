@@ -22,3 +22,11 @@ export interface SubjectInput {
     name: string
     teachers: string[]
 }
+
+export interface Subject {
+    id: string
+    name: string
+    teachers: string
+    createdAt: string
+    updatedAt: string
+}

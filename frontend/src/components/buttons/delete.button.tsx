@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { CheckCircleIcon, ExclamationTriangleIcon, TrashIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { Button } from "./default.button"
 
 interface DeleteButtonModalProps {
     id: string
@@ -13,6 +14,11 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
     const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
     const [loading, setLoading] = useState(false)
     if (!onDelete) return
+
+    const handleOpen = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsOpen(true)
+    }
 
     const handleConfirm = async () => {
         setLoading(true)
@@ -35,7 +41,7 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
     return (
         <>
             <button
-                onClick={() => setIsOpen(true)}
+                onClick={handleOpen}
                 className="text-red-500 hover:text-red-700"
                 title="Excluir"
             >
@@ -53,20 +59,20 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
                                     Essa ação não poderá ser desfeita.
                                 </p>
                                 <div className="flex justify-center gap-4">
-                                    <button
+                                    <Button
+                                        variant = "secondary"
                                         onClick={handleClose}
-                                        className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
                                         disabled={loading}
                                     >
                                         Cancelar
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
                                         onClick={handleConfirm}
                                         className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
                                         disabled={loading}
                                     >
                                         {loading ? 'Excluindo...' : 'Confirmar'}
-                                    </button>
+                                    </Button>
                                 </div>
                             </>
                         )}
