@@ -1,11 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { logout } from "@/actions/logout"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { logout } from "@/actions/logout"
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  const navItems = [
+    { href: "/home", label: "Home" },
+    { href: "/projetos", label: "Projetos" },
+    { href: "/ppis", label: "PPIs" },
+    { href: "/disciplinas", label: "Disciplinas" },
+    { href: "/usuarios", label: "Usuários" },
+  ]
 
   return (
     <nav className="bg-green-900 p-4 fixed top-0 left-0 w-full h-16 z-10 rounded-lg flex items-center justify-between">
@@ -15,22 +25,21 @@ export default function Navbar() {
         </Link>
       </div>
 
-      <ul className="hidden sm:flex space-x-4 text-white">
-        <li>
-          <Link href="/home" className="hover:underline hover:underline-offset-4">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link href="/disciplinas" className="hover:underline hover:underline-offset-4">
-            Disciplinas
-          </Link>
-        </li>
-        <li>
-          <Link href="/teste" className="hover:underline hover:underline-offset-4">
-            Teste
-          </Link>
-        </li>
+      <ul className="hidden sm:flex space-x-8 text-white">
+        {navItems.map(item => {
+          const isActive = pathname === item.href
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={`hover:underline hover:underline-offset-4 transition-opacity ${isActive ? "opacity-100 font-bold underline" : "opacity-50"
+                  }`}
+              >
+                {item.label}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
 
       <div className="flex items-center space-x-4">
@@ -52,21 +61,17 @@ export default function Navbar() {
 
       {menuOpen && (
         <ul className="sm:hidden bg-green-900 p-4 space-y-2 rounded-b-lg text-white absolute top-full left-0 w-full z-20">
-          <li>
-            <Link href="/home" className="block hover:underline" onClick={() => setMenuOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="/disciplinas" className="block hover:underline" onClick={() => setMenuOpen(false)}>
-              Disciplinas
-            </Link>
-          </li>
-          <li>
-            <Link href="/teste" className="block hover:underline" onClick={() => setMenuOpen(false)}>
-              Teste
-            </Link>
-          </li>
+          {navItems.map(item => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="block hover:underline"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
           <li>
             <button
               onClick={() => {
