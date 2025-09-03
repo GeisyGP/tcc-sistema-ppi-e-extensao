@@ -42,7 +42,7 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
         <>
             <button
                 onClick={handleOpen}
-                className="text-red-500 hover:text-red-700"
+                className="text-red-400 hover:text-red-700"
                 title="Excluir"
             >
                 <TrashIcon className="h-5 w-5" />
@@ -68,7 +68,6 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
                                     </Button>
                                     <Button
                                         onClick={handleConfirm}
-                                        className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
                                         disabled={loading}
                                     >
                                         {loading ? 'Excluindo...' : 'Confirmar'}

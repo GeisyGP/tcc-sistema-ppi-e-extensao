@@ -21,6 +21,7 @@ type EditSubjectModalProps = {
 export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectModalProps) {
     const [formData, setFormData] = useState<SubjectRes | null>(null)
     const [allTeachers, setAllTeachers] = useState<TeacherOption[]>([])
+    const [teachersLoaded, setTeachersLoaded] = useState(false)
     const [showTeacherSelect, setShowTeacherSelect] = useState(false)
     const [search, setSearch] = useState('')
 
@@ -47,11 +48,14 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     }, [])
 
     useEffect(() => {
-        const timeout = setTimeout(async () => {
+        if (!isOpen || teachersLoaded) return
+
+        const timeout = setTimeout(() => {
             fetchTeachers(search)
-        }, 300)
+            setTeachersLoaded(true)
+        }, 800)
         return () => clearTimeout(timeout)
-    }, [fetchTeachers, search])
+    }, [search, fetchTeachers, isOpen, teachersLoaded])
 
     if (!isOpen || !formData) return null
 
@@ -112,9 +116,6 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                             onClick={() => {
                                 const newValue = !showTeacherSelect
                                 setShowTeacherSelect(newValue)
-                                if (newValue && allTeachers.length === 0) {
-                                    fetchTeachers()
-                                }
                             }}
                         >
                             <div className="flex flex-wrap gap-1">
@@ -150,7 +151,10 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                                     type="text"
                                     placeholder="Digite para buscar..."
                                     value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value)
+                                        setTeachersLoaded(false)
+                                    }}
                                     className="w-full p-1 mb-2 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
                                 />
 

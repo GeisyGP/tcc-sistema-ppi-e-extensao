@@ -10,6 +10,8 @@ import { SubjectModal } from '@/components/subject-modal'
 import { formatSubject } from './utils/format-subject'
 import { Button } from '@/components/buttons/default.button'
 import { PlusIcon } from '@heroicons/react/16/solid'
+import { FilterButton } from '@/components/buttons/filter.button'
+import { getAllUsers } from '@/services/users.service'
 
 export default function SubjectsPage() {
     const [page, setPage] = useState(1)
@@ -21,12 +23,13 @@ export default function SubjectsPage() {
     const [selected, setSelected] = useState<Subject | null>(null)
     const [selectedForEdit, setSelectedForEdit] = useState<SubjectRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
+    const [teacherIdFilter, setTeacherIdFilter] = useState<string>()
 
     useEffect(() => {
         const fetchSubjects = async () => {
             try {
                 setLoading(true)
-                const response = await getAllSubjects({ page, name: nameFilter })
+                const response = await getAllSubjects({ page, name: nameFilter, teacherId: teacherIdFilter })
                 if (response) {
                     setRawData(response.items)
                     const formattedData = response.items.map(item => (formatSubject(item)))
@@ -41,7 +44,7 @@ export default function SubjectsPage() {
         }
 
         fetchSubjects()
-    }, [page, nameFilter])
+    }, [page, nameFilter, teacherIdFilter])
 
     const handleDelete = useCallback(async (id: string) => {
         await deleteSubjectById(id)
@@ -76,6 +79,16 @@ export default function SubjectsPage() {
         }
     }
 
+    const fetchTeacherOptions = useCallback(async () => {
+        const data = await getAllUsers({ role: "TEACHER" })
+        return (
+            data?.items.map(u => ({
+                label: `${u.name} (${u.registration})`,
+                value: u.id,
+            })) || []
+        )
+    }, [])
+
     return (
         <div className="w-full mx-auto p-6">
             <h1 className="text-2xl font-semibold mb-6">Disciplinas</h1>
@@ -89,6 +102,21 @@ export default function SubjectsPage() {
                         }}
                     />
                 </div>
+
+                <FilterButton
+                    filters={[
+                        {
+                            key: "teacherId",
+                            label: "Docente",
+                            type: "select",
+                            onLoadOptions: fetchTeacherOptions,
+                        },
+                    ]}
+                    onApply={(values) => {
+                        setTeacherIdFilter(values.teacherId || undefined)
+                        setPage(1)
+                    }}
+                />
 
                 <Button
                     onClick={() => {

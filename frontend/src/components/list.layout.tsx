@@ -99,7 +99,8 @@ export default function List<T extends { id: string }>({
                                             {showEditAction && (
                                                 <button
                                                     onClick={() => onEdit?.(row)}
-                                                    className="text-black-400 hover:text-black-900"
+                                                    className="text-black-100 hover:text-black-900"
+                                                    title="Editar"
                                                 >
                                                     <PencilIcon className="h-5 w-5" />
                                                 </button>
