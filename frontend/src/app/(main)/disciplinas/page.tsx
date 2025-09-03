@@ -2,82 +2,27 @@
 
 import SearchBar from '@/components/search-bar'
 import List from '@/components/list.layout'
-import { createSubject, deleteSubjectById, getAllSubjects, updateSubjectById } from '@/services/subjects.service'
 import { useState, useEffect, useCallback } from 'react'
 import { ViewModal } from '@/components/view-modal'
 import { Subject, SubjectRes } from '@/types/subject.types'
 import { SubjectModal } from '@/components/subject-modal'
-import { formatSubject } from './utils/format-subject'
 import { Button } from '@/components/buttons/default.button'
 import { PlusIcon } from '@heroicons/react/16/solid'
 import { FilterButton } from '@/components/buttons/filter.button'
 import { getAllUsers } from '@/services/users.service'
+import { SubjectDetails } from '@/components/subject-details'
+import { useSubjects } from './hooks/use-subjects'
 
 export default function SubjectsPage() {
+    const { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete } = useSubjects()
     const [page, setPage] = useState(1)
     const [nameFilter, setNameFilter] = useState<string | undefined>()
-    const [rawData, setRawData] = useState<SubjectRes[]>([])
-    const [formattedData, setFormattedData] = useState<Subject[]>([])
-    const [totalPages, setTotalPages] = useState(1)
-    const [loading, setLoading] = useState(false)
     const [selected, setSelected] = useState<Subject | null>(null)
     const [selectedForEdit, setSelectedForEdit] = useState<SubjectRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
     const [teacherIdFilter, setTeacherIdFilter] = useState<string>()
 
-    useEffect(() => {
-        const fetchSubjects = async () => {
-            try {
-                setLoading(true)
-                const response = await getAllSubjects({ page, name: nameFilter, teacherId: teacherIdFilter })
-                if (response) {
-                    setRawData(response.items)
-                    const formattedData = response.items.map(item => (formatSubject(item)))
-                    setFormattedData(formattedData)
-                    setTotalPages(response.metadata.totalPages)
-                }
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchSubjects()
-    }, [page, nameFilter, teacherIdFilter])
-
-    const handleDelete = useCallback(async (id: string) => {
-        await deleteSubjectById(id)
-
-        setFormattedData((prev) => prev.filter((item) => item.id !== id))
-    }, [])
-
-    const handleUpdate = useCallback(async (updated: SubjectRes) => {
-        await updateSubjectById(updated.id, {
-            name: updated.name,
-            teachers: updated.teachers.map(t => t.id),
-        })
-
-        setFormattedData(prev =>
-            prev.map(d =>
-                d.id === updated.id ? formatSubject(updated) : d
-            )
-        )
-
-        setSelectedForEdit(null)
-    }, [])
-
-    const handleCreate = async (newSubject: SubjectRes) => {
-        const created = await createSubject({
-            name: newSubject.name,
-            teachers: newSubject.teachers.map(t => t.id),
-        })
-
-        if (created) {
-            setFormattedData(prev => [...prev, formatSubject(created)])
-            setCreatingNew(false)
-        }
-    }
+    useEffect(() => { fetchSubjects({ page, name: nameFilter, teacherId: teacherIdFilter }) }, [page, nameFilter, teacherIdFilter, fetchSubjects])
 
     const fetchTeacherOptions = useCallback(async () => {
         const data = await getAllUsers({ role: "TEACHER" })
@@ -158,13 +103,7 @@ export default function SubjectsPage() {
                 item={selected}
                 onClose={() => setSelected(null)}
                 title={(item) => item.name}
-                renderContent={(item) => (
-                    <>
-                        <p><strong>Docente(s):</strong> {item.teachers}</p>
-                        <p><strong>Criado em:</strong> {item.createdAt}</p>
-                        <p><strong>Atualizado em:</strong> {item.updatedAt}</p>
-                    </>
-                )}
+                renderContent={(item) => <SubjectDetails subject={item} />}
             />
 
             <SubjectModal
