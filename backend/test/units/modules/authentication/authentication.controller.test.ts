@@ -50,9 +50,7 @@ describe("AuthenticationController", () => {
                 registration: userMock.registration,
                 password: userMock.password,
             }
-            jest.spyOn(authenticationService, "login").mockResolvedValue(
-                loginResMock,
-            )
+            jest.spyOn(authenticationService, "login").mockResolvedValue(loginResMock)
 
             const result = await authenticationController.login(dto)
 

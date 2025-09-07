@@ -13,10 +13,7 @@ export const paginationMock = <T>(items: Array<T>): PaginationResDto<T[]> => {
     }
 }
 
-export const baseResponseMock = <T>(
-    message: string,
-    data: T,
-): BaseResDto<T> => {
+export const baseResponseMock = <T>(message: string, data: T): BaseResDto<T> => {
     return {
         message,
         data,

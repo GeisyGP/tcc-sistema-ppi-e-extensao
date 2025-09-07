@@ -47,9 +47,7 @@ describe("UserRepository", () => {
                 role: userMock.role,
                 courseId: userMock.courseId[0],
             }
-            jest.spyOn(prismaService.user, "create").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(prismaService.user, "create").mockResolvedValueOnce(userMock)
 
             const result = await userRepository.create(dto)
 
@@ -74,9 +72,7 @@ describe("UserRepository", () => {
                 page: 1,
                 role: UserRole.STUDENT,
             }
-            jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce([
-                userMock,
-            ])
+            jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce([userMock])
             jest.spyOn(prismaService.user, "count").mockResolvedValueOnce(1)
 
             const result = await userRepository.getAll(dto)
@@ -111,9 +107,7 @@ describe("UserRepository", () => {
 
     describe("getById", () => {
         it("should return an user", async () => {
-            jest.spyOn(prismaService.user, "findUnique").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(prismaService.user, "findUnique").mockResolvedValueOnce(userMock)
 
             const result = await userRepository.getById(userMock.id)
 
@@ -126,13 +120,9 @@ describe("UserRepository", () => {
 
     describe("getByRegistration", () => {
         it("should return an user", async () => {
-            jest.spyOn(prismaService.user, "findUnique").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(prismaService.user, "findUnique").mockResolvedValueOnce(userMock)
 
-            const result = await userRepository.getByRegistration(
-                userMock.registration,
-            )
+            const result = await userRepository.getByRegistration(userMock.registration)
 
             expect(result).toEqual(userMock)
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
@@ -143,9 +133,7 @@ describe("UserRepository", () => {
 
     describe("delete", () => {
         it("should delete an user", async () => {
-            jest.spyOn(prismaService.user, "delete").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(prismaService.user, "delete").mockResolvedValueOnce(userMock)
 
             const result = await userRepository.delete(userMock.id)
 

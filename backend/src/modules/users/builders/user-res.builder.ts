@@ -15,12 +15,7 @@ export class UserResBuilder {
         }
     }
 
-    buildMany(
-        users: User[],
-        page: number,
-        limit: number,
-        totalItems: number,
-    ): PaginationResDto<UserResDto[]> {
+    buildMany(users: User[], page: number, limit: number, totalItems: number): PaginationResDto<UserResDto[]> {
         return {
             items: users.map((user) => this.build(user)),
             metadata: {

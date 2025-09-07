@@ -48,9 +48,7 @@ describe("SubjectRepository", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(prismaService.subject, "create").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(prismaService.subject, "create").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectRepository.create(dto)
 
@@ -79,10 +77,7 @@ describe("SubjectRepository", () => {
 
     describe("getById", () => {
         it("should return a subject", async () => {
-            jest.spyOn(
-                prismaService.subject,
-                "findUnique",
-            ).mockResolvedValueOnce(subjectMock)
+            jest.spyOn(prismaService.subject, "findUnique").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectRepository.getById(subjectMock.id)
 
@@ -109,9 +104,7 @@ describe("SubjectRepository", () => {
                 teacherId: "",
                 page: 1,
             }
-            jest.spyOn(prismaService.subject, "findMany").mockResolvedValueOnce(
-                [subjectMock],
-            )
+            jest.spyOn(prismaService.subject, "findMany").mockResolvedValueOnce([subjectMock])
             jest.spyOn(prismaService.subject, "count").mockResolvedValueOnce(1)
 
             const result = await subjectRepository.getAll(dto)
@@ -126,9 +119,7 @@ describe("SubjectRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
-                    teachers: dto.teacherId
-                        ? { some: { id: dto.teacherId } }
-                        : undefined,
+                    teachers: dto.teacherId ? { some: { id: dto.teacherId } } : undefined,
                 },
                 take: dto.limit,
                 skip: dto.limit * (dto.page - 1),
@@ -148,9 +139,7 @@ describe("SubjectRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
-                    teachers: dto.teacherId
-                        ? { some: { id: dto.teacherId } }
-                        : undefined,
+                    teachers: dto.teacherId ? { some: { id: dto.teacherId } } : undefined,
                 },
             })
         })
@@ -162,14 +151,9 @@ describe("SubjectRepository", () => {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
             }
-            jest.spyOn(prismaService.subject, "update").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(prismaService.subject, "update").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectRepository.updateById(
-                subjectMock.id,
-                dto,
-            )
+            const result = await subjectRepository.updateById(subjectMock.id, dto)
 
             expect(result).toEqual(subjectMock)
             expect(prismaService.subject.update).toHaveBeenCalledWith({
@@ -196,9 +180,7 @@ describe("SubjectRepository", () => {
 
     describe("deleteById", () => {
         it("should delete an subject", async () => {
-            jest.spyOn(prismaService.subject, "delete").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(prismaService.subject, "delete").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectRepository.deleteById(subjectMock.id)
 

@@ -29,9 +29,7 @@ export class UserRepository implements UserRepositoryInterface {
         })
     }
 
-    async getAll(
-        dto: GetAllUsersReqDto,
-    ): Promise<{ users: User[]; totalItems: number }> {
+    async getAll(dto: GetAllUsersReqDto): Promise<{ users: User[]; totalItems: number }> {
         const filter = {
             name: {
                 contains: dto.name,
@@ -70,10 +68,7 @@ export class UserRepository implements UserRepositoryInterface {
         await this.prisma.user.delete({ where: { id } })
     }
 
-    async changePassword(
-        id: string,
-        newPassword: string,
-    ): Promise<User | null> {
+    async changePassword(id: string, newPassword: string): Promise<User | null> {
         return await this.prisma.user.update({
             where: {
                 id,

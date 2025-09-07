@@ -50,13 +50,9 @@ describe("UserService", () => {
                 role: userMock.role,
                 courseId: userMock.courseId[0],
             }
-            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
-                null,
-            )
+            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(null)
             jest.spyOn(userRepository, "create").mockResolvedValueOnce(userMock)
-            const hashSpy = jest
-                .spyOn(userService as any, "hashPassword")
-                .mockResolvedValueOnce("hashedPassword")
+            const hashSpy = jest.spyOn(userService as any, "hashPassword").mockResolvedValueOnce("hashedPassword")
 
             const result = await userService.create(dto)
 
@@ -76,13 +72,9 @@ describe("UserService", () => {
                 role: userMock.role,
                 courseId: userMock.courseId[0],
             }
-            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(userMock)
 
-            await expect(userService.create(dto)).rejects.toThrow(
-                UserExistsException,
-            )
+            await expect(userService.create(dto)).rejects.toThrow(UserExistsException)
         })
     })
 
@@ -100,17 +92,13 @@ describe("UserService", () => {
                 role: "STUDENT",
             })
 
-            expect(result).toEqual(
-                paginationMock<UserResDto>([userResponseMock()]),
-            )
+            expect(result).toEqual(paginationMock<UserResDto>([userResponseMock()]))
         })
     })
 
     describe("getById", () => {
         it("should return an user", async () => {
-            jest.spyOn(userRepository, "getById").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(userRepository, "getById").mockResolvedValueOnce(userMock)
 
             const result = await userService.getById(userMock.id)
 
@@ -119,18 +107,13 @@ describe("UserService", () => {
 
         it("should throw UserNotFoundException", async () => {
             jest.spyOn(userRepository, "getById").mockResolvedValueOnce(null)
-            await expect(userService.getById(userMock.id)).rejects.toThrow(
-                UserNotFoundException,
-            )
+            await expect(userService.getById(userMock.id)).rejects.toThrow(UserNotFoundException)
         })
     })
 
     describe("getByRegistration", () => {
         it("should return an user", async () => {
-            jest.spyOn(
-                userRepository,
-                "getByRegistration",
-            ).mockResolvedValueOnce(userMock)
+            jest.spyOn(userRepository, "getByRegistration").mockResolvedValueOnce(userMock)
 
             const result = await userService.getByRegistration({
                 registration: userMock.registration,

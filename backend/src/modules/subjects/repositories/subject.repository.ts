@@ -52,17 +52,13 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         return subject
     }
 
-    async getAll(
-        dto: GetAllSubjectsReqDto,
-    ): Promise<{ subjects: SubjectWithTeacher[]; totalItems: number }> {
+    async getAll(dto: GetAllSubjectsReqDto): Promise<{ subjects: SubjectWithTeacher[]; totalItems: number }> {
         const filter = {
             name: {
                 contains: dto.name,
                 mode: Prisma.QueryMode.insensitive,
             },
-            teachers: dto.teacherId
-                ? { some: { id: dto.teacherId } }
-                : undefined,
+            teachers: dto.teacherId ? { some: { id: dto.teacherId } } : undefined,
         }
 
         const subjects = await this.prisma.subject.findMany({
@@ -94,10 +90,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         return { subjects, totalItems }
     }
 
-    async updateById(
-        id: string,
-        dto: UpdateSubjectReqDto,
-    ): Promise<SubjectWithTeacher> {
+    async updateById(id: string, dto: UpdateSubjectReqDto): Promise<SubjectWithTeacher> {
         return await this.prisma.subject.update({
             where: { id },
             data: {

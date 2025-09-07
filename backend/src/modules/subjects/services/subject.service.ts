@@ -21,10 +21,7 @@ export class SubjectService {
         private readonly loggerService: CustomLoggerService,
     ) {}
 
-    async create(
-        dto: CreateSubjectReqDto,
-        userCourseId: Array<string>,
-    ): Promise<SubjectWithTeacherResDto> {
+    async create(dto: CreateSubjectReqDto, userCourseId: Array<string>): Promise<SubjectWithTeacherResDto> {
         try {
             const courseId = userCourseId.find((id) => id == dto.courseId)
             if (!courseId) {
@@ -42,12 +39,7 @@ export class SubjectService {
 
             return SubjectResBuilder.build(subject)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.create.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.create.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
@@ -61,44 +53,23 @@ export class SubjectService {
 
             return SubjectResBuilder.build(subject)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.getById.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    async getAll(
-        dto: GetAllSubjectsReqDto,
-    ): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
+    async getAll(dto: GetAllSubjectsReqDto): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
         try {
-            const { subjects, totalItems } =
-                await this.subjectRepository.getAll(dto)
+            const { subjects, totalItems } = await this.subjectRepository.getAll(dto)
 
-            return SubjectResBuilder.buildMany(
-                subjects,
-                dto.page,
-                dto.limit,
-                totalItems,
-            )
+            return SubjectResBuilder.buildMany(subjects, dto.page, dto.limit, totalItems)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.getAll.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.getAll.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    async updateById(
-        id: string,
-        dto: UpdateSubjectReqDto,
-    ): Promise<SubjectWithTeacherResDto> {
+    async updateById(id: string, dto: UpdateSubjectReqDto): Promise<SubjectWithTeacherResDto> {
         try {
             await this.getById(id)
 
@@ -125,26 +96,16 @@ export class SubjectService {
             await this.getById(id)
             await this.subjectRepository.deleteById(id)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.delete.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.delete.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    private async validateTeacherExistsOrThrow(
-        teacherId: string,
-    ): Promise<void> {
+    private async validateTeacherExistsOrThrow(teacherId: string): Promise<void> {
         try {
             const teacher = await this.userService.getById(teacherId)
 
-            const validRoles: UserRole[] = [
-                UserRole.COORDINATOR,
-                UserRole.TEACHER,
-            ]
+            const validRoles: UserRole[] = [UserRole.COORDINATOR, UserRole.TEACHER]
             if (!validRoles.includes(teacher.role)) {
                 throw new TeacherNotFoundException()
             }

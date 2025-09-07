@@ -13,11 +13,7 @@ async function bootstrap() {
             transform: true,
             exceptionFactory: (errors: ValidationError[]) => {
                 const messages = errors
-                    .map((error) =>
-                        Object.values(
-                            error.constraints || "Unknown validation error",
-                        ),
-                    )
+                    .map((error) => Object.values(error.constraints || "Unknown validation error"))
                     .flat()
                 return new InvalidInputException(messages)
             },
@@ -25,10 +21,7 @@ async function bootstrap() {
     )
     app.enableCors()
 
-    const options = new DocumentBuilder()
-        .setTitle("SIPPIE")
-        .setVersion("1.0")
-        .build()
+    const options = new DocumentBuilder().setTitle("SIPPIE").setVersion("1.0").build()
     const document = SwaggerModule.createDocument(app, options)
     writeFileSync("./swagger.json", JSON.stringify(document, null, 2))
 

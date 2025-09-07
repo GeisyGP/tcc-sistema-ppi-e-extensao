@@ -59,16 +59,10 @@ describe("SubjectService", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(userService, "getById").mockResolvedValueOnce(
-                userResponseMock(UserRole.TEACHER),
-            )
-            jest.spyOn(subjectRepository, "create").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(userResponseMock(UserRole.TEACHER))
+            jest.spyOn(subjectRepository, "create").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectService.create(dto, [
-                subjectMock.courseId,
-            ])
+            const result = await subjectService.create(dto, [subjectMock.courseId])
 
             expect(result).toEqual(subjectResMock)
             expect(subjectRepository.create).toHaveBeenCalledWith(dto)
@@ -80,13 +74,9 @@ describe("SubjectService", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(userService, "getById").mockResolvedValueOnce(
-                userResponseMock(UserRole.STUDENT),
-            )
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(userResponseMock(UserRole.STUDENT))
 
-            await expect(
-                subjectService.create(dto, [subjectMock.courseId]),
-            ).rejects.toThrow(TeacherNotFoundException)
+            await expect(subjectService.create(dto, [subjectMock.courseId])).rejects.toThrow(TeacherNotFoundException)
         })
 
         it("should throw TeacherNotFoundException when user does not exist", async () => {
@@ -95,13 +85,9 @@ describe("SubjectService", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(userService, "getById").mockRejectedValueOnce(
-                new UserNotFoundException(),
-            )
+            jest.spyOn(userService, "getById").mockRejectedValueOnce(new UserNotFoundException())
 
-            await expect(
-                subjectService.create(dto, [subjectMock.courseId]),
-            ).rejects.toThrow(TeacherNotFoundException)
+            await expect(subjectService.create(dto, [subjectMock.courseId])).rejects.toThrow(TeacherNotFoundException)
         })
 
         it("should throw ForbiddenException when courseId is not in user", async () => {
@@ -110,13 +96,9 @@ describe("SubjectService", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(userService, "getById").mockRejectedValueOnce(
-                new ForbiddenException(),
-            )
+            jest.spyOn(userService, "getById").mockRejectedValueOnce(new ForbiddenException())
 
-            await expect(
-                subjectService.create(dto, [faker.string.uuid()]),
-            ).rejects.toThrow(ForbiddenException)
+            await expect(subjectService.create(dto, [faker.string.uuid()])).rejects.toThrow(ForbiddenException)
         })
     })
 
@@ -134,17 +116,13 @@ describe("SubjectService", () => {
                 page: 1,
             })
 
-            expect(result).toEqual(
-                paginationMock<SubjectWithTeacherResDto>([subjectResMock]),
-            )
+            expect(result).toEqual(paginationMock<SubjectWithTeacherResDto>([subjectResMock]))
         })
     })
 
     describe("getById", () => {
         it("should return a subject", async () => {
-            jest.spyOn(subjectRepository, "getById").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectRepository, "getById").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectService.getById(subjectMock.id)
 
@@ -153,9 +131,7 @@ describe("SubjectService", () => {
 
         it("should throw SubjectNotFoundException", async () => {
             jest.spyOn(subjectRepository, "getById").mockResolvedValueOnce(null)
-            await expect(
-                subjectService.getById(subjectMock.id),
-            ).rejects.toThrow(SubjectNotFoundException)
+            await expect(subjectService.getById(subjectMock.id)).rejects.toThrow(SubjectNotFoundException)
         })
     })
 
@@ -165,15 +141,9 @@ describe("SubjectService", () => {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
             }
-            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(
-                subjectResMock,
-            )
-            jest.spyOn(userService, "getById").mockResolvedValueOnce(
-                userResponseMock(UserRole.TEACHER),
-            )
-            jest.spyOn(subjectRepository, "updateById").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectResMock)
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(userResponseMock(UserRole.TEACHER))
+            jest.spyOn(subjectRepository, "updateById").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectService.updateById(subjectMock.id, dto)
 
@@ -183,18 +153,14 @@ describe("SubjectService", () => {
 
     describe("deleteById", () => {
         it("should delete an user", async () => {
-            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectMock)
             jest.spyOn(subjectRepository, "deleteById").mockResolvedValueOnce()
 
             const result = await subjectService.delete(subjectMock.id)
 
             expect(result).toBeUndefined()
             expect(subjectService.getById).toHaveBeenCalledWith(subjectMock.id)
-            expect(subjectRepository.deleteById).toHaveBeenCalledWith(
-                subjectMock.id,
-            )
+            expect(subjectRepository.deleteById).toHaveBeenCalledWith(subjectMock.id)
         })
     })
 })

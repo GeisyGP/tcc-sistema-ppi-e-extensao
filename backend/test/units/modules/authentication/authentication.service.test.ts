@@ -51,13 +51,9 @@ describe("AuthenticationService", () => {
                 registration: userMock.registration,
                 password: userMock.password,
             }
-            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(userMock)
             jest.spyOn(bcrypt, "compare").mockImplementation(() => true)
-            jest.spyOn(jwtService, "signAsync").mockResolvedValueOnce(
-                loginResMock.accessToken,
-            )
+            jest.spyOn(jwtService, "signAsync").mockResolvedValueOnce(loginResMock.accessToken)
 
             const result = await authenticationService.login(dto)
 
@@ -65,10 +61,7 @@ describe("AuthenticationService", () => {
             expect(userService.getByRegistration).toHaveBeenCalledWith({
                 registration: dto.registration,
             })
-            expect(bcrypt.compare).toHaveBeenCalledWith(
-                dto.password,
-                userMock.password,
-            )
+            expect(bcrypt.compare).toHaveBeenCalledWith(dto.password, userMock.password)
             expect(jwtService.signAsync).toHaveBeenCalledWith({
                 sub: userMock.id,
                 role: userMock.role,
@@ -82,13 +75,9 @@ describe("AuthenticationService", () => {
                 registration: "some-registration",
                 password: userMock.password,
             }
-            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
-                null,
-            )
+            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(null)
 
-            await expect(authenticationService.login(dto)).rejects.toThrow(
-                UnauthorizedException,
-            )
+            await expect(authenticationService.login(dto)).rejects.toThrow(UnauthorizedException)
         })
 
         it("should throw UnauthorizedException when password does not match", async () => {
@@ -96,14 +85,10 @@ describe("AuthenticationService", () => {
                 registration: userMock.registration,
                 password: "invalid password",
             }
-            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
-                userMock,
-            )
+            jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(userMock)
             jest.spyOn(bcrypt, "compare").mockImplementation(() => false)
 
-            await expect(authenticationService.login(dto)).rejects.toThrow(
-                UnauthorizedException,
-            )
+            await expect(authenticationService.login(dto)).rejects.toThrow(UnauthorizedException)
         })
     })
 })

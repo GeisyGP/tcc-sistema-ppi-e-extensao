@@ -10,11 +10,6 @@ import { CustomLoggerService } from "src/common/logger"
 @Module({
     imports: [PrismaModule, UserModule],
     controllers: [SubjectController],
-    providers: [
-        SubjectService,
-        SubjectRepository,
-        CaslAbilityFactory,
-        CustomLoggerService,
-    ],
+    providers: [SubjectService, SubjectRepository, CaslAbilityFactory, CustomLoggerService],
 })
 export class SubjectModule {}

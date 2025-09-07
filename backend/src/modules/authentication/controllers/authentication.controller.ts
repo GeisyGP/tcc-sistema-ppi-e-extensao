@@ -8,9 +8,7 @@ import { Public } from "src/common/decorators/public.decorator"
 @ApiTags()
 @Controller()
 export class AuthenticationController {
-    constructor(
-        private readonly authenticationService: AuthenticationService,
-    ) {}
+    constructor(private readonly authenticationService: AuthenticationService) {}
 
     @Post("/login")
     @ApiOkResponse({

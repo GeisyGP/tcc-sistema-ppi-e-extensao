@@ -12,7 +12,7 @@ import { SubjectWithTeacherResDto } from "src/modules/subjects/types/dtos/respon
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
 
-describe("UserController", () => {
+describe("SubjectController", () => {
     let subjectService: SubjectService
     let subjectController: SubjectController
 
@@ -53,22 +53,14 @@ describe("UserController", () => {
                 teachers: [subjectMock.teachers[0].id],
                 courseId: subjectMock.courseId,
             }
-            jest.spyOn(subjectService, "create").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectService, "create").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectController.create(dto, requestMock)
 
             expect(result).toEqual(
-                baseResponseMock<SubjectWithTeacherResDto>(
-                    "Subject created successfully",
-                    subjectMock,
-                ),
+                baseResponseMock<SubjectWithTeacherResDto>("Subject created successfully", subjectMock),
             )
-            expect(subjectService.create).toHaveBeenCalledWith(
-                dto,
-                requestMock.user.courseId,
-            )
+            expect(subjectService.create).toHaveBeenCalledWith(dto, requestMock.user.courseId)
         })
     })
 
@@ -99,9 +91,7 @@ describe("UserController", () => {
 
     describe("getById", () => {
         it("should return a subject", async () => {
-            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectMock)
 
             const result = await subjectController.getById(
                 {
@@ -111,10 +101,7 @@ describe("UserController", () => {
             )
 
             expect(result).toEqual(
-                baseResponseMock<SubjectWithTeacherResDto>(
-                    "Subject found successfully",
-                    subjectMock,
-                ),
+                baseResponseMock<SubjectWithTeacherResDto>("Subject found successfully", subjectMock),
             )
         })
     })
@@ -126,21 +113,12 @@ describe("UserController", () => {
                 teachers: [subjectMock.teachers[0].id],
             }
 
-            jest.spyOn(subjectService, "updateById").mockResolvedValueOnce(
-                subjectMock,
-            )
+            jest.spyOn(subjectService, "updateById").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectController.update(
-                { id: subjectMock.id },
-                dto,
-                requestMock,
-            )
+            const result = await subjectController.update({ id: subjectMock.id }, dto, requestMock)
 
             expect(result).toEqual(
-                baseResponseMock<SubjectWithTeacherResDto>(
-                    "Subject updated successfully",
-                    subjectMock,
-                ),
+                baseResponseMock<SubjectWithTeacherResDto>("Subject updated successfully", subjectMock),
             )
         })
     })

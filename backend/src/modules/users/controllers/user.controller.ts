@@ -1,21 +1,5 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Patch,
-    Post,
-    Query,
-    Request,
-    UseGuards,
-} from "@nestjs/common"
-import {
-    ApiCreatedResponse,
-    ApiNoContentResponse,
-    ApiOkResponse,
-    ApiTags,
-} from "@nestjs/swagger"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
+import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
 import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { UserResDto } from "../types/dtos/responses/user-res.dto"
@@ -29,10 +13,7 @@ import { CheckPolicies } from "src/common/decorators/check-policies.decorator"
 import { AppAbility } from "src/modules/casl/casl-ability.factory"
 import { Action } from "src/common/enums/action.enum"
 import { UserEntity } from "../types/entities/user.entity"
-import {
-    ChangePasswordBodyReqDto,
-    ChangePasswordParamReqDto,
-} from "../types/dtos/requests/change-password-req.dto"
+import { ChangePasswordBodyReqDto, ChangePasswordParamReqDto } from "../types/dtos/requests/change-password-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 
 @ApiTags("users")
@@ -48,18 +29,9 @@ export class UserController {
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Create, UserEntity),
-    )
-    async create(
-        @Body() dto: CreateUserReqDto,
-        @Request() request: RequestDto,
-    ): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.create.name,
-            `user: ${request.user.sub}`,
-        )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, UserEntity))
+    async create(@Body() dto: CreateUserReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
 
         const user = await this.userService.create(dto)
 
@@ -74,18 +46,12 @@ export class UserController {
         type: PaginationResDto<UserResDto[]>,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Read, UserEntity),
-    )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, UserEntity))
     async getAll(
         @Query() queryParams: GetAllUsersReqDto,
         @Request() request: RequestDto,
     ): Promise<BaseResDto<PaginationResDto<UserResDto[]>>> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.getAll.name,
-            `user: ${request.user.sub}`,
-        )
+        this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
         const response = await this.userService.getAll(queryParams)
         return {
@@ -99,17 +65,9 @@ export class UserController {
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Read, UserEntity),
-    )
-    async getCurrent(
-        @Request() request: RequestDto,
-    ): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.getCurrent.name,
-            `user: ${request.user.sub}`,
-        )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, UserEntity))
+    async getCurrent(@Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.getCurrent.name, `user: ${request.user.sub}`)
 
         const userId = request.user.sub
         const res = await this.userService.getById(userId)
@@ -125,18 +83,9 @@ export class UserController {
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Read, UserEntity),
-    )
-    async getById(
-        @Param() param: GetUserByIdReqDto,
-        @Request() request: RequestDto,
-    ): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.getById.name,
-            `user: ${request.user.sub}`,
-        )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, UserEntity))
+    async getById(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
         const user = await this.userService.getById(param.id)
 
@@ -149,18 +98,9 @@ export class UserController {
     @Delete(":id")
     @ApiNoContentResponse()
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Delete, UserEntity),
-    )
-    async delete(
-        @Param() param: GetUserByIdReqDto,
-        @Request() request: RequestDto,
-    ): Promise<void> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.delete.name,
-            `user: ${request.user.sub}`,
-        )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, UserEntity))
+    async delete(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
+        this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
         await this.userService.delete(param.id)
     }
@@ -170,19 +110,13 @@ export class UserController {
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) =>
-        ability.can(Action.Update, UserEntity),
-    )
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, UserEntity))
     async update(
         @Request() request: RequestDto,
         @Param() param: ChangePasswordParamReqDto,
         @Body() dto: ChangePasswordBodyReqDto,
     ): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(
-            this.constructor.name,
-            this.update.name,
-            `user: ${request.user.sub}`,
-        )
+        this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
 
         const user = await this.userService.update(param.id, dto, request.user)
         return {

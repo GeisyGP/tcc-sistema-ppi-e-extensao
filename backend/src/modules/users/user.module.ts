@@ -9,12 +9,7 @@ import { CustomLoggerService } from "src/common/logger"
 @Module({
     imports: [PrismaModule],
     controllers: [UserController],
-    providers: [
-        UserService,
-        UserRepository,
-        CaslAbilityFactory,
-        CustomLoggerService,
-    ],
+    providers: [UserService, UserRepository, CaslAbilityFactory, CustomLoggerService],
     exports: [UserService],
 })
 export class UserModule {}

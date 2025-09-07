@@ -41,12 +41,7 @@ export class UserService {
             })
             return new UserResBuilder().build(user)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.create.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.create.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
@@ -65,41 +60,22 @@ export class UserService {
             }
             return new UserResBuilder().build(user)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.getById.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    async getAll(
-        dto: GetAllUsersReqDto,
-    ): Promise<PaginationResDto<UserResDto[]>> {
+    async getAll(dto: GetAllUsersReqDto): Promise<PaginationResDto<UserResDto[]>> {
         try {
             const { users, totalItems } = await this.userRepository.getAll(dto)
-            return new UserResBuilder().buildMany(
-                users,
-                dto.page,
-                dto.limit,
-                totalItems,
-            )
+            return new UserResBuilder().buildMany(users, dto.page, dto.limit, totalItems)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.getAll.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.getAll.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    async getByRegistration(
-        dto: GetByRegistrationReqDto,
-    ): Promise<User | null> {
+    async getByRegistration(dto: GetByRegistrationReqDto): Promise<User | null> {
         try {
             return await this.userRepository.getByRegistration(dto.registration)
         } catch (error) {
@@ -118,21 +94,12 @@ export class UserService {
             await this.getById(id)
             await this.userRepository.delete(id)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.delete.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.delete.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    async update(
-        id: string,
-        dto: ChangePasswordBodyReqDto,
-        currentUser: UserRequestDto,
-    ): Promise<UserResDto> {
+    async update(id: string, dto: ChangePasswordBodyReqDto, currentUser: UserRequestDto): Promise<UserResDto> {
         try {
             const ability = this.caslFactory.createForUser(currentUser)
 
@@ -146,14 +113,9 @@ export class UserService {
                 throw new ForbiddenException()
             }
 
-            const isMatch = await bcrypt.compare(
-                dto.currentPassword,
-                user.password,
-            )
+            const isMatch = await bcrypt.compare(dto.currentPassword, user.password)
             if (!isMatch) {
-                throw new InvalidInputException([
-                    "Current password is incorrect",
-                ])
+                throw new InvalidInputException(["Current password is incorrect"])
             }
 
             const hashedPassword = await bcrypt.hash(dto.newPassword, 10)
@@ -161,12 +123,7 @@ export class UserService {
             await this.userRepository.changePassword(id, hashedPassword)
             return new UserResBuilder().build(user)
         } catch (error) {
-            this.loggerService.error(
-                this.constructor.name,
-                this.update.name,
-                `error: ${error.message}`,
-                error.stack,
-            )
+            this.loggerService.error(this.constructor.name, this.update.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
