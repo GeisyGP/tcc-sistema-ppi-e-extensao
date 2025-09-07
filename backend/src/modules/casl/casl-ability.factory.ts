@@ -1,32 +1,26 @@
-import {
-    AbilityBuilder,
-    createMongoAbility,
-    ExtractSubjectType,
-    InferSubjects,
-    MongoAbility,
-} from "@casl/ability"
+import { AbilityBuilder, createMongoAbility, ExtractSubjectType, InferSubjects, MongoAbility } from "@casl/ability"
 import { Injectable } from "@nestjs/common"
 import { Action } from "src/common/enums/action.enum"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { UserEntity } from "../users/types/entities/user.entity"
 import { UserRequestDto } from "../authentication/dtos/requests/request.dto"
 import { SubjectEntity } from "../subjects/types/entities/subject.entity"
+import { CourseEntity } from "../courses/types/entities/course.entity"
 
-type Subjects = InferSubjects<typeof UserEntity | typeof SubjectEntity> | "all"
+type Subjects = InferSubjects<typeof UserEntity | typeof SubjectEntity | typeof CourseEntity> | "all"
 
 export type AppAbility = MongoAbility<[Action, Subjects]>
 
 @Injectable()
 export class CaslAbilityFactory {
     createForUser(user: UserRequestDto) {
-        const { can, build } = new AbilityBuilder<AppAbility>(
-            createMongoAbility,
-        )
+        const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility)
 
         switch (user.role) {
             case UserRole.SYSADMIN: {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Manage, UserEntity)
+                can(Action.Manage, CourseEntity)
                 break
             }
             case UserRole.COORDINATOR: {
@@ -41,12 +35,14 @@ export class CaslAbilityFactory {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
                 can(Action.Read, SubjectEntity)
+                can(Action.Read, CourseEntity)
                 break
             }
             case UserRole.STUDENT: {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
                 can(Action.Read, SubjectEntity)
+                can(Action.Read, CourseEntity)
                 break
             }
             default: {
@@ -55,8 +51,7 @@ export class CaslAbilityFactory {
         }
 
         return build({
-            detectSubjectType: (item) =>
-                item.constructor as ExtractSubjectType<Subjects>,
+            detectSubjectType: (item) => item.constructor as ExtractSubjectType<Subjects>,
         })
     }
 }
