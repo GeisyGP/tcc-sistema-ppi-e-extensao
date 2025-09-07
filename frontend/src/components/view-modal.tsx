@@ -26,7 +26,7 @@ export function ViewModal<T>({
       <div className="bg-white rounded-lg p-6 w-full max-w-xl">
         {renderedTitle && (
           <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-lg font-semibold">{renderedTitle}</h2>
+            <h2 className="text-lg font-bold">{renderedTitle}</h2>
           </div>
         )}
 
