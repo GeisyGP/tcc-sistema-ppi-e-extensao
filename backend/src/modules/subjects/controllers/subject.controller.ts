@@ -62,7 +62,10 @@ export class SubjectController {
             `user: ${request.user.sub}`,
         )
 
-        const subject = await this.subjectService.create(dto)
+        const subject = await this.subjectService.create(
+            dto,
+            request.user.courseId,
+        )
 
         return {
             message: "Subject created successfully",

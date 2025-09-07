@@ -16,6 +16,7 @@ export class UserRepository implements UserRepositoryInterface {
                 name: dto.name,
                 role: dto.role,
                 password: dto.password,
+                courseId: [dto.courseId],
             },
         })
     }

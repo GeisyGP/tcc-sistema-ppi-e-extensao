@@ -9,6 +9,7 @@ export class UserResBuilder {
             name: user.name,
             registration: user.registration,
             role: user.role,
+            courseId: user.courseId,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         }

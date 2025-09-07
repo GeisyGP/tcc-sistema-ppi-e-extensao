@@ -14,6 +14,8 @@ import { UserRole } from "src/common/enums/user-role.enum"
 import { TeacherNotFoundException } from "src/common/exceptions/teacher-not-found.exception"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
 import { CustomLoggerService } from "src/common/logger"
+import { ForbiddenException } from "@nestjs/common"
+import { faker } from "@faker-js/faker/."
 
 describe("SubjectService", () => {
     let userService: UserService
@@ -55,6 +57,7 @@ describe("SubjectService", () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
             }
             jest.spyOn(userService, "getById").mockResolvedValueOnce(
                 userResponseMock(UserRole.TEACHER),
@@ -63,7 +66,9 @@ describe("SubjectService", () => {
                 subjectMock,
             )
 
-            const result = await subjectService.create(dto)
+            const result = await subjectService.create(dto, [
+                subjectMock.courseId,
+            ])
 
             expect(result).toEqual(subjectResMock)
             expect(subjectRepository.create).toHaveBeenCalledWith(dto)
@@ -73,28 +78,45 @@ describe("SubjectService", () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
             }
             jest.spyOn(userService, "getById").mockResolvedValueOnce(
                 userResponseMock(UserRole.STUDENT),
             )
 
-            await expect(subjectService.create(dto)).rejects.toThrow(
-                TeacherNotFoundException,
-            )
+            await expect(
+                subjectService.create(dto, [subjectMock.courseId]),
+            ).rejects.toThrow(TeacherNotFoundException)
         })
 
         it("should throw TeacherNotFoundException when user does not exist", async () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
             }
             jest.spyOn(userService, "getById").mockRejectedValueOnce(
                 new UserNotFoundException(),
             )
 
-            await expect(subjectService.create(dto)).rejects.toThrow(
-                TeacherNotFoundException,
+            await expect(
+                subjectService.create(dto, [subjectMock.courseId]),
+            ).rejects.toThrow(TeacherNotFoundException)
+        })
+
+        it("should throw ForbiddenException when courseId is not in user", async () => {
+            const dto = {
+                name: subjectMock.name,
+                teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
+            }
+            jest.spyOn(userService, "getById").mockRejectedValueOnce(
+                new ForbiddenException(),
             )
+
+            await expect(
+                subjectService.create(dto, [faker.string.uuid()]),
+            ).rejects.toThrow(ForbiddenException)
         })
     })
 

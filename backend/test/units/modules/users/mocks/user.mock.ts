@@ -7,6 +7,7 @@ const user = {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     registration: faker.string.numeric(),
+    courseId: [faker.string.uuid()],
     createdAt: new Date(),
     updatedAt: new Date(),
 }

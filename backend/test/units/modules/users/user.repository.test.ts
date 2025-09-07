@@ -45,6 +45,7 @@ describe("UserRepository", () => {
                 password: userMock.password,
                 registration: userMock.registration,
                 role: userMock.role,
+                courseId: userMock.courseId[0],
             }
             jest.spyOn(prismaService.user, "create").mockResolvedValueOnce(
                 userMock,
@@ -59,6 +60,7 @@ describe("UserRepository", () => {
                     name: dto.name,
                     role: dto.role,
                     password: dto.password,
+                    courseId: [dto.courseId],
                 },
             })
         })

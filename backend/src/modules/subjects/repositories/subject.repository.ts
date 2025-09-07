@@ -21,6 +21,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
                         id: teacherId,
                     })),
                 },
+                courseId: dto.courseId,
             },
             include: {
                 teachers: {

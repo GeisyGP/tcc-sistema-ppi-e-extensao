@@ -26,7 +26,12 @@ export class AuthenticationService {
             throw new UnauthorizedException()
         }
 
-        const payload = { sub: user.id, role: user.role, name: user.name }
+        const payload = {
+            sub: user.id,
+            role: user.role,
+            name: user.name,
+            courseId: user.courseId,
+        }
         return {
             accessToken: await this.jwtService.signAsync(payload),
             expiresIn: jwtConstants.expiresTime,

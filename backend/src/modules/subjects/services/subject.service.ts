@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { ForbiddenException, Injectable } from "@nestjs/common"
 import { UserService } from "src/modules/users/services/user.service"
 import { CreateSubjectReqDto } from "../types/dtos/requests/create-subject-req.dto"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
@@ -21,13 +21,24 @@ export class SubjectService {
         private readonly loggerService: CustomLoggerService,
     ) {}
 
-    async create(dto: CreateSubjectReqDto): Promise<SubjectWithTeacherResDto> {
+    async create(
+        dto: CreateSubjectReqDto,
+        userCourseId: Array<string>,
+    ): Promise<SubjectWithTeacherResDto> {
         try {
+            const courseId = userCourseId.find((id) => id == dto.courseId)
+            if (!courseId) {
+                throw new ForbiddenException()
+            }
+
             for (const teacherId of dto.teachers) {
                 await this.validateTeacherExistsOrThrow(teacherId)
             }
 
-            const subject = await this.subjectRepository.create(dto)
+            const subject = await this.subjectRepository.create({
+                ...dto,
+                courseId,
+            })
 
             return SubjectResBuilder.build(subject)
         } catch (error) {

@@ -13,5 +13,6 @@ export const requestMock: RequestDto = {
         sub: faker.string.uuid(),
         name: faker.person.fullName(),
         role: UserRole.COORDINATOR,
+        courseId: [faker.string.uuid()],
     },
 }

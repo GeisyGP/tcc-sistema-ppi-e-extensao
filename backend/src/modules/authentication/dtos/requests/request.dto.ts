@@ -8,4 +8,5 @@ export class UserRequestDto {
     sub: string
     role: UserRole
     name: string
+    courseId: Array<string>
 }

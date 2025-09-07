@@ -49,6 +49,7 @@ describe("UserController", () => {
                 password: userMock.password,
                 registration: userMock.registration,
                 role: userMock.role,
+                courseId: userMock.courseId[0],
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(
                 responseMock,

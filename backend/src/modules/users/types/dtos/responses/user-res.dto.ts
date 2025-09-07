@@ -15,6 +15,9 @@ export class UserResDto {
     role: UserRole
 
     @ApiProperty()
+    courseId: Array<string>
+
+    @ApiProperty()
     createdAt: Date
 
     @ApiProperty()

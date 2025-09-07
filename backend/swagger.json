@@ -434,13 +434,17 @@
           },
           "password": {
             "type": "string"
+          },
+          "courseId": {
+            "type": "string"
           }
         },
         "required": [
           "registration",
           "name",
           "role",
-          "password"
+          "password",
+          "courseId"
         ]
       },
       "UserResDto": {
@@ -465,6 +469,12 @@
               "SYSADMIN"
             ]
           },
+          "courseId": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -479,6 +489,7 @@
           "registration",
           "name",
           "role",
+          "courseId",
           "createdAt",
           "updatedAt"
         ]
@@ -580,11 +591,15 @@
             "items": {
               "type": "string"
             }
+          },
+          "courseId": {
+            "type": "string"
           }
         },
         "required": [
           "name",
-          "teachers"
+          "teachers",
+          "courseId"
         ]
       },
       "TeacherResDto": {
@@ -619,6 +634,9 @@
               "$ref": "#/components/schemas/TeacherResDto"
             }
           },
+          "courseId": {
+            "type": "string"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -632,6 +650,7 @@
           "id",
           "name",
           "teachers",
+          "courseId",
           "createdAt",
           "updatedAt"
         ]

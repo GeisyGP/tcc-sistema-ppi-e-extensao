@@ -10,4 +10,5 @@ export class UserEntity implements User {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    courseId: string[]
 }

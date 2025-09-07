@@ -13,6 +13,9 @@ export class SubjectWithTeacherResDto {
     teachers: TeacherResDto[]
 
     @ApiProperty()
+    courseId: string
+
+    @ApiProperty()
     createdAt: Date
 
     @ApiProperty()

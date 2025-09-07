@@ -10,6 +10,7 @@ export const subjectResMock = {
             name: faker.person.fullName(),
         },
     ],
+    courseId: faker.string.uuid(),
     createdAt: new Date(),
     updatedAt: new Date(),
 }

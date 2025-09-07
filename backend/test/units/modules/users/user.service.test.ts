@@ -48,6 +48,7 @@ describe("UserService", () => {
                 password: userMock.password,
                 registration: userMock.registration,
                 role: userMock.role,
+                courseId: userMock.courseId[0],
             }
             jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
                 null,
@@ -73,6 +74,7 @@ describe("UserService", () => {
                 password: userMock.password,
                 registration: userMock.registration,
                 role: userMock.role,
+                courseId: userMock.courseId[0],
             }
             jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(
                 userMock,

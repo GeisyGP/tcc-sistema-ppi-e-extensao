@@ -6,4 +6,5 @@ export class SubjectEntity implements Subject {
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
+    courseId: string
 }

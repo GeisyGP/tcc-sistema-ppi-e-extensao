@@ -73,6 +73,7 @@ describe("AuthenticationService", () => {
                 sub: userMock.id,
                 role: userMock.role,
                 name: userMock.name,
+                courseId: userMock.courseId,
             })
         })
 

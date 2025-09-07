@@ -13,6 +13,7 @@ export class SubjectResBuilder {
                 id: teacher.id,
                 name: teacher.name,
             })),
+            courseId: subject.courseId,
             createdAt: subject.createdAt,
             updatedAt: subject.updatedAt,
         }

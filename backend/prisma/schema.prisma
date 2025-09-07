@@ -7,16 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Course {
+  id                String    @id @default(uuid())
+  name              String
+  technologicalAxis String
+  educationLevel    String
+  degree            String
+  modality          String
+  shift             String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+}
+
 model User {
-  id           String     @id @default(uuid())
-  registration String     @unique
+  id           String    @id @default(uuid())
+  registration String    @unique
   name         String
   role         UserRole
   password     String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
   subjects     Subject[]
+  courseId     String[]
 }
 
 enum UserRole {
@@ -33,4 +47,5 @@ model Subject {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+  courseId  String
 }

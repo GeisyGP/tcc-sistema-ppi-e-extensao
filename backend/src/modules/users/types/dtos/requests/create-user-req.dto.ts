@@ -23,4 +23,9 @@ export class CreateUserReqDto {
     @IsNotEmpty()
     @MinLength(8)
     password: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    courseId: string
 }

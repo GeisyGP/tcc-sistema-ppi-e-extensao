@@ -51,6 +51,7 @@ describe("UserController", () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
             }
             jest.spyOn(subjectService, "create").mockResolvedValueOnce(
                 subjectMock,
@@ -64,7 +65,10 @@ describe("UserController", () => {
                     subjectMock,
                 ),
             )
-            expect(subjectService.create).toHaveBeenCalledWith(dto)
+            expect(subjectService.create).toHaveBeenCalledWith(
+                dto,
+                requestMock.user.courseId,
+            )
         })
     })
 

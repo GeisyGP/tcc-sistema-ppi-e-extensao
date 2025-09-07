@@ -46,6 +46,7 @@ describe("SubjectRepository", () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
+                courseId: subjectMock.courseId,
             }
             jest.spyOn(prismaService.subject, "create").mockResolvedValueOnce(
                 subjectMock,
@@ -62,6 +63,7 @@ describe("SubjectRepository", () => {
                             id: teacherId,
                         })),
                     },
+                    courseId: dto.courseId,
                 },
                 include: {
                     teachers: {
