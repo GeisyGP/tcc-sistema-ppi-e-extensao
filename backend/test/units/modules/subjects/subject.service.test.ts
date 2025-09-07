@@ -136,7 +136,7 @@ describe("SubjectService", () => {
     })
 
     describe("updateById", () => {
-        it("should return an user", async () => {
+        it("should return a subject", async () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
@@ -152,7 +152,7 @@ describe("SubjectService", () => {
     })
 
     describe("deleteById", () => {
-        it("should delete an user", async () => {
+        it("should delete a subject", async () => {
             jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectMock)
             jest.spyOn(subjectRepository, "deleteById").mockResolvedValueOnce()
 
