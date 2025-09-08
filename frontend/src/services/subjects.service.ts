@@ -1,9 +1,9 @@
-import { GetAllSubjectsReq, SubjectInput, SubjectRes } from "@/types/subject.types"
+import { GetAllSubjectsReq, SubjectCreateInput, SubjectRes, SubjectUpdateInput } from "@/types/subject.types"
 import backendApi from "./api"
 import { PaginationResDto } from "@/types/pagination.type"
 import { getSession } from "next-auth/react"
 
-export async function createSubject(body: SubjectInput): Promise<SubjectRes | void> {
+export async function createSubject(body: SubjectCreateInput): Promise<SubjectRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -46,7 +46,7 @@ export async function getSubjectById(id: string): Promise<SubjectRes | void> {
     return response.data?.data
 }
 
-export async function updateSubjectById(id: string, body: SubjectInput): Promise<SubjectRes | void> {
+export async function updateSubjectById(id: string, body: SubjectUpdateInput): Promise<SubjectRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return

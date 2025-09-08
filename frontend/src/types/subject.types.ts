@@ -2,6 +2,7 @@ export interface SubjectRes {
     id: string
     name: string
     teachers: TeacherResDto[]
+    courseId: string
     createdAt: Date
     updatedAt: Date
 }
@@ -18,9 +19,15 @@ export interface GetAllSubjectsReq {
     limit?: number
 }
 
-export interface SubjectInput {
+export interface SubjectUpdateInput {
     name: string
     teachers: string[]
+}
+
+export interface SubjectCreateInput {
+    name: string
+    teachers: string[]
+    courseId: string
 }
 
 export interface Subject {

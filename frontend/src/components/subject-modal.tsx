@@ -36,6 +36,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                 id: "",
                 name: "",
                 teachers: [],
+                courseId: "id", //TODO: get from global courseId
             } as unknown as SubjectRes)
         }
     }, [subject])

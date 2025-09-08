@@ -16,7 +16,15 @@ backendApi.interceptors.response.use(
             isLoggingOut = true
             await logout()
         }
-        return Promise.reject(error)
+
+        if (error.response?.status === 403) {
+            return Promise.reject(
+                new Error("Você não tem permissão para acessar.")
+            )
+        }
+
+        console.log(error.message)
+        return Promise.reject(new Error("Algo deu errado. Tente novamente mais tarde."))
     }
 )
 

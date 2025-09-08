@@ -2,6 +2,7 @@ import { createCourse, deleteCourseById, getAllCourses, updateCourseById } from 
 import { Course, CourseRes } from "@/types/course.types"
 import { useCallback, useState } from "react"
 import { formatCourse } from "../utils/format-course"
+import toast from "react-hot-toast"
 
 export function useCourses() {
     const [rawData, setRawData] = useState<CourseRes[]>([])
@@ -18,38 +19,55 @@ export function useCourses() {
                 setFormattedData(response.items.map(formatCourse))
                 setTotalPages(response.metadata.totalPages)
             }
+        } catch (error: any) {
+            toast.error(error.message)
         } finally {
             setLoading(false)
         }
     }, [])
 
     const handleCreate = useCallback(async (newCourse: CourseRes) => {
-        const created = await createCourse({
-            name: newCourse.name,
-            technologicalAxis: newCourse.technologicalAxis,
-            educationLevel: newCourse.educationLevel,
-            degree: newCourse.degree,
-            modality: newCourse.modality,
-            shift: newCourse.shift,
-        })
-        if (created) setFormattedData(prev => [...prev, formatCourse(created)])
+        try {
+            const created = await createCourse({
+                name: newCourse.name,
+                technologicalAxis: newCourse.technologicalAxis,
+                educationLevel: newCourse.educationLevel,
+                degree: newCourse.degree,
+                modality: newCourse.modality,
+                shift: newCourse.shift,
+            })
+            if (created) setFormattedData(prev => [...prev, formatCourse(created)])
+            toast.success("Curso criado com sucesso")
+        } catch (error: any) {
+            toast.error(error.message)
+        }
     }, [])
 
     const handleUpdate = useCallback(async (updated: CourseRes) => {
-        await updateCourseById(updated.id, {
-            name: updated.name,
-            technologicalAxis: updated.technologicalAxis,
-            educationLevel: updated.educationLevel,
-            degree: updated.degree,
-            modality: updated.modality,
-            shift: updated.shift,
-        })
-        setFormattedData(prev => prev.map(d => d.id === updated.id ? formatCourse(updated) : d))
+        try {
+            await updateCourseById(updated.id, {
+                name: updated.name,
+                technologicalAxis: updated.technologicalAxis,
+                educationLevel: updated.educationLevel,
+                degree: updated.degree,
+                modality: updated.modality,
+                shift: updated.shift,
+            })
+            setFormattedData(prev => prev.map(d => d.id === updated.id ? formatCourse(updated) : d))
+            toast.success("Curso atualizado com sucesso")
+        } catch (error: any) {
+            toast.error(error.message)
+        }
     }, [])
 
     const handleDelete = useCallback(async (id: string) => {
-        await deleteCourseById(id)
-        setFormattedData(prev => prev.filter(d => d.id !== id))
+        try {
+            await deleteCourseById(id)
+            setFormattedData(prev => prev.filter(d => d.id !== id))
+            toast.success("Curso deletado com sucesso")
+        } catch (error: any) {
+            toast.error(error.message)
+        }
     }, [])
 
     return { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete }
