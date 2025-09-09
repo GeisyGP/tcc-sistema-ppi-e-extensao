@@ -12,6 +12,9 @@ import { FilterButton } from '@/components/buttons/filter.button'
 import { getAllUsers } from '@/services/users.service'
 import { SubjectDetails } from '@/components/subject-details'
 import { useSubjects } from './hooks/use-subjects'
+import { RoleGuard } from '@/components/role-guard'
+import { UserRole } from '@/types/user.type'
+import { useRole } from '@/hooks/use-role'
 
 export default function SubjectsPage() {
     const { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete } = useSubjects()
@@ -21,6 +24,7 @@ export default function SubjectsPage() {
     const [selectedForEdit, setSelectedForEdit] = useState<SubjectRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
     const [teacherIdFilter, setTeacherIdFilter] = useState<string>()
+    const { can } = useRole()
 
     useEffect(() => { fetchSubjects({ page, name: nameFilter, teacherId: teacherIdFilter }) }, [page, nameFilter, teacherIdFilter, fetchSubjects])
 
@@ -35,90 +39,94 @@ export default function SubjectsPage() {
     }, [])
 
     return (
-        <div className="w-full mx-auto p-6">
-            <h1 className="text-2xl font-semibold mb-6">Disciplinas</h1>
-            <div className="flex items-center gap-2 mb-4">
-                <div className="flex-1">
-                    <SearchBar
-                        placeholder="Buscar disciplina..."
-                        onSearch={(value) => {
-                            setNameFilter(value)
+        <RoleGuard roles={[UserRole.TEACHER, UserRole.COORDINATOR]}>
+            <div className="w-full mx-auto p-6">
+                <h1 className="text-2xl font-semibold mb-6">Disciplinas</h1>
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="flex-1">
+                        <SearchBar
+                            placeholder="Buscar disciplina..."
+                            onSearch={(value) => {
+                                setNameFilter(value)
+                                setPage(1)
+                            }}
+                        />
+                    </div>
+
+                    <FilterButton
+                        filters={[
+                            {
+                                key: "teacherId",
+                                label: "Docente",
+                                type: "select",
+                                onLoadOptions: fetchTeacherOptions,
+                            },
+                        ]}
+                        onApply={(values) => {
+                            setTeacherIdFilter(values.teacherId || undefined)
                             setPage(1)
                         }}
                     />
+
+                    <RoleGuard roles={[UserRole.COORDINATOR]}>
+                        <Button
+                            onClick={() => {
+                                setCreatingNew(true)
+                            }}
+                            className="flex items-center gap-1"
+                        >
+                            <PlusIcon className="h-5 w-5" />
+                            Criar
+                        </Button>
+                    </RoleGuard>
                 </div>
 
-                <FilterButton
-                    filters={[
-                        {
-                            key: "teacherId",
-                            label: "Docente",
-                            type: "select",
-                            onLoadOptions: fetchTeacherOptions,
-                        },
-                    ]}
-                    onApply={(values) => {
-                        setTeacherIdFilter(values.teacherId || undefined)
-                        setPage(1)
-                    }}
+
+                {loading ? (
+                    <p className="text-gray-500">Carregando...</p>
+                ) : (
+                    <List
+                        columns={[
+                            { key: 'name', label: 'Disciplina' },
+                            { key: 'teachers', label: 'Docentes' },
+                        ]}
+                        data={formattedData}
+                        page={page}
+                        totalPages={totalPages}
+                        onPageChange={setPage}
+                        showEditAction={can(UserRole.COORDINATOR)}
+                        showDeleteAction={can(UserRole.COORDINATOR)}
+                        onDelete={(id) => handleDelete(id)}
+                        onView={setSelected}
+                        onEdit={(row) => {
+                            const original = rawData.find(r => r.id === row.id) || null
+                            setSelectedForEdit(original)
+                        }}
+                    />
+                )}
+
+                <ViewModal
+                    isOpen={!!selected}
+                    item={selected}
+                    onClose={() => setSelected(null)}
+                    title={(item) => item.name}
+                    renderContent={(item) => <SubjectDetails subject={item} />}
                 />
 
-                <Button
-                    onClick={() => {
-                        setCreatingNew(true)
-                    }}
-                    className="flex items-center gap-1"
-                >
-                    <PlusIcon className="h-5 w-5" />
-                    Criar
-                </Button>
+                <SubjectModal
+                    isOpen={creatingNew}
+                    subject={null}
+                    onClose={() => setCreatingNew(false)}
+                    onSave={handleCreate}
+                />
+
+                <SubjectModal
+                    isOpen={!!selectedForEdit}
+                    subject={selectedForEdit}
+                    onClose={() => setSelectedForEdit(null)}
+                    onSave={handleUpdate}
+                />
             </div>
-
-
-            {loading ? (
-                <p className="text-gray-500">Carregando...</p>
-            ) : (
-                <List
-                    columns={[
-                        { key: 'name', label: 'Disciplina' },
-                        { key: 'teachers', label: 'Docentes' },
-                    ]}
-                    data={formattedData}
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                    showEditAction
-                    showDeleteAction
-                    onDelete={(id) => handleDelete(id)}
-                    onView={setSelected}
-                    onEdit={(row) => {
-                        const original = rawData.find(r => r.id === row.id) || null
-                        setSelectedForEdit(original)
-                    }}
-                />
-            )}
-
-            <ViewModal
-                isOpen={!!selected}
-                item={selected}
-                onClose={() => setSelected(null)}
-                title={(item) => item.name}
-                renderContent={(item) => <SubjectDetails subject={item} />}
-            />
-
-            <SubjectModal
-                isOpen={creatingNew}
-                subject={null}
-                onClose={() => setCreatingNew(false)}
-                onSave={handleCreate}
-            />
-
-            <SubjectModal
-                isOpen={!!selectedForEdit}
-                subject={selectedForEdit}
-                onClose={() => setSelectedForEdit(null)}
-                onSave={handleUpdate}
-            />
-        </div>
+        </RoleGuard>
     )
 }

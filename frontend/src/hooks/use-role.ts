@@ -1,0 +1,12 @@
+"use client"
+import { useSession } from "next-auth/react"
+import { UserRole } from "@/types/user.type"
+
+export function useRole() {
+    const { data: session } = useSession()
+    const userRole = session?.user?.role as UserRole | undefined
+
+    const can = (...roles: UserRole[]) => !!userRole && roles.includes(userRole)
+
+    return { userRole, can }
+}

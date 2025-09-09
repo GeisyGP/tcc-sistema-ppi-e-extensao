@@ -1,3 +1,4 @@
+import { NextAuthProvider } from "@/providers/session-provider";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="pt-br">
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                {children}
+                <NextAuthProvider>
+                    {children}
+                </NextAuthProvider>
                 <Toaster position="top-right" reverseOrder={false} />
             </body>
         </html>

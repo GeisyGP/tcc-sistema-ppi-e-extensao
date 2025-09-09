@@ -4,17 +4,20 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { logout } from "@/actions/logout"
+import { RoleGuard } from "./role-guard"
+import { UserRole } from "@/types/user.type"
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
 
   const navItems = [
-    { href: "/home", label: "Home" },
-    { href: "/projetos", label: "Projetos" },
-    { href: "/ppis", label: "PPIs" },
-    { href: "/disciplinas", label: "Disciplinas" },
-    { href: "/usuarios", label: "Usuários" },
+    { href: "/home", label: "Home", roles: [] },
+    { href: "/projetos", label: "Projetos", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
+    { href: "/ppis", label: "PPIs", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
+    { href: "/disciplinas", label: "Disciplinas", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
+    { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR] },
+    { href: "/cursos", label: "Cursos", roles: [UserRole.SYSADMIN] },
   ]
 
   return (
@@ -29,15 +32,17 @@ export default function Navbar() {
         {navItems.map(item => {
           const isActive = pathname === item.href
           return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={`hover:underline hover:underline-offset-4 transition-opacity ${isActive ? "opacity-100 font-bold underline" : "opacity-50"
-                  }`}
-              >
-                {item.label}
-              </Link>
-            </li>
+            <RoleGuard key={item.href} roles={item.roles}>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`hover:underline hover:underline-offset-4 transition-opacity ${isActive ? "opacity-100 font-bold underline" : "opacity-50"
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            </RoleGuard>
           )
         })}
       </ul>

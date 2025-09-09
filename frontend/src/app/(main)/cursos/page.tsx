@@ -10,6 +10,8 @@ import { useCourses } from './hooks/use-courses'
 import { CourseDetails } from '@/components/course-details'
 import { Course, CourseRes } from '@/types/course.types'
 import { CourseModal } from '@/components/course-modal'
+import { RoleGuard } from '@/components/role-guard'
+import { UserRole } from '@/types/user.type'
 
 export default function CoursesPage() {
     const { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete } = useCourses()
@@ -22,77 +24,79 @@ export default function CoursesPage() {
     useEffect(() => { fetchCourses({ page, name: nameFilter }) }, [page, nameFilter, fetchCourses])
 
     return (
-        <div className="w-full mx-auto p-6">
-            <h1 className="text-2xl font-semibold mb-6">Cursos</h1>
-            <div className="flex items-center gap-2 mb-4">
-                <div className="flex-1">
-                    <SearchBar
-                        placeholder="Buscar curso..."
-                        onSearch={(value) => {
-                            setNameFilter(value)
-                            setPage(1)
+        <RoleGuard roles={[UserRole.SYSADMIN]}>
+            <div className="w-full mx-auto p-6">
+                <h1 className="text-2xl font-semibold mb-6">Cursos</h1>
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="flex-1">
+                        <SearchBar
+                            placeholder="Buscar curso..."
+                            onSearch={(value) => {
+                                setNameFilter(value)
+                                setPage(1)
+                            }}
+                        />
+                    </div>
+
+                    <Button
+                        onClick={() => {
+                            setCreatingNew(true)
                         }}
-                    />
+                        className="flex items-center gap-1"
+                    >
+                        <PlusIcon className="h-5 w-5" />
+                        Criar
+                    </Button>
                 </div>
 
-                <Button
-                    onClick={() => {
-                        setCreatingNew(true)
-                    }}
-                    className="flex items-center gap-1"
-                >
-                    <PlusIcon className="h-5 w-5" />
-                    Criar
-                </Button>
-            </div>
 
+                {loading ? (
+                    <p className="text-gray-500">Carregando...</p>
+                ) : (
+                    <List
+                        columns={[
+                            { key: 'name', label: 'Curso' },
+                            { key: 'educationLevel', label: 'Forma' },
+                            { key: 'degree', label: 'Grau' },
+                            { key: 'shift', label: 'Turno' },
+                        ]}
+                        data={formattedData}
+                        page={page}
+                        totalPages={totalPages}
+                        onPageChange={setPage}
+                        showEditAction
+                        showDeleteAction
+                        onDelete={(id) => handleDelete(id)}
+                        onView={setSelected}
+                        onEdit={(row) => {
+                            const original = rawData.find(r => r.id === row.id) || null
+                            setSelectedForEdit(original)
+                        }}
+                    />
+                )}
 
-            {loading ? (
-                <p className="text-gray-500">Carregando...</p>
-            ) : (
-                <List
-                    columns={[
-                        { key: 'name', label: 'Curso' },
-                        { key: 'educationLevel', label: 'Forma' },
-                        { key: 'degree', label: 'Grau' },
-                        { key: 'shift', label: 'Turno' },
-                    ]}
-                    data={formattedData}
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                    showEditAction
-                    showDeleteAction
-                    onDelete={(id) => handleDelete(id)}
-                    onView={setSelected}
-                    onEdit={(row) => {
-                        const original = rawData.find(r => r.id === row.id) || null
-                        setSelectedForEdit(original)
-                    }}
+                <ViewModal
+                    isOpen={!!selected}
+                    item={selected}
+                    onClose={() => setSelected(null)}
+                    title={(item) => item.name}
+                    renderContent={(item) => <CourseDetails course={item} />}
                 />
-            )}
 
-            <ViewModal
-                isOpen={!!selected}
-                item={selected}
-                onClose={() => setSelected(null)}
-                title={(item) => item.name}
-                renderContent={(item) => <CourseDetails course={item} />}
-            />
+                <CourseModal
+                    isOpen={creatingNew}
+                    course={null}
+                    onClose={() => setCreatingNew(false)}
+                    onSave={handleCreate}
+                />
 
-            <CourseModal
-                isOpen={creatingNew}
-                course={null}
-                onClose={() => setCreatingNew(false)}
-                onSave={handleCreate}
-            />
-
-            <CourseModal
-                isOpen={!!selectedForEdit}
-                course={selectedForEdit}
-                onClose={() => setSelectedForEdit(null)}
-                onSave={handleUpdate}
-            />
-        </div>
+                <CourseModal
+                    isOpen={!!selectedForEdit}
+                    course={selectedForEdit}
+                    onClose={() => setSelectedForEdit(null)}
+                    onSave={handleUpdate}
+                />
+            </div>
+        </RoleGuard>
     )
 }
