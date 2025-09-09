@@ -14,10 +14,10 @@ export function RoleGuard({ children, roles = [] }: RoleGuardProps) {
     if (status !== "authenticated") return null
 
     const userRole = session?.user?.role
-    console.log(userRole, roles)
+
     if (roles.length > 0 && !roles.includes(userRole || 'no')) {
         return null
     }
-    console.log("#########")
+
     return <>{children}</>
 }

@@ -9,6 +9,7 @@ interface AppJwtPayload extends JwtPayload {
     sub: string
     name: string
     role: string
+    courseId: string[]
     iat: number
     exp: number
 }
@@ -19,12 +20,14 @@ declare module "next-auth" {
         id?: string
         role?: string
         name?: string
+        courseId?: string[]
     }
     interface Session {
         user: {
             id?: string
             role?: string
             name?: string
+            courseId?: string[]
         }
         accessToken?: string
     }
@@ -62,6 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         id: decoded.sub,
                         name: decoded.name,
                         role: decoded.role,
+                        courseId: decoded.courseId,
                         accessToken: data.accessToken,
                     }
                 } catch {
@@ -76,6 +80,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 token.accessToken = user.accessToken
                 token.id = user.id
                 token.role = user.role
+                token.name = user.name
+                token.courseId = user.courseId
             }
             return token
         },
@@ -84,6 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.id = token.id as string;
                 session.user.role = token.role as string;
                 session.user.name = token.name as string;
+                session.user.courseId = token.courseId as string[];
                 session.accessToken = token.accessToken as string;
             }
             return session
@@ -106,5 +113,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     pages: {
         signIn: "/login"
     },
-    // basePath: "/auth",
 })
