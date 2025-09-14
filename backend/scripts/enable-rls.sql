@@ -11,7 +11,7 @@ BEGIN
     PERFORM enable_rls_with_policy(
       tbl,
       policy,
-      '"courseId" = current_setting('app.current_course_id')::TEXT'
+      '"courseId" = current_setting(''app.current_course_id'')::TEXT'
     );
   END LOOP;
 END $$;

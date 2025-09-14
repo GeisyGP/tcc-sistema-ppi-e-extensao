@@ -7,7 +7,17 @@ import { UserRequestDto } from "../authentication/dtos/requests/request.dto"
 import { SubjectEntity } from "../subjects/types/entities/subject.entity"
 import { CourseEntity } from "../courses/types/entities/course.entity"
 
-type Subjects = InferSubjects<typeof UserEntity | typeof SubjectEntity | typeof CourseEntity> | "all"
+type Subjects =
+    | InferSubjects<
+          | typeof UserEntity
+          | typeof SubjectEntity
+          | typeof CourseEntity
+          | "TEACHER"
+          | "COORDINATOR"
+          | "STUDENT"
+          | "VIEWER"
+      >
+    | "all"
 
 export type AppAbility = MongoAbility<[Action, Subjects]>
 
@@ -21,6 +31,8 @@ export class CaslAbilityFactory {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Manage, UserEntity)
                 can(Action.Manage, CourseEntity)
+                can(Action.Create, "COORDINATOR")
+                can(Action.Delete, "COORDINATOR")
                 break
             }
             case UserRole.COORDINATOR: {
@@ -29,6 +41,12 @@ export class CaslAbilityFactory {
                 can(Action.Delete, UserEntity)
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Manage, SubjectEntity)
+                can(Action.Create, "TEACHER")
+                can(Action.Create, "VIEWER")
+                can(Action.Create, "STUDENT")
+                can(Action.Delete, "TEACHER")
+                can(Action.Delete, "VIEWER")
+                can(Action.Delete, "STUDENT")
                 break
             }
             case UserRole.TEACHER: {
@@ -36,6 +54,8 @@ export class CaslAbilityFactory {
                 can(Action.Read, UserEntity)
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, CourseEntity)
+                can(Action.Create, "STUDENT")
+                can(Action.Delete, "STUDENT")
                 break
             }
             case UserRole.STUDENT: {

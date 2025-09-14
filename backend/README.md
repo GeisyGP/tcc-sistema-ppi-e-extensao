@@ -37,3 +37,4 @@ $ npm run test:cov
 ## Observações
 
 - Se usuário já existir em outro curso (registration), ele apenas ficará visível no curso quando for "criado". Ou seja, suas informações não serão alteradas (nome e senha).
+- Quando um professor ou consultor é deletado, ele na verdade é removido de um curso. O usuario continua a existir

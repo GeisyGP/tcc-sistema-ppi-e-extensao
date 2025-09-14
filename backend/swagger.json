@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/users": {
+    "/users/teacher": {
       "post": {
-        "operationId": "UserController_create",
+        "operationId": "UserController_createTeacher",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -30,7 +30,102 @@
         "tags": [
           "users"
         ]
-      },
+      }
+    },
+    "/users/coordinator": {
+      "post": {
+        "operationId": "UserController_createCoordinator",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/student": {
+      "post": {
+        "operationId": "UserController_createStudent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/viewer": {
+      "post": {
+        "operationId": "UserController_createViewer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users": {
       "get": {
         "operationId": "UserController_getAll",
         "parameters": [
@@ -141,27 +236,6 @@
           "users"
         ]
       },
-      "delete": {
-        "operationId": "UserController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      },
       "patch": {
         "operationId": "UserController_update",
         "parameters": [
@@ -194,6 +268,98 @@
                 }
               }
             }
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/coordinator/{id}": {
+      "delete": {
+        "operationId": "UserController_deleteCoordinator",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/teacher/{id}": {
+      "delete": {
+        "operationId": "UserController_deleteTeacher",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/student/{id}": {
+      "delete": {
+        "operationId": "UserController_deleteStudent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/viewer/{id}": {
+      "delete": {
+        "operationId": "UserController_deleteViewer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
           }
         },
         "tags": [
@@ -619,16 +785,6 @@
           "name": {
             "type": "string"
           },
-          "role": {
-            "type": "string",
-            "enum": [
-              "COORDINATOR",
-              "TEACHER",
-              "STUDENT",
-              "SYSADMIN",
-              "VIEWER"
-            ]
-          },
           "password": {
             "type": "string"
           },
@@ -639,7 +795,6 @@
         "required": [
           "registration",
           "name",
-          "role",
           "password",
           "courseId"
         ]

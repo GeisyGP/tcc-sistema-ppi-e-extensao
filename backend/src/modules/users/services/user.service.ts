@@ -18,6 +18,7 @@ import { UserEntity } from "../types/entities/user.entity"
 import { CustomLoggerService } from "src/common/logger"
 import { UserWithCourses } from "../repositories/user.repository.interface"
 import { UserWithCoursesResDto } from "../types/dtos/responses/user-with-courses-res.dto"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @Injectable()
 export class UserService {
@@ -27,7 +28,7 @@ export class UserService {
         private readonly loggerService: CustomLoggerService,
     ) {}
 
-    async create(dto: CreateUserReqDto, currentCourseId: string): Promise<UserResDto> {
+    async create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<UserResDto> {
         try {
             const userExists = await this.getByRegistration({ registration: dto.registration }, currentCourseId)
             if (userExists && userExists.UserCourse.find((uc) => uc.courseId == dto.courseId)) {
@@ -39,6 +40,7 @@ export class UserService {
                     ...dto,
                     password: await this.hashPassword(dto.password),
                 },
+                role,
                 currentCourseId,
             )
             return new UserResBuilder().build(user)
@@ -95,6 +97,16 @@ export class UserService {
         try {
             await this.getById(id, currentCourseId)
             await this.userRepository.delete(id, currentCourseId)
+        } catch (error) {
+            this.loggerService.error(this.constructor.name, this.delete.name, `error: ${error.message}`, error.stack)
+            throw error
+        }
+    }
+
+    async removeFromCourse(id: string, currentCourseId: string): Promise<void> {
+        try {
+            await this.getById(id, currentCourseId)
+            await this.userRepository.removeFromCourse(id, currentCourseId)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.delete.name, `error: ${error.message}`, error.stack)
             throw error

@@ -15,6 +15,7 @@ import { Action } from "src/common/enums/action.enum"
 import { UserEntity } from "../types/entities/user.entity"
 import { ChangePasswordBodyReqDto, ChangePasswordParamReqDto } from "../types/dtos/requests/change-password-req.dto"
 import { CustomLoggerService } from "src/common/logger"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @ApiTags("users")
 @Controller("users")
@@ -24,16 +25,76 @@ export class UserController {
         private readonly loggerService: CustomLoggerService,
     ) {}
 
-    @Post()
+    @Post("/teacher")
     @ApiCreatedResponse({
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, UserEntity))
-    async create(@Body() dto: CreateUserReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "TEACHER"))
+    async createTeacher(
+        @Body() dto: CreateUserReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.createTeacher.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.create(dto, request.user.mainCourseId)
+        const user = await this.userService.create(dto, UserRole.TEACHER, request.user.mainCourseId)
+
+        return {
+            message: "User created successfully",
+            data: user,
+        }
+    }
+
+    @Post("/coordinator")
+    @ApiCreatedResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "COORDINATOR"))
+    async createCoordinator(
+        @Body() dto: CreateUserReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.createCoordinator.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.create(dto, UserRole.COORDINATOR, request.user.mainCourseId)
+
+        return {
+            message: "User created successfully",
+            data: user,
+        }
+    }
+
+    @Post("/student")
+    @ApiCreatedResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "STUDENT"))
+    async createStudent(
+        @Body() dto: CreateUserReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.createStudent.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.create(dto, UserRole.STUDENT, request.user.mainCourseId)
+
+        return {
+            message: "User created successfully",
+            data: user,
+        }
+    }
+
+    @Post("/viewer")
+    @ApiCreatedResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "VIEWER"))
+    async createViewer(@Body() dto: CreateUserReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.createViewer.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.create(dto, UserRole.VIEWER, request.user.mainCourseId)
 
         return {
             message: "User created successfully",
@@ -95,14 +156,44 @@ export class UserController {
         }
     }
 
-    @Delete(":id")
+    @Delete("/coordinator/:id")
     @ApiNoContentResponse()
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, UserEntity))
-    async delete(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
-        this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, "COORDINATOR"))
+    async deleteCoordinator(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
+        this.loggerService.info(this.constructor.name, this.deleteCoordinator.name, `user: ${request.user.sub}`)
 
         await this.userService.delete(param.id, request.user.mainCourseId)
+    }
+
+    @Delete("/teacher/:id")
+    @ApiNoContentResponse()
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, "TEACHER"))
+    async deleteTeacher(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
+        this.loggerService.info(this.constructor.name, this.deleteTeacher.name, `user: ${request.user.sub}`)
+
+        await this.userService.removeFromCourse(param.id, request.user.mainCourseId)
+    }
+
+    @Delete("/student/:id")
+    @ApiNoContentResponse()
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, "STUDENT"))
+    async deleteStudent(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
+        this.loggerService.info(this.constructor.name, this.deleteStudent.name, `user: ${request.user.sub}`)
+
+        await this.userService.delete(param.id, request.user.mainCourseId)
+    }
+
+    @Delete("/viewer/:id")
+    @ApiNoContentResponse()
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Delete, "VIEWER"))
+    async deleteViewer(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
+        this.loggerService.info(this.constructor.name, this.deleteViewer.name, `user: ${request.user.sub}`)
+
+        await this.userService.removeFromCourse(param.id, request.user.mainCourseId)
     }
 
     @Patch(":id")

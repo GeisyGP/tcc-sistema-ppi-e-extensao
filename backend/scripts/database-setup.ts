@@ -11,6 +11,9 @@ export async function databaseSetup() {
     console.log("Enabling RLS")
     const enableRls = readFileSync(path.join(__dirname, "enable-rls.sql"), "utf-8")
     await prisma.$executeRawUnsafe(enableRls)
+    const enableUserRls = readFileSync(path.join(__dirname, "enable-user-rls.sql"), "utf-8")
+    await prisma.$executeRawUnsafe(enableUserRls)
+    
 
     const user: Array<object> = await prisma.$queryRaw`
         SELECT u.*

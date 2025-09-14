@@ -4,12 +4,13 @@ import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { PrismaService } from "src/config/prisma.service"
 import { Injectable } from "@nestjs/common"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(dto: CreateUserReqDto, currentCourseId: string): Promise<User> {
+    async create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<User> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
 
         return await this.prisma.user.upsert({
@@ -23,7 +24,7 @@ export class UserRepository implements UserRepositoryInterface {
                 UserCourse: {
                     create: {
                         courseId: dto.courseId,
-                        role: dto.role,
+                        role,
                     },
                 },
             },
@@ -31,7 +32,7 @@ export class UserRepository implements UserRepositoryInterface {
                 UserCourse: {
                     create: {
                         courseId: dto.courseId,
-                        role: dto.role,
+                        role,
                     },
                 },
             },
@@ -101,6 +102,23 @@ export class UserRepository implements UserRepositoryInterface {
     async delete(id: string, currentCourseId: string): Promise<void> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         await this.prisma.user.delete({ where: { id } })
+    }
+
+    async removeFromCourse(id: string, currentCourseId: string): Promise<void> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        await this.prisma.user.update({
+            where: { id },
+            data: {
+                UserCourse: {
+                    delete: {
+                        userId_courseId: {
+                            userId: id,
+                            courseId: currentCourseId,
+                        },
+                    },
+                },
+            },
+        })
     }
 
     async changePassword(id: string, newPassword: string, currentCourseId: string): Promise<User | null> {
