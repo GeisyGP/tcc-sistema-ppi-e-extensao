@@ -16,7 +16,7 @@ export class CaslAbilityFactory {
     createForUser(user: UserRequestDto) {
         const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility)
 
-        switch (user.role) {
+        switch (user.mainRole) {
             case UserRole.SYSADMIN: {
                 can(Action.Update, UserEntity, { id: user.sub })
                 can(Action.Manage, UserEntity)

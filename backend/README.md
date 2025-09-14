@@ -34,10 +34,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Observações
 
-[x] Husky
-[x] soft delete
-[] Autorização
-[x] Autenticação
-[] Swagger 
-[x] Testes
+- Se usuário já existir em outro curso (registration), ele apenas ficará visível no curso quando for "criado". Ou seja, suas informações não serão alteradas (nome e senha).

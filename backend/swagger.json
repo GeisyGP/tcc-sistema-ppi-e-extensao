@@ -68,7 +68,8 @@
                 "COORDINATOR",
                 "TEACHER",
                 "STUDENT",
-                "SYSADMIN"
+                "SYSADMIN",
+                "VIEWER"
               ]
             }
           }
@@ -210,6 +211,37 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LoginReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/select-course": {
+      "patch": {
+        "operationId": "AuthenticationController_selectCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SelectCourseReqDto"
               }
             }
           }
@@ -593,7 +625,8 @@
               "COORDINATOR",
               "TEACHER",
               "STUDENT",
-              "SYSADMIN"
+              "SYSADMIN",
+              "VIEWER"
             ]
           },
           "password": {
@@ -624,21 +657,6 @@
           "name": {
             "type": "string"
           },
-          "role": {
-            "type": "string",
-            "enum": [
-              "COORDINATOR",
-              "TEACHER",
-              "STUDENT",
-              "SYSADMIN"
-            ]
-          },
-          "courseId": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -652,8 +670,6 @@
           "id",
           "registration",
           "name",
-          "role",
-          "courseId",
           "createdAt",
           "updatedAt"
         ]
@@ -744,6 +760,17 @@
           "expiresIn"
         ]
       },
+      "SelectCourseReqDto": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "courseId"
+        ]
+      },
       "CreateSubjectReqDto": {
         "type": "object",
         "properties": {
@@ -755,15 +782,11 @@
             "items": {
               "type": "string"
             }
-          },
-          "courseId": {
-            "type": "string"
           }
         },
         "required": [
           "name",
-          "teachers",
-          "courseId"
+          "teachers"
         ]
       },
       "TeacherResDto": {

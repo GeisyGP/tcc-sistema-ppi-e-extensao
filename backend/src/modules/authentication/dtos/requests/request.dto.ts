@@ -6,7 +6,8 @@ export class RequestDto {
 
 export class UserRequestDto {
     sub: string
-    role: UserRole
     name: string
-    courseId: Array<string>
+    courses: Array<{ courseId: string; role: string }>
+    mainRole: UserRole
+    mainCourseId: string
 }

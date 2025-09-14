@@ -11,9 +11,4 @@ export class CreateSubjectReqDto {
     @IsArray()
     @IsNotEmpty()
     teachers: Array<string>
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
-    courseId: string
 }

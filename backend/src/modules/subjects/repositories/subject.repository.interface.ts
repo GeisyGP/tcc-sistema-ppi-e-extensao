@@ -4,9 +4,9 @@ import { GetAllSubjectsReqDto } from "../types/dtos/requests/get-all-subjects-re
 import { UpdateSubjectReqDto } from "../types/dtos/requests/update-subject-req.dto"
 
 export interface SubjectRepositoryInterface {
-    create(dto: CreateSubjectReqDto): Promise<Subject>
-    getById(id: string): Promise<Subject | null>
-    getAll(dto: GetAllSubjectsReqDto): Promise<{ subjects: Subject[]; totalItems: number }>
-    updateById(id: string, dto: UpdateSubjectReqDto): Promise<Subject>
-    deleteById(id: string): Promise<void>
+    create(dto: CreateSubjectReqDto, currentCourseId: string): Promise<Subject>
+    getById(id: string, currentCourseId: string): Promise<Subject | null>
+    getAll(dto: GetAllSubjectsReqDto, currentCourseId: string): Promise<{ subjects: Subject[]; totalItems: number }>
+    updateById(id: string, dto: UpdateSubjectReqDto, currentCourseId: string): Promise<Subject>
+    deleteById(id: string, currentCourseId: string): Promise<void>
 }

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common"
+import { Injectable } from "@nestjs/common"
 import { UserService } from "src/modules/users/services/user.service"
 import { CreateSubjectReqDto } from "../types/dtos/requests/create-subject-req.dto"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
@@ -21,21 +21,13 @@ export class SubjectService {
         private readonly loggerService: CustomLoggerService,
     ) {}
 
-    async create(dto: CreateSubjectReqDto, userCourseId: Array<string>): Promise<SubjectWithTeacherResDto> {
+    async create(dto: CreateSubjectReqDto, currentCourseId: string): Promise<SubjectWithTeacherResDto> {
         try {
-            const courseId = userCourseId.find((id) => id == dto.courseId)
-            if (!courseId) {
-                throw new ForbiddenException()
-            }
-
             for (const teacherId of dto.teachers) {
-                await this.validateTeacherExistsOrThrow(teacherId)
+                await this.validateTeacherExistsOrThrow(teacherId, currentCourseId)
             }
 
-            const subject = await this.subjectRepository.create({
-                ...dto,
-                courseId,
-            })
+            const subject = await this.subjectRepository.create(dto, currentCourseId)
 
             return SubjectResBuilder.build(subject)
         } catch (error) {
@@ -44,9 +36,9 @@ export class SubjectService {
         }
     }
 
-    async getById(id: string): Promise<SubjectWithTeacherResDto> {
+    async getById(id: string, currentCourseId: string): Promise<SubjectWithTeacherResDto> {
         try {
-            const subject = await this.subjectRepository.getById(id)
+            const subject = await this.subjectRepository.getById(id, currentCourseId)
             if (!subject) {
                 throw new SubjectNotFoundException()
             }
@@ -58,9 +50,12 @@ export class SubjectService {
         }
     }
 
-    async getAll(dto: GetAllSubjectsReqDto): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
+    async getAll(
+        dto: GetAllSubjectsReqDto,
+        currentCourseId: string,
+    ): Promise<PaginationResDto<SubjectWithTeacherResDto[]>> {
         try {
-            const { subjects, totalItems } = await this.subjectRepository.getAll(dto)
+            const { subjects, totalItems } = await this.subjectRepository.getAll(dto, currentCourseId)
 
             return SubjectResBuilder.buildMany(subjects, dto.page, dto.limit, totalItems)
         } catch (error) {
@@ -69,15 +64,15 @@ export class SubjectService {
         }
     }
 
-    async updateById(id: string, dto: UpdateSubjectReqDto): Promise<SubjectWithTeacherResDto> {
+    async updateById(id: string, dto: UpdateSubjectReqDto, currentCourseId: string): Promise<SubjectWithTeacherResDto> {
         try {
-            await this.getById(id)
+            await this.getById(id, currentCourseId)
 
             for (const teacherId of dto.teachers) {
-                await this.validateTeacherExistsOrThrow(teacherId)
+                await this.validateTeacherExistsOrThrow(teacherId, currentCourseId)
             }
 
-            const subject = await this.subjectRepository.updateById(id, dto)
+            const subject = await this.subjectRepository.updateById(id, dto, currentCourseId)
 
             return SubjectResBuilder.build(subject)
         } catch (error) {
@@ -91,22 +86,22 @@ export class SubjectService {
         }
     }
 
-    async delete(id: string): Promise<void> {
+    async delete(id: string, currentCourseId: string): Promise<void> {
         try {
-            await this.getById(id)
-            await this.subjectRepository.deleteById(id)
+            await this.getById(id, currentCourseId)
+            await this.subjectRepository.deleteById(id, currentCourseId)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.delete.name, `error: ${error.message}`, error.stack)
             throw error
         }
     }
 
-    private async validateTeacherExistsOrThrow(teacherId: string): Promise<void> {
+    private async validateTeacherExistsOrThrow(teacherId: string, currentCourseId: string): Promise<void> {
         try {
-            const teacher = await this.userService.getById(teacherId)
+            const teacher = await this.userService.getById(teacherId, currentCourseId)
 
             const validRoles: UserRole[] = [UserRole.COORDINATOR, UserRole.TEACHER]
-            if (!validRoles.includes(teacher.role)) {
+            if (!teacher.userCourse.some((uc) => validRoles.includes(uc.role))) {
                 throw new TeacherNotFoundException()
             }
         } catch (error) {

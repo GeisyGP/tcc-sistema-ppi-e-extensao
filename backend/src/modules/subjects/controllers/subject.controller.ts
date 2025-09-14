@@ -37,7 +37,7 @@ export class SubjectController {
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
         this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
 
-        const subject = await this.subjectService.create(dto, request.user.courseId)
+        const subject = await this.subjectService.create(dto, request.user.mainCourseId)
 
         return {
             message: "Subject created successfully",
@@ -57,7 +57,7 @@ export class SubjectController {
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const subject = await this.subjectService.getById(param.id)
+        const subject = await this.subjectService.getById(param.id, request.user.mainCourseId)
 
         return {
             message: "Subject found successfully",
@@ -77,7 +77,7 @@ export class SubjectController {
     ): Promise<BaseResDto<PaginationResDto<SubjectWithTeacherResDto[]>>> {
         this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
-        const response = await this.subjectService.getAll(queryParams)
+        const response = await this.subjectService.getAll(queryParams, request.user.mainCourseId)
         return {
             message: "Subjects found successfully",
             data: response,
@@ -97,7 +97,7 @@ export class SubjectController {
     ): Promise<BaseResDto<SubjectWithTeacherResDto>> {
         this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
 
-        const subject = await this.subjectService.updateById(param.id, dto)
+        const subject = await this.subjectService.updateById(param.id, dto, request.user.mainCourseId)
 
         return {
             message: "Subject updated successfully",
@@ -112,6 +112,6 @@ export class SubjectController {
     async delete(@Param() param: DeleteSubjectReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.subjectService.delete(param.id)
+        await this.subjectService.delete(param.id, request.user.mainCourseId)
     }
 }

@@ -4,6 +4,7 @@ import { jwtConstants } from "../../common/constants"
 import { AuthenticationService } from "./services/authentication.service"
 import { AuthenticationController } from "./controllers/authentication.controller"
 import { UserModule } from "../users/user.module"
+import { CaslAbilityFactory } from "../casl/casl-ability.factory"
 
 @Module({
     imports: [
@@ -14,7 +15,7 @@ import { UserModule } from "../users/user.module"
             signOptions: { expiresIn: jwtConstants.expiresTime },
         }),
     ],
-    providers: [AuthenticationService],
+    providers: [AuthenticationService, CaslAbilityFactory],
     controllers: [AuthenticationController],
     exports: [],
 })

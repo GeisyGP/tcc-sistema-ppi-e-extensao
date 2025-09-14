@@ -3,7 +3,6 @@ INSERT INTO "User" (
 	name, 
 	registration, 
 	password,
-	role,
 	"createdAt",
 	"updatedAt"
 ) VALUES (
@@ -11,7 +10,6 @@ INSERT INTO "User" (
 	'ROOT',
 	'000000',
 	'$2b$10$QglT2nJF1Nqr.0ESTBxI1uV8hWtn0d4cmGhyJeXUSq5Q6b8sD7P0C',
-	'SYSADMIN',
 	CURRENT_TIMESTAMP,
 	CURRENT_TIMESTAMP
 );

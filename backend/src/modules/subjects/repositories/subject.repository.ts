@@ -12,7 +12,9 @@ type SubjectWithTeacher = Subject & { teachers: { id: string; name: string }[] }
 export class SubjectRepository implements SubjectRepositoryInterface {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(dto: CreateSubjectReqDto): Promise<SubjectWithTeacher> {
+    async create(dto: CreateSubjectReqDto, currentCourseId: string): Promise<SubjectWithTeacher> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+
         return await this.prisma.subject.create({
             data: {
                 name: dto.name,
@@ -21,7 +23,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
                         id: teacherId,
                     })),
                 },
-                courseId: dto.courseId,
+                courseId: currentCourseId,
             },
             include: {
                 teachers: {
@@ -34,7 +36,8 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         })
     }
 
-    async getById(id: string): Promise<SubjectWithTeacher | null> {
+    async getById(id: string, currentCourseId: string): Promise<SubjectWithTeacher | null> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const subject = await this.prisma.subject.findUnique({
             where: { id },
             include: {
@@ -52,7 +55,11 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         return subject
     }
 
-    async getAll(dto: GetAllSubjectsReqDto): Promise<{ subjects: SubjectWithTeacher[]; totalItems: number }> {
+    async getAll(
+        dto: GetAllSubjectsReqDto,
+        currentCourseId: string,
+    ): Promise<{ subjects: SubjectWithTeacher[]; totalItems: number }> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const filter = {
             name: {
                 contains: dto.name,
@@ -90,7 +97,9 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         return { subjects, totalItems }
     }
 
-    async updateById(id: string, dto: UpdateSubjectReqDto): Promise<SubjectWithTeacher> {
+    async updateById(id: string, dto: UpdateSubjectReqDto, currentCourseId: string): Promise<SubjectWithTeacher> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+
         return await this.prisma.subject.update({
             where: { id },
             data: {
@@ -112,7 +121,9 @@ export class SubjectRepository implements SubjectRepositoryInterface {
         })
     }
 
-    async deleteById(id: string): Promise<void> {
+    async deleteById(id: string, currentCourseId: string): Promise<void> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+
         await this.prisma.subject.delete({
             where: { id },
         })

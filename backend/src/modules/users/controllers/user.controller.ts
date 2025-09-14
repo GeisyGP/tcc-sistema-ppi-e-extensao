@@ -33,7 +33,7 @@ export class UserController {
     async create(@Body() dto: CreateUserReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.create(dto)
+        const user = await this.userService.create(dto, request.user.mainCourseId)
 
         return {
             message: "User created successfully",
@@ -53,7 +53,7 @@ export class UserController {
     ): Promise<BaseResDto<PaginationResDto<UserResDto[]>>> {
         this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
-        const response = await this.userService.getAll(queryParams)
+        const response = await this.userService.getAll(queryParams, request.user.mainCourseId)
         return {
             message: "Users found successfully",
             data: response,
@@ -70,7 +70,7 @@ export class UserController {
         this.loggerService.info(this.constructor.name, this.getCurrent.name, `user: ${request.user.sub}`)
 
         const userId = request.user.sub
-        const res = await this.userService.getById(userId)
+        const res = await this.userService.getById(userId, request.user.mainCourseId)
 
         return {
             message: "User found successfully",
@@ -87,7 +87,7 @@ export class UserController {
     async getById(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.getById(param.id)
+        const user = await this.userService.getById(param.id, request.user.mainCourseId)
 
         return {
             message: "User found successfully",
@@ -102,7 +102,7 @@ export class UserController {
     async delete(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.userService.delete(param.id)
+        await this.userService.delete(param.id, request.user.mainCourseId)
     }
 
     @Patch(":id")
@@ -118,7 +118,7 @@ export class UserController {
     ): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.update(param.id, dto, request.user)
+        const user = await this.userService.update(param.id, dto, request.user, request.user.mainCourseId)
         return {
             message: "User updated successfully",
             data: user,
