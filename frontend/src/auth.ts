@@ -96,7 +96,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return session
         },
         authorized({ auth, request: { nextUrl } }) {
-            const isLoggedIn = !!auth?.user;
+            const now = Date.now()
+            const expires = auth?.expires ? new Date(auth.expires).getTime() : 0
+            const isLoggedIn = !!auth && expires > now;
             const isRequiredAuth = !nextUrl.pathname.startsWith('/login') && !nextUrl.pathname.startsWith('/error')
             if (isRequiredAuth) {
                 return isLoggedIn;
