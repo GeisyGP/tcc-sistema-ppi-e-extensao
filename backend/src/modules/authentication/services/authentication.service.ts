@@ -4,7 +4,7 @@ import { LoginReqDto } from "../dtos/requests/login-req.dto"
 import { LoginResDto } from "../dtos/responses/login-res.dto"
 import { JwtService } from "@nestjs/jwt"
 import { UserService } from "../../users/services/user.service"
-import { jwtConstants, rootCourseId } from "src/common/constants"
+import { jwtConstants, ROOT_COURSE_ID } from "src/common/constants"
 
 @Injectable()
 export class AuthenticationService {
@@ -14,7 +14,7 @@ export class AuthenticationService {
     ) {}
 
     async login(dto: LoginReqDto): Promise<LoginResDto> {
-        const user = await this.userService.getByRegistration({ registration: dto.registration }, rootCourseId)
+        const user = await this.userService.getByRegistration({ registration: dto.registration }, ROOT_COURSE_ID)
         if (!user) {
             throw new UnauthorizedException()
         }
@@ -41,7 +41,7 @@ export class AuthenticationService {
     }
 
     async selectCourse(courseId: string, userId: string): Promise<LoginResDto> {
-        const user = await this.userService.getById(userId, rootCourseId)
+        const user = await this.userService.getById(userId, ROOT_COURSE_ID)
         if (!user) {
             throw new UnauthorizedException()
         }

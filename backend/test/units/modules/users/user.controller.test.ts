@@ -2,13 +2,15 @@ import { Test } from "@nestjs/testing"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { PrismaService } from "src/config/prisma.service"
 import { UserService } from "src/modules/users/services/user.service"
-import { userMock, userResponseMock } from "./mocks/user.mock"
+import { userMock, userResponseMock, userWithCoursesMock, userWithCoursesResponseMock } from "./mocks/user.mock"
 import { baseResponseMock, paginationMock } from "test/units/mocks"
 import { UserController } from "src/modules/users/controllers/user.controller"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
 import { requestMock } from "../authentication/mocks/authentication.mock"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
+import { UserRole } from "src/common/enums/user-role.enum"
+import { UserWithCoursesResDto } from "src/modules/users/types/dtos/responses/user-with-courses-res.dto"
 
 describe("UserController", () => {
     let userService: UserService
@@ -41,29 +43,101 @@ describe("UserController", () => {
         jest.clearAllMocks()
     })
 
-    describe("create", () => {
+    describe("createTeacher", () => {
         it("should return an user", async () => {
-            const responseMock = userResponseMock()
             const dto = {
-                name: userMock.name,
-                password: userMock.password,
-                registration: userMock.registration,
-                role: userMock.role,
-                courseId: userMock.courseId[0],
+                name: userWithCoursesMock.name,
+                password: userWithCoursesMock.password,
+                registration: userWithCoursesMock.registration,
+                courseId: userWithCoursesMock.UserCourse[0].courseId,
             }
-            jest.spyOn(userService, "create").mockResolvedValueOnce(responseMock)
+            jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
 
-            const result = await userController.create(dto, requestMock)
+            const result = await userController.createTeacher(dto, requestMock)
 
-            expect(result).toEqual(baseResponseMock<UserResDto>("User created successfully", responseMock))
-            expect(userService.create).toHaveBeenCalledWith(dto)
+            expect(result).toEqual(baseResponseMock<UserResDto>("User created successfully", userResponseMock))
+            expect(userService.create).toHaveBeenCalledWith(
+                {
+                    ...dto,
+                    courseId: requestMock.user.mainCourseId,
+                },
+                UserRole.TEACHER,
+                requestMock.user.mainCourseId,
+            )
+        })
+    })
+
+    describe("createCoordinator", () => {
+        it("should return an user", async () => {
+            const dto = {
+                name: userWithCoursesMock.name,
+                password: userWithCoursesMock.password,
+                registration: userWithCoursesMock.registration,
+                courseId: userWithCoursesMock.UserCourse[0].courseId,
+            }
+            jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
+
+            const result = await userController.createCoordinator(dto, requestMock)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User created successfully", userResponseMock))
+            expect(userService.create).toHaveBeenCalledWith(dto, UserRole.COORDINATOR, requestMock.user.mainCourseId)
+        })
+    })
+
+    describe("createStudent", () => {
+        it("should return an user", async () => {
+            const dto = {
+                name: userWithCoursesMock.name,
+                password: userWithCoursesMock.password,
+                registration: userWithCoursesMock.registration,
+                courseId: userWithCoursesMock.UserCourse[0].courseId,
+            }
+            jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
+
+            const result = await userController.createStudent(dto, requestMock)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User created successfully", userResponseMock))
+            expect(userService.create).toHaveBeenCalledWith(
+                {
+                    ...dto,
+                    courseId: requestMock.user.mainCourseId,
+                },
+                UserRole.STUDENT,
+                requestMock.user.mainCourseId,
+            )
+        })
+    })
+
+    describe("createViewer", () => {
+        it("should return an user", async () => {
+            const dto = {
+                name: userWithCoursesMock.name,
+                password: userWithCoursesMock.password,
+                registration: userWithCoursesMock.registration,
+                courseId: userWithCoursesMock.UserCourse[0].courseId,
+            }
+            jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
+
+            const result = await userController.createViewer(dto, requestMock)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User created successfully", userResponseMock))
+            expect(userService.create).toHaveBeenCalledWith(
+                {
+                    ...dto,
+                    courseId: requestMock.user.mainCourseId,
+                },
+                UserRole.VIEWER,
+                requestMock.user.mainCourseId,
+            )
         })
     })
 
     describe("getAll", () => {
         it("should return an array of users with pagination", async () => {
-            const responseMock = userResponseMock()
-            jest.spyOn(userService, "getAll").mockResolvedValueOnce(paginationMock<UserResDto>([responseMock]))
+            const responseMock = userWithCoursesResponseMock()
+            jest.spyOn(userService, "getAll").mockResolvedValueOnce(
+                paginationMock<UserWithCoursesResDto>([responseMock]),
+            )
 
             const result = await userController.getAll(
                 {
@@ -76,14 +150,14 @@ describe("UserController", () => {
             )
 
             expect(result).toEqual(
-                baseResponseMock("Users found successfully", paginationMock<UserResDto>([responseMock])),
+                baseResponseMock("Users found successfully", paginationMock<UserWithCoursesResDto>([responseMock])),
             )
         })
     })
 
     describe("getById", () => {
         it("should return an user", async () => {
-            const responseMock = userResponseMock()
+            const responseMock = userWithCoursesResponseMock()
             jest.spyOn(userService, "getById").mockResolvedValueOnce(responseMock)
 
             const result = await userController.getById({ id: userMock.id }, requestMock)
@@ -94,7 +168,7 @@ describe("UserController", () => {
 
     describe("getCurrent", () => {
         it("should return an user", async () => {
-            const responseMock = userResponseMock()
+            const responseMock = userWithCoursesResponseMock()
             jest.spyOn(userService, "getById").mockResolvedValueOnce(responseMock)
 
             const result = await userController.getCurrent(requestMock)
@@ -103,11 +177,41 @@ describe("UserController", () => {
         })
     })
 
-    describe("delete", () => {
+    describe("deleteCoordinator", () => {
         it("should delete an user", async () => {
             jest.spyOn(userService, "delete").mockResolvedValueOnce()
 
-            const result = await userController.delete({ id: userMock.id }, requestMock)
+            const result = await userController.deleteCoordinator({ id: userMock.id }, requestMock)
+
+            expect(result).toBeUndefined()
+        })
+    })
+
+    describe("deleteTeacher", () => {
+        it("should remove an user from course", async () => {
+            jest.spyOn(userService, "removeFromCourse").mockResolvedValueOnce()
+
+            const result = await userController.deleteTeacher({ id: userMock.id }, requestMock)
+
+            expect(result).toBeUndefined()
+        })
+    })
+
+    describe("deleteStudent", () => {
+        it("should delete an user", async () => {
+            jest.spyOn(userService, "delete").mockResolvedValueOnce()
+
+            const result = await userController.deleteStudent({ id: userMock.id }, requestMock)
+
+            expect(result).toBeUndefined()
+        })
+    })
+
+    describe("deleteViewer", () => {
+        it("should remove an user from course", async () => {
+            jest.spyOn(userService, "removeFromCourse").mockResolvedValueOnce()
+
+            const result = await userController.deleteViewer({ id: userMock.id }, requestMock)
 
             expect(result).toBeUndefined()
         })

@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsNotEmpty, IsString, MinLength } from "class-validator"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
+import { IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator"
 
 export class CreateUserReqDto {
     @ApiProperty()
@@ -18,8 +18,8 @@ export class CreateUserReqDto {
     @MinLength(8)
     password: string
 
-    @ApiProperty()
+    @ApiPropertyOptional()
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     courseId: string
 }

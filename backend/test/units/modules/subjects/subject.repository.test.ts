@@ -7,6 +7,7 @@ import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { UserService } from "src/modules/users/services/user.service"
 import { subjectMock } from "./mocks/subject.mock"
 import { CustomLoggerService } from "src/common/logger"
+import { requestMock } from "../authentication/mocks/authentication.mock"
 
 describe("SubjectRepository", () => {
     let subjectRepository: SubjectRepository
@@ -35,6 +36,8 @@ describe("SubjectRepository", () => {
 
         subjectRepository = moduleRef.get(SubjectRepository)
         prismaService = moduleRef.get(PrismaService)
+
+        jest.spyOn(prismaService, "$executeRawUnsafe").mockResolvedValue(1)
     })
 
     afterAll(() => {
@@ -46,11 +49,11 @@ describe("SubjectRepository", () => {
             const dto = {
                 name: subjectMock.name,
                 teachers: [subjectMock.teachers[0].id],
-                courseId: subjectMock.courseId,
+                courseId: requestMock.user.mainCourseId,
             }
             jest.spyOn(prismaService.subject, "create").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectRepository.create(dto)
+            const result = await subjectRepository.create(dto, requestMock.user.mainCourseId)
 
             expect(result).toEqual(subjectMock)
             expect(prismaService.subject.create).toHaveBeenCalledWith({
@@ -79,7 +82,7 @@ describe("SubjectRepository", () => {
         it("should return a subject", async () => {
             jest.spyOn(prismaService.subject, "findUnique").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectRepository.getById(subjectMock.id)
+            const result = await subjectRepository.getById(subjectMock.id, requestMock.user.mainCourseId)
 
             expect(result).toEqual(subjectMock)
             expect(prismaService.subject.findUnique).toHaveBeenCalledWith({
@@ -107,7 +110,7 @@ describe("SubjectRepository", () => {
             jest.spyOn(prismaService.subject, "findMany").mockResolvedValueOnce([subjectMock])
             jest.spyOn(prismaService.subject, "count").mockResolvedValueOnce(1)
 
-            const result = await subjectRepository.getAll(dto)
+            const result = await subjectRepository.getAll(dto, requestMock.user.mainCourseId)
 
             expect(result).toEqual({
                 totalItems: 1,
@@ -153,7 +156,7 @@ describe("SubjectRepository", () => {
             }
             jest.spyOn(prismaService.subject, "update").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectRepository.updateById(subjectMock.id, dto)
+            const result = await subjectRepository.updateById(subjectMock.id, dto, requestMock.user.mainCourseId)
 
             expect(result).toEqual(subjectMock)
             expect(prismaService.subject.update).toHaveBeenCalledWith({
@@ -182,7 +185,7 @@ describe("SubjectRepository", () => {
         it("should delete an subject", async () => {
             jest.spyOn(prismaService.subject, "delete").mockResolvedValueOnce(subjectMock)
 
-            const result = await subjectRepository.deleteById(subjectMock.id)
+            const result = await subjectRepository.deleteById(subjectMock.id, requestMock.user.mainCourseId)
 
             expect(result).toBeUndefined()
             expect(prismaService.subject.delete).toHaveBeenCalledWith({

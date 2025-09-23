@@ -37,7 +37,14 @@ export class UserController {
     ): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.createTeacher.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.create(dto, UserRole.TEACHER, request.user.mainCourseId)
+        const user = await this.userService.create(
+            {
+                ...dto,
+                courseId: request.user.mainCourseId,
+            },
+            UserRole.TEACHER,
+            request.user.mainCourseId,
+        )
 
         return {
             message: "User created successfully",
@@ -77,7 +84,14 @@ export class UserController {
     ): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.createStudent.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.create(dto, UserRole.STUDENT, request.user.mainCourseId)
+        const user = await this.userService.create(
+            {
+                ...dto,
+                courseId: request.user.mainCourseId,
+            },
+            UserRole.STUDENT,
+            request.user.mainCourseId,
+        )
 
         return {
             message: "User created successfully",
@@ -94,7 +108,14 @@ export class UserController {
     async createViewer(@Body() dto: CreateUserReqDto, @Request() request: RequestDto): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.createViewer.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.create(dto, UserRole.VIEWER, request.user.mainCourseId)
+        const user = await this.userService.create(
+            {
+                ...dto,
+                courseId: request.user.mainCourseId,
+            },
+            UserRole.VIEWER,
+            request.user.mainCourseId,
+        )
 
         return {
             message: "User created successfully",

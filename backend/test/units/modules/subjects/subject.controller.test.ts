@@ -60,7 +60,7 @@ describe("SubjectController", () => {
             expect(result).toEqual(
                 baseResponseMock<SubjectWithTeacherResDto>("Subject created successfully", subjectMock),
             )
-            expect(subjectService.create).toHaveBeenCalledWith(dto, requestMock.user.courseId)
+            expect(subjectService.create).toHaveBeenCalledWith(dto, requestMock.user.mainCourseId)
         })
     })
 

@@ -8,11 +8,13 @@ export const loginResMock: LoginResDto = {
     expiresIn: "43200s",
 }
 
+const courseId = faker.string.uuid()
 export const requestMock: RequestDto = {
     user: {
         sub: faker.string.uuid(),
         name: faker.person.fullName(),
-        role: UserRole.COORDINATOR,
-        courseId: [faker.string.uuid()],
+        courses: [{ courseId, role: "COORDINATOR" }],
+        mainRole: UserRole.COORDINATOR,
+        mainCourseId: courseId,
     },
 }
