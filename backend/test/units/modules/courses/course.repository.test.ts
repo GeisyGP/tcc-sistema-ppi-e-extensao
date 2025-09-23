@@ -98,6 +98,9 @@ describe("CourseRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
+                    id: {
+                        in: undefined,
+                    },
                 },
                 take: dto.limit,
                 skip: dto.limit * (dto.page - 1),
@@ -108,6 +111,9 @@ describe("CourseRepository", () => {
                     name: {
                         contains: dto.name,
                         mode: "insensitive",
+                    },
+                    id: {
+                        in: undefined,
                     },
                 },
             })

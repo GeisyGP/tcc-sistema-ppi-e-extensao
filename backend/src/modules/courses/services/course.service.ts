@@ -41,9 +41,15 @@ export class CourseService {
         }
     }
 
-    async getAll(dto: GetAllCoursesReqDto): Promise<PaginationResDto<CourseResDto[]>> {
+    async getAll(
+        dto: GetAllCoursesReqDto,
+        userCourses?: Array<{ courseId: string; role: string }>,
+    ): Promise<PaginationResDto<CourseResDto[]>> {
         try {
-            const { courses, totalItems } = await this.courseRepository.getAll(dto)
+            const { courses, totalItems } = await this.courseRepository.getAll(
+                dto,
+                userCourses?.map((uc) => uc.courseId),
+            )
 
             return CourseResBuilder.buildMany(courses, dto.page, dto.limit, totalItems)
         } catch (error) {

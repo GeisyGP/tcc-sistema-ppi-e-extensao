@@ -16,6 +16,7 @@ import { GetAllCoursesReqDto } from "../types/dtos/requests/get-all-req.dto"
 import { UpdateCourseParamsReqDto, UpdateCourseReqDto } from "../types/dtos/requests/update-course-req.dto"
 import { GetByIdCourseReqDto } from "../types/dtos/requests/get-by-id-course-req.dto"
 import { DeleteCourseReqDto } from "../types/dtos/requests/delete-course-req.dto"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @ApiTags("courses")
 @Controller("courses")
@@ -74,7 +75,8 @@ export class CourseController {
     ): Promise<BaseResDto<PaginationResDto<CourseResDto[]>>> {
         this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
-        const response = await this.courseService.getAll(queryParams)
+        const userCourses = request.user.mainRole === UserRole.SYSADMIN ? undefined : request.user.courses
+        const response = await this.courseService.getAll(queryParams, userCourses)
         return {
             message: "Courses found successfully",
             data: response,

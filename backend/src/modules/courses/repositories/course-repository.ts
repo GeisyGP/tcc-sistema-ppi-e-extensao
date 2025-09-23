@@ -33,11 +33,17 @@ export class CourseRepository implements CourseRepositoryInterface {
         return course
     }
 
-    async getAll(dto: GetAllCoursesReqDto): Promise<{ courses: Course[]; totalItems: number }> {
+    async getAll(
+        dto: GetAllCoursesReqDto,
+        userCourseIds?: Array<string>,
+    ): Promise<{ courses: Course[]; totalItems: number }> {
         const filter = {
             name: {
                 contains: dto.name,
                 mode: Prisma.QueryMode.insensitive,
+            },
+            id: {
+                in: userCourseIds,
             },
         }
 

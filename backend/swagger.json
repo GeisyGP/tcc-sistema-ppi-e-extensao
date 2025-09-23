@@ -795,8 +795,7 @@
         "required": [
           "registration",
           "name",
-          "password",
-          "courseId"
+          "password"
         ]
       },
       "UserResDto": {
