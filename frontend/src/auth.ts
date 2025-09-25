@@ -4,32 +4,38 @@ import Credentials from "next-auth/providers/credentials"
 import { z } from "zod"
 import { jwtDecode, JwtPayload } from "jwt-decode"
 import { login } from "@/services/auth.service"
+import { CoursesJwt } from "./types/course.types"
 
-interface AppJwtPayload extends JwtPayload {
+export interface AppJwtPayload extends JwtPayload {
     sub: string
     name: string
-    role: string
-    courseId: string[]
+    courses: CoursesJwt[]
+    mainRole: string
+    mainCourseId: string
     iat: number
     exp: number
 }
 
 declare module "next-auth" {
     interface User {
+        exp: number
         accessToken?: string;
         id?: string
-        role?: string
         name?: string
-        courseId?: string[]
+        courses?: CoursesJwt[]
+        mainRole?: string
+        mainCourseId?: string
     }
     interface Session {
         user: {
             id?: string
-            role?: string
             name?: string
-            courseId?: string[]
+            courses?: CoursesJwt[]
+            mainRole?: string
+            mainCourseId?: string
         }
         accessToken?: string
+        exp: number
     }
 }
 
@@ -43,6 +49,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Credentials({
             async authorize(credentials) {
+                 if (credentials?.accessToken && typeof credentials.accessToken === "string") {
+                    const decoded = jwtDecode(credentials.accessToken) as AppJwtPayload
+                    return {
+                        id: decoded.sub,
+                        name: decoded.name,
+                        mainRole: decoded.mainRole,
+                        mainCourseId: decoded.mainCourseId,
+                        courses: decoded.courses,
+                        accessToken: credentials.accessToken,
+                        exp: decoded.exp,
+                    }
+                }
                 const parsed = z
                     .object({
                         registration: z.string(),
@@ -64,9 +82,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     return {
                         id: decoded.sub,
                         name: decoded.name,
-                        role: decoded.role,
-                        courseId: decoded.courseId,
+                        mainRole: decoded.mainRole,
+                        mainCourseId: decoded.mainCourseId,
+                        courses: decoded.courses,
                         accessToken: data.accessToken,
+                        exp: decoded.exp,
                     }
                 } catch {
                     return null
@@ -79,25 +99,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (user) {
                 token.accessToken = user.accessToken
                 token.id = user.id
-                token.role = user.role
                 token.name = user.name
-                token.courseId = user.courseId
+                token.mainRole = user.mainRole
+                token.mainCourseId = user.mainCourseId
+                token.courses = user.courses
+                token.exp = user.exp
             }
             return token
         },
         async session({ session, token }) {
             if (token.accessToken) {
-                session.user.id = token.id as string;
-                session.user.role = token.role as string;
-                session.user.name = token.name as string;
-                session.user.courseId = token.courseId as string[];
-                session.accessToken = token.accessToken as string;
+                session.user.id = token.id as string
+                session.user.mainRole = token.mainRole as string
+                session.user.name = token.name as string
+                session.user.mainCourseId = token.mainCourseId as string
+                session.user.courses = token.courses as CoursesJwt[]
+                session.accessToken = token.accessToken as string
+                session.exp = token.exp as number
             }
             return session
         },
         authorized({ auth, request: { nextUrl } }) {
             const now = Date.now()
-            const expires = auth?.expires ? new Date(auth.expires).getTime() : 0
+            const expires = auth?.exp ? new Date(auth.exp*1000).getTime() : 0
             const isLoggedIn = !!auth && expires > now;
             const isRequiredAuth = !nextUrl.pathname.startsWith('/login') && !nextUrl.pathname.startsWith('/error')
             if (isRequiredAuth) {

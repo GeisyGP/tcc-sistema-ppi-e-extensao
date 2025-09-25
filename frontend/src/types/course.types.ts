@@ -45,3 +45,9 @@ export interface Course {
     createdAt: string
     updatedAt: string
 }
+
+export interface CoursesJwt {
+    courseId: string,
+    role: string,
+    name: string,
+}

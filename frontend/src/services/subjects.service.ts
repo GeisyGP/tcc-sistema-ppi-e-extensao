@@ -8,8 +8,7 @@ export async function createSubject(body: SubjectCreateInput): Promise<SubjectRe
     if (!session?.accessToken) {
         return
     }
-    //TODO: remove courseId
-    const response = await backendApi.post(`/subjects`, { ...body, courseId: session.user.courseId?.[0] }, {
+    const response = await backendApi.post(`/subjects`, { ...body }, {
         headers: {
             "Authorization": `Bearer ${session.accessToken}`
         }
@@ -22,7 +21,7 @@ export async function getAllSubjects(payload: GetAllSubjectsReq): Promise<Pagina
     if (!session?.accessToken) {
         return
     }
-
+    
     const response = await backendApi.get("/subjects", {
         params: payload,
         headers: {

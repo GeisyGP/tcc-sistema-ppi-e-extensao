@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { logout } from "@/actions/logout"
 import { RoleGuard } from "./role-guard"
 import { UserRole } from "@/types/user.type"
+import { CourseSelector } from "./course-selector"
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -24,7 +25,7 @@ export default function Navbar() {
     <nav className="bg-green-900 p-4 fixed top-0 left-0 w-full h-16 z-10 rounded-lg flex items-center justify-between">
       <div>
         <Link href="/home" className="text-3xl font-bold text-white tracking-wide m-0">
-          SIPPIE
+          SISTEMA
         </Link>
       </div>
 
@@ -48,6 +49,7 @@ export default function Navbar() {
       </ul>
 
       <div className="flex items-center space-x-4">
+        <CourseSelector />
         <button
           onClick={() => logout()}
           className="hidden sm:block bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition"
