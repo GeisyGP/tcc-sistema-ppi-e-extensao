@@ -14,10 +14,10 @@ export default function Navbar() {
 
   const navItems = [
     { href: "/home", label: "Home", roles: [] },
-    { href: "/projetos", label: "Projetos", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
-    { href: "/ppis", label: "PPIs", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
+    { href: "/projetos", label: "Projetos", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER, UserRole.VIEWER] },
+    { href: "/ppis", label: "PPIs", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
     { href: "/disciplinas", label: "Disciplinas", roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER] },
-    { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR] },
+    { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR, UserRole.TEACHER] },
     { href: "/cursos", label: "Cursos", roles: [UserRole.SYSADMIN] },
   ]
 
@@ -49,7 +49,7 @@ export default function Navbar() {
       </ul>
 
       <div className="flex items-center space-x-4">
-        <CourseSelector />
+        <RoleGuard roles={[UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER, UserRole.VIEWER]}><CourseSelector /></RoleGuard>
         <button
           onClick={() => logout()}
           className="hidden sm:block bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition"
