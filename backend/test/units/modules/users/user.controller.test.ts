@@ -144,7 +144,7 @@ describe("UserController", () => {
                     limit: 30,
                     name: "",
                     page: 1,
-                    role: "STUDENT",
+                    role: ["STUDENT"],
                 },
                 requestMock,
             )

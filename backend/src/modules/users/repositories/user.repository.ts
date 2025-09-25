@@ -46,7 +46,11 @@ export class UserRepository implements UserRepositoryInterface {
                 id,
             },
             include: {
-                UserCourse: true,
+                UserCourse: {
+                    include: {
+                        course: { select: { name: true } },
+                    },
+                },
             },
         })
     }
@@ -62,7 +66,13 @@ export class UserRepository implements UserRepositoryInterface {
                 contains: dto.name,
                 mode: Prisma.QueryMode.insensitive,
             },
-            role: dto.role,
+            UserCourse: {
+                some: {
+                    role: {
+                        in: dto.role,
+                    },
+                },
+            },
         }
         const users = await this.prisma.user.findMany({
             where: filter,
@@ -94,7 +104,11 @@ export class UserRepository implements UserRepositoryInterface {
                 registration,
             },
             include: {
-                UserCourse: true,
+                UserCourse: {
+                    include: {
+                        course: { select: { name: true } },
+                    },
+                },
             },
         })
     }

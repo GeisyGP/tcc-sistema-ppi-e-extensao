@@ -91,7 +91,7 @@ describe("UserRepository", () => {
                 limit: 30,
                 name: "",
                 page: 1,
-                role: UserRole.STUDENT,
+                role: [UserRole.STUDENT],
             }
             jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce([userMock])
             jest.spyOn(prismaService.user, "count").mockResolvedValueOnce(1)
@@ -108,7 +108,13 @@ describe("UserRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
-                    role: "STUDENT",
+                    UserCourse: {
+                        some: {
+                            role: {
+                                in: dto.role,
+                            },
+                        },
+                    },
                 },
                 take: dto.limit,
                 skip: dto.limit * (dto.page - 1),
@@ -121,7 +127,13 @@ describe("UserRepository", () => {
                         contains: dto.name,
                         mode: "insensitive",
                     },
-                    role: "STUDENT",
+                    UserCourse: {
+                        some: {
+                            role: {
+                                in: dto.role,
+                            },
+                        },
+                    },
                 },
             })
         })
@@ -136,7 +148,17 @@ describe("UserRepository", () => {
             expect(result).toEqual(userMock)
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: { id: userMock.id },
-                include: { UserCourse: true },
+                include: {
+                    UserCourse: {
+                        include: {
+                            course: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
+                },
             })
         })
     })
@@ -150,7 +172,17 @@ describe("UserRepository", () => {
             expect(result).toEqual(userMock)
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: { registration: userMock.registration },
-                include: { UserCourse: true },
+                include: {
+                    UserCourse: {
+                        include: {
+                            course: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
+                },
             })
         })
     })

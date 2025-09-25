@@ -158,14 +158,17 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string",
-              "enum": [
-                "COORDINATOR",
-                "TEACHER",
-                "STUDENT",
-                "SYSADMIN",
-                "VIEWER"
-              ]
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "COORDINATOR",
+                  "TEACHER",
+                  "STUDENT",
+                  "SYSADMIN",
+                  "VIEWER"
+                ]
+              }
             }
           }
         ],

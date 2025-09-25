@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { UserResDto } from "./user-res.dto"
 
@@ -13,4 +13,7 @@ export class UserCourse {
 
     @ApiProperty()
     role: UserRole
+
+    @ApiPropertyOptional()
+    name?: string
 }

@@ -2,7 +2,7 @@ import { User, UserRole } from "@prisma/client"
 import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 
-export type UserWithCourses = User & { UserCourse: { courseId: string; role: UserRole }[] }
+export type UserWithCourses = User & { UserCourse: { courseId: string; role: UserRole; course?: { name: string } }[] }
 
 export interface UserRepositoryInterface {
     create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<User>

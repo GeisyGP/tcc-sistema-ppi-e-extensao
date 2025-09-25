@@ -99,7 +99,7 @@ describe("UserService", () => {
                     limit: 30,
                     name: "",
                     page: 1,
-                    role: "STUDENT",
+                    role: ["STUDENT"],
                 },
                 requestMock.user.mainCourseId,
             )

@@ -23,6 +23,7 @@ export class UserResBuilder {
             userCourse: user.UserCourse.map((uc) => ({
                 role: uc.role,
                 courseId: uc.courseId,
+                name: uc?.course?.name,
             })),
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,

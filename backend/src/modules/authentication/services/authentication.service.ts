@@ -30,6 +30,7 @@ export class AuthenticationService {
             courses: user.UserCourse.map((uc) => ({
                 courseId: uc.courseId,
                 role: uc.role,
+                name: uc?.course?.name,
             })),
             mainCourseId: user.UserCourse[0].courseId,
             mainRole: user.UserCourse[0].role,
@@ -57,6 +58,7 @@ export class AuthenticationService {
             courses: user.userCourse.map((uc) => ({
                 courseId: uc.courseId,
                 role: uc.role,
+                name: uc?.name,
             })),
             mainCourseId: course.courseId,
             mainRole: course.role,
