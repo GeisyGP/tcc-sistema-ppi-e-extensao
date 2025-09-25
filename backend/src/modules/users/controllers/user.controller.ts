@@ -16,6 +16,7 @@ import { UserEntity } from "../types/entities/user.entity"
 import { ChangePasswordBodyReqDto, ChangePasswordParamReqDto } from "../types/dtos/requests/change-password-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { UserRole } from "src/common/enums/user-role.enum"
+import { ROOT_COURSE_ID } from "src/common/constants"
 
 @ApiTags("users")
 @Controller("users")
@@ -43,7 +44,7 @@ export class UserController {
                 courseId: request.user.mainCourseId,
             },
             UserRole.TEACHER,
-            request.user.mainCourseId,
+            ROOT_COURSE_ID,
         )
 
         return {
@@ -90,7 +91,7 @@ export class UserController {
                 courseId: request.user.mainCourseId,
             },
             UserRole.STUDENT,
-            request.user.mainCourseId,
+            ROOT_COURSE_ID,
         )
 
         return {
@@ -114,7 +115,7 @@ export class UserController {
                 courseId: request.user.mainCourseId,
             },
             UserRole.VIEWER,
-            request.user.mainCourseId,
+            ROOT_COURSE_ID,
         )
 
         return {

@@ -1,7 +1,12 @@
 SELECT enable_rls_with_policy(
   'User',
   'user_isolation_policy',
-  'EXISTS (
+  'NOT EXISTS (
+    SELECT 1
+    FROM "UserCourse" uc
+    WHERE uc."userId" = "User".id
+  )
+  OR EXISTS (
      SELECT 1
      FROM "UserCourse" uc
      WHERE uc."userId" = "User".id
