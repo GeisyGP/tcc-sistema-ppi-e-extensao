@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
-import { CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
+import { CreateUserCoordinatorReqDto, CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
 import { UserResDto } from "../types/dtos/responses/user-res.dto"
 import { BaseResDto } from "../../../common/types/dtos/base-res.dto"
 import { GetUserByIdReqDto } from "../types/dtos/requests/get-by-id-req.dto"
@@ -60,7 +60,7 @@ export class UserController {
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "COORDINATOR"))
     async createCoordinator(
-        @Body() dto: CreateUserReqDto,
+        @Body() dto: CreateUserCoordinatorReqDto,
         @Request() request: RequestDto,
     ): Promise<BaseResDto<UserResDto>> {
         this.loggerService.info(this.constructor.name, this.createCoordinator.name, `user: ${request.user.sub}`)

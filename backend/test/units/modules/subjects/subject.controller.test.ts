@@ -11,6 +11,8 @@ import { SubjectController } from "src/modules/subjects/controllers/subject.cont
 import { SubjectWithTeacherResDto } from "src/modules/subjects/types/dtos/responses/subject-with-teacher-res.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("SubjectController", () => {
     let subjectService: SubjectService
@@ -21,6 +23,8 @@ describe("SubjectController", () => {
 
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseRepository,
+                CourseService,
                 SubjectService,
                 SubjectRepository,
                 SubjectController,

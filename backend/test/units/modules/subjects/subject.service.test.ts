@@ -17,6 +17,8 @@ import { CustomLoggerService } from "src/common/logger"
 import { ForbiddenException } from "@nestjs/common"
 import { faker } from "@faker-js/faker/."
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("SubjectService", () => {
     let userService: UserService
@@ -28,6 +30,8 @@ describe("SubjectService", () => {
 
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseRepository,
+                CourseService,
                 SubjectService,
                 SubjectRepository,
                 UserService,

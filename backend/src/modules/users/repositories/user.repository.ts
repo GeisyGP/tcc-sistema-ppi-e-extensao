@@ -80,7 +80,11 @@ export class UserRepository implements UserRepositoryInterface {
             skip: dto.limit * (dto.page - 1),
             orderBy: [{ name: "asc" }],
             include: {
-                UserCourse: true,
+                UserCourse: {
+                    include: {
+                        course: { select: { name: true } },
+                    },
+                },
             },
         })
         if (!users) {

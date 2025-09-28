@@ -19,6 +19,7 @@ import { CustomLoggerService } from "src/common/logger"
 import { UserWithCourses } from "../repositories/user.repository.interface"
 import { UserWithCoursesResDto } from "../types/dtos/responses/user-with-courses-res.dto"
 import { UserRole } from "src/common/enums/user-role.enum"
+import { CourseService } from "src/modules/courses/services/course.service"
 
 @Injectable()
 export class UserService {
@@ -26,10 +27,13 @@ export class UserService {
         private readonly userRepository: UserRepository,
         private caslFactory: CaslAbilityFactory,
         private readonly loggerService: CustomLoggerService,
+        private readonly courseService: CourseService,
     ) {}
 
     async create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<UserResDto> {
         try {
+            await this.courseService.getById(dto.courseId)
+
             const userExists = await this.getByRegistration({ registration: dto.registration }, currentCourseId)
             if (userExists && userExists.UserCourse.find((uc) => uc.courseId == dto.courseId)) {
                 throw new UserExistsException()

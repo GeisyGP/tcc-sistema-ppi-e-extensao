@@ -8,6 +8,8 @@ import { UserService } from "src/modules/users/services/user.service"
 import { subjectMock } from "./mocks/subject.mock"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("SubjectRepository", () => {
     let subjectRepository: SubjectRepository
@@ -18,6 +20,8 @@ describe("SubjectRepository", () => {
 
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseRepository,
+                CourseService,
                 SubjectService,
                 SubjectRepository,
                 UserService,

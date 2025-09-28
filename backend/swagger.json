@@ -41,7 +41,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateUserReqDto"
+                "$ref": "#/components/schemas/CreateUserCoordinatorReqDto"
               }
             }
           }
@@ -370,6 +370,170 @@
         ]
       }
     },
+    "/courses": {
+      "post": {
+        "operationId": "CourseController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "courses"
+        ]
+      },
+      "get": {
+        "operationId": "CourseController_getAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "name",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "courses"
+        ]
+      }
+    },
+    "/courses/{id}": {
+      "get": {
+        "operationId": "CourseController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "courses"
+        ]
+      },
+      "put": {
+        "operationId": "CourseController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "courses"
+        ]
+      },
+      "delete": {
+        "operationId": "CourseController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "courses"
+        ]
+      }
+    },
     "/login": {
       "post": {
         "operationId": "AuthenticationController_login",
@@ -603,170 +767,6 @@
           "subjects"
         ]
       }
-    },
-    "/courses": {
-      "post": {
-        "operationId": "CourseController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCourseReqDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CourseResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "courses"
-        ]
-      },
-      "get": {
-        "operationId": "CourseController_getAll",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "name",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "courses"
-        ]
-      }
-    },
-    "/courses/{id}": {
-      "get": {
-        "operationId": "CourseController_getById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CourseResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "courses"
-        ]
-      },
-      "put": {
-        "operationId": "CourseController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCourseReqDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CourseResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "courses"
-        ]
-      },
-      "delete": {
-        "operationId": "CourseController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "courses"
-        ]
-      }
     }
   },
   "info": {
@@ -831,6 +831,29 @@
           "updatedAt"
         ]
       },
+      "CreateUserCoordinatorReqDto": {
+        "type": "object",
+        "properties": {
+          "registration": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "registration",
+          "name",
+          "password",
+          "courseId"
+        ]
+      },
       "MetadataDto": {
         "type": "object",
         "properties": {
@@ -885,6 +908,121 @@
         "required": [
           "newPassword",
           "currentPassword"
+        ]
+      },
+      "CreateCourseReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "technologicalAxis": {
+            "type": "string"
+          },
+          "educationLevel": {
+            "type": "string",
+            "example": "Superior"
+          },
+          "degree": {
+            "type": "string",
+            "example": "Bacharelado"
+          },
+          "modality": {
+            "type": "string",
+            "example": "Presencial"
+          },
+          "shift": {
+            "type": "string",
+            "example": "Noturno"
+          }
+        },
+        "required": [
+          "name",
+          "technologicalAxis",
+          "educationLevel",
+          "degree",
+          "modality",
+          "shift"
+        ]
+      },
+      "randomUUID": {
+        "type": "object",
+        "properties": {}
+      },
+      "CourseResDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "technologicalAxis": {
+            "type": "string"
+          },
+          "educationLevel": {
+            "type": "string"
+          },
+          "degree": {
+            "type": "string"
+          },
+          "modality": {
+            "type": "string"
+          },
+          "shift": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "technologicalAxis",
+          "educationLevel",
+          "degree",
+          "modality",
+          "shift",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateCourseReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "technologicalAxis": {
+            "type": "string"
+          },
+          "educationLevel": {
+            "type": "string"
+          },
+          "degree": {
+            "type": "string"
+          },
+          "modality": {
+            "type": "string"
+          },
+          "shift": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "technologicalAxis",
+          "educationLevel",
+          "degree",
+          "modality",
+          "shift"
         ]
       },
       "LoginReqDto": {
@@ -1015,121 +1153,6 @@
         "required": [
           "name",
           "teachers"
-        ]
-      },
-      "CreateCourseReqDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "technologicalAxis": {
-            "type": "string"
-          },
-          "educationLevel": {
-            "type": "string",
-            "example": "Superior"
-          },
-          "degree": {
-            "type": "string",
-            "example": "Bacharelado"
-          },
-          "modality": {
-            "type": "string",
-            "example": "Presencial"
-          },
-          "shift": {
-            "type": "string",
-            "example": "Noturno"
-          }
-        },
-        "required": [
-          "name",
-          "technologicalAxis",
-          "educationLevel",
-          "degree",
-          "modality",
-          "shift"
-        ]
-      },
-      "randomUUID": {
-        "type": "object",
-        "properties": {}
-      },
-      "CourseResDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/randomUUID"
-          },
-          "name": {
-            "type": "string"
-          },
-          "technologicalAxis": {
-            "type": "string"
-          },
-          "educationLevel": {
-            "type": "string"
-          },
-          "degree": {
-            "type": "string"
-          },
-          "modality": {
-            "type": "string"
-          },
-          "shift": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "technologicalAxis",
-          "educationLevel",
-          "degree",
-          "modality",
-          "shift",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "UpdateCourseReqDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "technologicalAxis": {
-            "type": "string"
-          },
-          "educationLevel": {
-            "type": "string"
-          },
-          "degree": {
-            "type": "string"
-          },
-          "modality": {
-            "type": "string"
-          },
-          "shift": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "technologicalAxis",
-          "educationLevel",
-          "degree",
-          "modality",
-          "shift"
         ]
       }
     }

@@ -10,6 +10,8 @@ import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
+import { CourseService } from "src/modules/courses/services/course.service"
 
 describe("UserService", () => {
     let userService: UserService
@@ -20,6 +22,13 @@ describe("UserService", () => {
 
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseRepository,
+                {
+                    provide: CourseService,
+                    useValue: {
+                        getById: () => {},
+                    },
+                },
                 UserService,
                 UserRepository,
                 PrismaService,

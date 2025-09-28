@@ -11,6 +11,9 @@ import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { UserWithCoursesResDto } from "src/modules/users/types/dtos/responses/user-with-courses-res.dto"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
+import { ROOT_COURSE_ID } from "src/common/constants"
 
 describe("UserController", () => {
     let userService: UserService
@@ -21,6 +24,8 @@ describe("UserController", () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [UserController],
             providers: [
+                CourseRepository,
+                CourseService,
                 UserService,
                 UserRepository,
                 PrismaService,
@@ -62,7 +67,7 @@ describe("UserController", () => {
                     courseId: requestMock.user.mainCourseId,
                 },
                 UserRole.TEACHER,
-                requestMock.user.mainCourseId,
+                ROOT_COURSE_ID,
             )
         })
     })
@@ -103,7 +108,7 @@ describe("UserController", () => {
                     courseId: requestMock.user.mainCourseId,
                 },
                 UserRole.STUDENT,
-                requestMock.user.mainCourseId,
+                ROOT_COURSE_ID,
             )
         })
     })
@@ -127,7 +132,7 @@ describe("UserController", () => {
                     courseId: requestMock.user.mainCourseId,
                 },
                 UserRole.VIEWER,
-                requestMock.user.mainCourseId,
+                ROOT_COURSE_ID,
             )
         })
     })

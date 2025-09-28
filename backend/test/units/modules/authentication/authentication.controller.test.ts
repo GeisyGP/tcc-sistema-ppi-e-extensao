@@ -9,6 +9,8 @@ import { PrismaService } from "src/config/prisma.service"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("AuthenticationController", () => {
     let authenticationService: AuthenticationService
@@ -20,6 +22,8 @@ describe("AuthenticationController", () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [AuthenticationController],
             providers: [
+                CourseService,
+                CourseRepository,
                 AuthenticationService,
                 UserService,
                 UserRepository,

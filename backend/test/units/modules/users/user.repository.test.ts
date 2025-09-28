@@ -7,6 +7,8 @@ import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("UserRepository", () => {
     let userRepository: UserRepository
@@ -17,6 +19,8 @@ describe("UserRepository", () => {
 
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseRepository,
+                CourseService,
                 UserService,
                 UserRepository,
                 PrismaService,
@@ -119,7 +123,11 @@ describe("UserRepository", () => {
                 take: dto.limit,
                 skip: dto.limit * (dto.page - 1),
                 orderBy: [{ name: "asc" }],
-                include: { UserCourse: true },
+                include: {
+                    UserCourse: {
+                        include: { course: { select: { name: true } } },
+                    },
+                },
             })
             expect(prismaService.user.count).toHaveBeenCalledWith({
                 where: {

@@ -11,6 +11,8 @@ import { UnauthorizedException } from "@nestjs/common"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { ROOT_COURSE_ID } from "src/common/constants"
+import { CourseService } from "src/modules/courses/services/course.service"
+import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 
 describe("AuthenticationService", () => {
     let authenticationService: AuthenticationService
@@ -21,6 +23,8 @@ describe("AuthenticationService", () => {
         jest.clearAllMocks()
         const moduleRef = await Test.createTestingModule({
             providers: [
+                CourseService,
+                CourseRepository,
                 AuthenticationService,
                 UserService,
                 UserRepository,

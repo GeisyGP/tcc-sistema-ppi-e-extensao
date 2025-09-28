@@ -9,6 +9,7 @@ import { CourseRepository } from "./repositories/course-repository"
 @Module({
     imports: [PrismaModule],
     controllers: [CourseController],
+    exports: [CourseService],
     providers: [CourseService, CourseRepository, CaslAbilityFactory, CustomLoggerService],
 })
 export class CourseModule {}
