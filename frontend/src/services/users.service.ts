@@ -11,15 +11,27 @@ export async function getAllUsers(payload: GetAllUsersReq): Promise<PaginationRe
 
     const response = await backendApi.get("/users", {
         params: payload,
+        paramsSerializer: (params) => {
+            const searchParams = new URLSearchParams()
+            Object.entries(params).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => searchParams.append(key, String(v)))
+                } else if (value !== undefined && value !== null) {
+                    searchParams.append(key, String(value))
+                }
+            })
+            return searchParams.toString()
+        },
         headers: {
             "Authorization": `Bearer ${session.accessToken}`
         }
     })
+
     return response.data?.data
 }
 
 export async function createUser(
-    userRole: UserRole, 
+    userRole: UserRole,
     body: CreateUserReq
 ): Promise<UserRes | void> {
     const session = await getSession()
@@ -36,8 +48,8 @@ export async function createUser(
 }
 
 export async function deleteUser(
-    userRole: UserRole, 
-    userId: string, 
+    userRole: UserRole,
+    userId: string,
 ): Promise<UserRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {

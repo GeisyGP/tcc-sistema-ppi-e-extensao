@@ -36,13 +36,12 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                 id: "",
                 name: "",
                 teachers: [],
-                courseId: "id", //TODO: get from global courseId
             } as unknown as SubjectRes)
         }
     }, [subject])
 
     const fetchTeachers = useCallback(async (query?: string) => {
-        const data = await getAllUsers({ role: "TEACHER", name: query })
+        const data = await getAllUsers({ role: ["TEACHER", "COORDINATOR"], name: query })
         setAllTeachers(
             data?.items.map(u => ({ label: `${u.name} (${u.registration})`, value: u.id })) || []
         )

@@ -10,7 +10,7 @@ export function useUsers() {
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
 
-    const fetchUsers = useCallback(async (params: { page: number, name?: string }) => {
+    const fetchUsers = useCallback(async (params: { page: number, role: UserRole[], name?: string }) => {
         setLoading(true)
         try {
             const response = await getAllUsers(params)
@@ -41,10 +41,9 @@ export function useUsers() {
         }
     }, [])
 
-     const handleCreate = useCallback(async (newUser: CreateUserReq) => {
+     const handleCreate = useCallback(async (newUser: CreateUserReq, userRole: UserRole) => {
         try {
-            //TODO: make dynamic 
-            const created = await createUser(UserRole.TEACHER,{
+            const created = await createUser(userRole,{
                 name: newUser.name,
                 password: newUser.password,
                 registration: newUser.registration,
@@ -56,10 +55,9 @@ export function useUsers() {
         }
     }, [])
 
-    const handleDelete = useCallback(async (id: string) => {
+    const handleDelete = useCallback(async (id: string, userRole: UserRole) => {
         try {
-            //TODO: make dynamic 
-            await deleteUser(UserRole.COORDINATOR, id)
+            await deleteUser(userRole, id)
             setFormattedData(prev => prev.filter(d => d.id !== id))
             toast.success("Usuário deletado com sucesso")
         } catch (error: any) {

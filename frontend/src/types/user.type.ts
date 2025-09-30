@@ -36,7 +36,7 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 export interface GetAllUsersReq {
     name?: string
-    role?: UserRole
+    role?: UserRole[]
     page?: number
     limit?: number
 }

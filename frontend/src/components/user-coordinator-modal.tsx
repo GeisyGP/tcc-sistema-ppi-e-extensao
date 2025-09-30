@@ -1,10 +1,11 @@
 'use client'
 
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/buttons/default.button'
 import { CreateUserReq, UserRole } from '@/types/user.type'
 import { createUserSchema } from '@/validations/user.schema'
+import { getAllCourses } from '@/services/courses.service'
 import { roleMap } from '@/app/(main)/usuarios/utils/format-user'
 
 type ExtendedUserReq = CreateUserReq & {
@@ -15,17 +16,34 @@ type UserModalProps = {
     isOpen: boolean
     onClose: () => void
     onSave: (created: CreateUserReq, role: UserRole) => void
-    role: UserRole
 }
 
-export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
+export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps) {
+    const [courses, setCourses] = useState<{ label: string; value: string }[]>([])
+    const [coursesLoaded, setCoursesLoaded] = useState(false)
     const [formData, setFormData] = useState<ExtendedUserReq>({
         name: "",
         registration: "",
         password: "",
         confirmPassword: "",
+        courseId: "",
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
+
+    const fetchCourses = useCallback(async () => {
+        const data = await getAllCourses({})
+        setCourses(
+            data?.items.map(c => ({ label: `${c.name}`, value: c.id })) || []
+        )
+    }, [])
+
+    useEffect(() => {
+        if (!isOpen || coursesLoaded) return
+
+        fetchCourses()
+        setCoursesLoaded(true)
+        return
+    }, [coursesLoaded, fetchCourses, isOpen])
 
     if (!isOpen) return null
 
@@ -44,10 +62,11 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
             name: formData.name,
             registration: formData.registration,
             password: formData.password,
+            courseId: formData.courseId,
         }
 
         setErrors({})
-        onSave(userData, role)
+        onSave(userData, UserRole.COORDINATOR)
         onClose()
     }
 
@@ -65,7 +84,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl">
                 <h2 className="text-lg font-semibold mb-4">
-                    Novo {roleMap[role]}
+                    Novo {roleMap[UserRole.COORDINATOR]}
                 </h2>
 
                 <div className="space-y-3">
@@ -97,6 +116,40 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
                             <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
                                 <ExclamationCircleIcon className="h-4 w-4" />
                                 <span>{errors.registration}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label
+                            htmlFor="courseId"
+                            className="text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Curso
+                        </label>
+                        <select
+                            id="courseId"
+                            name="courseId"
+                            value={formData.courseId}
+                            onChange={(e) =>
+                                setFormData({ ...formData, courseId: e.target.value })
+                            }
+                            className="bg-white text-gray-800 text-sm border border-gray-300 rounded-md px-2 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="" disabled>
+                                Selecione o curso
+                            </option>
+                            {courses.map((c) => (
+                                <option key={c.value} value={c.value} className="truncate">
+                                    {c.label}
+                                </option>
+                            ))}
+                        </select>
+
+                        {errors.courseId && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.courseId}</span>
                             </div>
                         )}
                     </div>

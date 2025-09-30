@@ -26,10 +26,10 @@ export function formatUserWithCourses(res: UserWithCoursesRes): User {
     }
 }
 
-const roleMap: Record<UserRole, string> = {
+export const roleMap: Record<UserRole, string> = {
     COORDINATOR: "Coordenador",
-    TEACHER: "Professor",
-    STUDENT: "Aluno",
+    TEACHER: "Docente",
+    STUDENT: "Discente",
     SYSADMIN: "Administrador do sistema",
     VIEWER: "Visualizador"
 }
