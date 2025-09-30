@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/buttons/default.button'
 import { CourseRes } from '@/types/course.types'
+import { createCourseSchema } from '@/validations/course.schema'
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 
 type CourseModalProps = {
     isOpen: boolean
@@ -13,6 +15,7 @@ type CourseModalProps = {
 
 export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProps) {
     const [formData, setFormData] = useState<CourseRes | null>(null)
+    const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
         if (course) {
@@ -33,9 +36,27 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
     if (!isOpen || !formData) return null
 
     const handleSubmit = () => {
-        if (formData) {
-            onSave(formData)
+        const result = createCourseSchema.safeParse(formData)
+
+        if (!result.success) {
+            const firstIssue = result.error.issues[0]
+            setErrors({
+                [firstIssue.path[0] as string]: firstIssue.message,
+            })
+            return
         }
+
+        setErrors({})
+        onSave(formData)
+        setFormData({
+            id: "",
+            name: "",
+            technologicalAxis: "",
+            educationLevel: "",
+            degree: "",
+            modality: "",
+            shift: "",
+        } as unknown as CourseRes)
         onClose()
     }
 
@@ -55,6 +76,12 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
+                        {errors.name && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.name}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -65,6 +92,12 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             onChange={(e) => setFormData({ ...formData, technologicalAxis: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
+                        {errors.technologicalAxis && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.technologicalAxis}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -75,6 +108,12 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             onChange={(e) => setFormData({ ...formData, educationLevel: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
+                        {errors.educationLevel && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.educationLevel}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -84,7 +123,13 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.degree}
                             onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                            />
+                        {errors.degree && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.degree}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -94,7 +139,13 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.modality}
                             onChange={(e) => setFormData({ ...formData, modality: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                            />
+                        {errors.modality && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.modality}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -104,7 +155,13 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.shift}
                             onChange={(e) => setFormData({ ...formData, shift: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
+                            />
+                            {errors.shift && (
+                                <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                    <ExclamationCircleIcon className="h-4 w-4" />
+                                    <span>{errors.shift}</span>
+                                </div>
+                            )}
                     </div>
                 </div>
 

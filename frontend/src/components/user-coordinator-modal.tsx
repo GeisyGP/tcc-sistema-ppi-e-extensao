@@ -67,6 +67,13 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
 
         setErrors({})
         onSave(userData, UserRole.COORDINATOR)
+        setFormData({
+            name: "",
+            registration: "",
+            courseId: "",
+            password: "",
+            confirmPassword: "",
+        })
         onClose()
     }
 

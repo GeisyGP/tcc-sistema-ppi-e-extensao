@@ -48,6 +48,13 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
 
         setErrors({})
         onSave(userData, role)
+        setFormData({
+            name: "",
+            registration: "",
+            courseId: "",
+            password: "",
+            confirmPassword: "",
+        })
         onClose()
     }
 

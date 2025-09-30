@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/buttons/default.button'
 import { getAllUsers } from '@/services/users.service'
 import { SubjectRes } from '@/types/subject.types'
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import { createSubjectSchema } from '@/validations/subject.schema'
 
 export type TeacherOption = {
     label: string
@@ -24,6 +25,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     const [teachersLoaded, setTeachersLoaded] = useState(false)
     const [showTeacherSelect, setShowTeacherSelect] = useState(false)
     const [search, setSearch] = useState('')
+    const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
         if (subject) {
@@ -81,12 +83,27 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     }
 
     const handleSubmit = () => {
-        if (formData) {
-            onSave({
-                ...formData,
-                teachers: [...formData.teachers]
-            })
+        const formattedData = {
+            ...formData,
+            teachers: [...formData.teachers]
         }
+        const result = createSubjectSchema.safeParse(formattedData)
+
+        if (!result.success) {
+            const firstIssue = result.error.issues[0]
+            setErrors({
+                [firstIssue.path[0] as string]: firstIssue.message,
+            })
+            return
+        }
+
+        onSave(formattedData)
+        setFormData({
+            id: "",
+            name: "",
+            teachers: [],
+            courseId: "",
+        } as unknown as SubjectRes)
         onClose()
     }
 
@@ -106,6 +123,12 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
+                        {errors.name && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.name}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex flex-col">
@@ -144,6 +167,12 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                                 <ChevronDownIcon className="w-5 h-5 text-gray-500" />
                             )}
                         </div>
+                        {errors.teachers && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.teachers}</span>
+                            </div>
+                        )}
 
                         {showTeacherSelect && (
                             <div className="mt-1 border rounded shadow-lg p-2 max-h-60 overflow-y-auto bg-white z-10">
