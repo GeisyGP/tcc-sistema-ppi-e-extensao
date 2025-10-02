@@ -20,6 +20,7 @@ import { UserWithCourses } from "../repositories/user.repository.interface"
 import { UserWithCoursesResDto } from "../types/dtos/responses/user-with-courses-res.dto"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { CourseService } from "src/modules/courses/services/course.service"
+import { ChangeRoleBodyReqDto } from "../types/dtos/requests/change-role-req.dto"
 
 @Injectable()
 export class UserService {
@@ -147,6 +148,33 @@ export class UserService {
             return new UserResBuilder().build(user)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.update.name, `error: ${error.message}`, error.stack)
+            throw error
+        }
+    }
+
+    async changeUserRole(
+        userId: string,
+        dto: ChangeRoleBodyReqDto,
+        currentCourseId: string,
+    ): Promise<UserWithCoursesResDto> {
+        try {
+            const validaRoles = [UserRole.COORDINATOR, UserRole.TEACHER]
+            const user = await this.getById(userId, currentCourseId)
+            const inInCourse = user.userCourse.find((uc) => uc.courseId === dto.courseId)
+            if (!inInCourse || !validaRoles.includes(inInCourse.role as any)) {
+                throw new UserNotFoundException()
+            }
+
+            const updatedUser = await this.userRepository.changeUserRole(userId, dto, currentCourseId)
+
+            return new UserResBuilder().buildWithCourses(updatedUser)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.changeUserRole.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
             throw error
         }
     }

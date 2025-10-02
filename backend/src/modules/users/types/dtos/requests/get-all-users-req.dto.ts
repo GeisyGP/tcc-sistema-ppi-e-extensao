@@ -10,6 +10,11 @@ export class GetAllUsersReqDto extends PaginationReqDto {
     @IsOptional()
     name: string
 
+    @ApiPropertyOptional()
+    @IsString()
+    @IsOptional()
+    courseId: string
+
     @ApiPropertyOptional({ enum: UserRole, isArray: true })
     @IsArray()
     @IsEnum(UserRole, { each: true })

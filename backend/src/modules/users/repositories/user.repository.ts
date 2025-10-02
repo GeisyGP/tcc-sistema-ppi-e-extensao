@@ -5,6 +5,7 @@ import { PrismaService } from "src/config/prisma.service"
 import { Injectable } from "@nestjs/common"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { UserRole } from "src/common/enums/user-role.enum"
+import { ChangeRoleBodyReqDto } from "../types/dtos/requests/change-role-req.dto"
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
@@ -71,6 +72,7 @@ export class UserRepository implements UserRepositoryInterface {
                     role: {
                         in: dto.role,
                     },
+                    courseId: dto.courseId,
                 },
             },
         }
@@ -133,6 +135,35 @@ export class UserRepository implements UserRepositoryInterface {
                             userId: id,
                             courseId: currentCourseId,
                         },
+                    },
+                },
+            },
+        })
+    }
+
+    async changeUserRole(userId: string, dto: ChangeRoleBodyReqDto, currentCourseId: string): Promise<UserWithCourses> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        return await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                UserCourse: {
+                    update: {
+                        where: {
+                            userId_courseId: {
+                                courseId: dto.courseId,
+                                userId,
+                            },
+                        },
+                        data: {
+                            role: dto.userRole,
+                        },
+                    },
+                },
+            },
+            include: {
+                UserCourse: {
+                    include: {
+                        course: { select: { name: true } },
                     },
                 },
             },

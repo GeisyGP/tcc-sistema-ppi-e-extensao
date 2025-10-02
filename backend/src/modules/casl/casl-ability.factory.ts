@@ -33,6 +33,7 @@ export class CaslAbilityFactory {
                 can(Action.Manage, CourseEntity)
                 can(Action.Create, "COORDINATOR")
                 can(Action.Delete, "COORDINATOR")
+                can(Action.ChangeRole, UserEntity)
                 break
             }
             case UserRole.COORDINATOR: {

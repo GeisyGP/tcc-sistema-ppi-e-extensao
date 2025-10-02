@@ -1,5 +1,5 @@
 import { PaginationResDto } from "@/types/pagination.type"
-import { CreateUserReq, GetAllUsersReq, UserRes, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import { ChangeRoleReq, CreateUserReq, GetAllUsersReq, UserRes, UserRole, UserWithCoursesRes } from "@/types/user.type"
 import { getSession } from "next-auth/react"
 import backendApi from "./api"
 
@@ -57,6 +57,23 @@ export async function deleteUser(
     }
 
     const response = await backendApi.delete(`/users/${userRole.toLowerCase()}/${userId}`, {
+        headers: {
+            "Authorization": `Bearer ${session.accessToken}`
+        }
+    })
+    return response.data?.data
+}
+
+export async function changeRole(
+    userId: string,
+    body: ChangeRoleReq
+): Promise<UserWithCoursesRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.patch(`/users/${userId}/role`, body, {
         headers: {
             "Authorization": `Bearer ${session.accessToken}`
         }

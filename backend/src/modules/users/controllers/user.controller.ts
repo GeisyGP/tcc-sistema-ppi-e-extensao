@@ -17,6 +17,7 @@ import { ChangePasswordBodyReqDto, ChangePasswordParamReqDto } from "../types/dt
 import { CustomLoggerService } from "src/common/logger"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { ROOT_COURSE_ID } from "src/common/constants"
+import { ChangeRoleBodyReqDto, ChangeRoleParamReqDto } from "../types/dtos/requests/change-role-req.dto"
 
 @ApiTags("users")
 @Controller("users")
@@ -232,6 +233,27 @@ export class UserController {
         this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
 
         const user = await this.userService.update(param.id, dto, request.user, request.user.mainCourseId)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
+    }
+
+    @Patch(":userId/role")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.ChangeRole, UserEntity))
+    async changeUserRole(
+        @Param() param: ChangeRoleParamReqDto,
+        @Body() body: ChangeRoleBodyReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.changeUserRole.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.changeUserRole(param.userId, body, request.user.mainCourseId)
+
         return {
             message: "User updated successfully",
             data: user,

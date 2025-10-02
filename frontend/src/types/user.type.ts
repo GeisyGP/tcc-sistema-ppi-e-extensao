@@ -39,6 +39,7 @@ export interface GetAllUsersReq {
     role?: UserRole[]
     page?: number
     limit?: number
+    courseId?: string
 }
 
 export interface CreateUserReq {
@@ -46,4 +47,9 @@ export interface CreateUserReq {
     name: string
     password: string
     courseId?: string
+}
+
+export interface ChangeRoleReq {
+    courseId: string
+    userRole: UserRole
 }

@@ -96,6 +96,7 @@ describe("UserRepository", () => {
                 name: "",
                 page: 1,
                 role: [UserRole.STUDENT],
+                courseId: "",
             }
             jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce([userMock])
             jest.spyOn(prismaService.user, "count").mockResolvedValueOnce(1)
@@ -117,6 +118,7 @@ describe("UserRepository", () => {
                             role: {
                                 in: dto.role,
                             },
+                            courseId: dto.courseId,
                         },
                     },
                 },
@@ -140,6 +142,7 @@ describe("UserRepository", () => {
                             role: {
                                 in: dto.role,
                             },
+                            courseId: dto.courseId,
                         },
                     },
                 },
@@ -224,6 +227,44 @@ describe("UserRepository", () => {
                                 userId: userMock.id,
                                 courseId: requestMock.user.mainCourseId,
                             },
+                        },
+                    },
+                },
+            })
+        })
+    })
+
+    describe("changeUserRole", () => {
+        it("should return an user", async () => {
+            jest.spyOn(prismaService.user, "update").mockResolvedValueOnce(userMock)
+            const dto = {
+                courseId: userWithCoursesMock.UserCourse[0].courseId,
+                userRole: userWithCoursesMock.UserCourse[0].role,
+            }
+            const result = await userRepository.changeUserRole(userMock.id, dto, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(userMock)
+            expect(prismaService.user.update).toHaveBeenCalledWith({
+                where: { id: userMock.id },
+                data: {
+                    UserCourse: {
+                        update: {
+                            where: {
+                                userId_courseId: {
+                                    courseId: dto.courseId,
+                                    userId: userMock.id,
+                                },
+                            },
+                            data: {
+                                role: dto.userRole,
+                            },
+                        },
+                    },
+                },
+                include: {
+                    UserCourse: {
+                        include: {
+                            course: { select: { name: true } },
                         },
                     },
                 },

@@ -12,6 +12,7 @@ import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
 import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 import { CourseService } from "src/modules/courses/services/course.service"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 describe("UserService", () => {
     let userService: UserService
@@ -109,6 +110,7 @@ describe("UserService", () => {
                     name: "",
                     page: 1,
                     role: ["STUDENT"],
+                    courseId: "",
                 },
                 requestMock.user.mainCourseId,
             )
@@ -177,6 +179,37 @@ describe("UserService", () => {
             expect(userService.getById).toHaveBeenCalledWith(userWithCoursesMock.id, requestMock.user.mainCourseId)
             expect(userRepository.removeFromCourse).toHaveBeenCalledWith(
                 userWithCoursesMock.id,
+                requestMock.user.mainCourseId,
+            )
+        })
+    })
+
+    describe("changeUserRole", () => {
+        it("should change user role", async () => {
+            const user = userWithCoursesResponseMock(UserRole.COORDINATOR)
+            const dto = {
+                courseId: user.userCourse[0].courseId,
+                userRole: UserRole.TEACHER,
+            }
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(user)
+            jest.spyOn(userRepository, "changeUserRole").mockResolvedValueOnce({
+                ...userWithCoursesMock,
+                UserCourse: [
+                    {
+                        courseId: user.userCourse[0].courseId,
+                        role: UserRole.COORDINATOR,
+                        course: { name: "Course" },
+                    },
+                ],
+            })
+
+            const result = await userService.changeUserRole(userWithCoursesMock.id, dto, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(user)
+            expect(userService.getById).toHaveBeenCalledWith(userWithCoursesMock.id, requestMock.user.mainCourseId)
+            expect(userRepository.changeUserRole).toHaveBeenCalledWith(
+                userWithCoursesMock.id,
+                dto,
                 requestMock.user.mainCourseId,
             )
         })

@@ -21,6 +21,7 @@ export const userWithCoursesResponseMock = (
         {
             courseId,
             role,
+            name: "Course",
         },
     ],
 })
@@ -37,6 +38,7 @@ export const userWithCoursesMock: UserWithCourses = {
         {
             courseId: faker.string.uuid(),
             role: "STUDENT",
+            course: { name: "Course" },
         },
     ],
 }

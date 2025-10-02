@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react"
 import { formatUser, formatUserWithCourses } from "../utils/format-user"
 import toast from "react-hot-toast"
-import { CreateUserReq, User, UserRole, UserWithCoursesRes } from "@/types/user.type"
-import { createUser, deleteUser, getAllUsers } from "@/services/users.service"
+import { ChangeRoleReq, CreateUserReq, User, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import { changeRole, createUser, deleteUser, getAllUsers } from "@/services/users.service"
 
 export function useUsers() {
     const [rawData, setRawData] = useState<UserWithCoursesRes[]>([])
@@ -10,7 +10,7 @@ export function useUsers() {
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
 
-    const fetchUsers = useCallback(async (params: { page: number, role: UserRole[], name?: string }) => {
+    const fetchUsers = useCallback(async (params: { page: number, role: UserRole[], name?: string, courseId?: string }) => {
         setLoading(true)
         try {
             const response = await getAllUsers(params)
@@ -28,7 +28,7 @@ export function useUsers() {
 
     const handleCreateCoordinator = useCallback(async (newUser: CreateUserReq) => {
         try {
-            const created = await createUser(UserRole.COORDINATOR,{
+            const created = await createUser(UserRole.COORDINATOR, {
                 name: newUser.name,
                 password: newUser.password,
                 registration: newUser.registration,
@@ -41,9 +41,9 @@ export function useUsers() {
         }
     }, [])
 
-     const handleCreate = useCallback(async (newUser: CreateUserReq, userRole: UserRole) => {
+    const handleCreate = useCallback(async (newUser: CreateUserReq, userRole: UserRole) => {
         try {
-            const created = await createUser(userRole,{
+            const created = await createUser(userRole, {
                 name: newUser.name,
                 password: newUser.password,
                 registration: newUser.registration,
@@ -65,5 +65,27 @@ export function useUsers() {
         }
     }, [])
 
-    return { rawData, formattedData, loading, totalPages, fetchUsers, handleCreate, handleDelete, handleCreateCoordinator }
+    const handleChangeRole = useCallback(async (userId: string, req: ChangeRoleReq) => {
+        try {
+            const updated = await changeRole(userId, req)
+            if (updated) {
+                setFormattedData(prev => prev.map(d => d.id === updated.id ? formatUserWithCourses(updated) : d))
+            }
+            toast.success("Usuário atualizado com sucesso")
+        } catch (error: any) {
+            toast.error(error.message)
+        }
+    }, [])
+
+    return {
+        rawData,
+        loading,
+        totalPages,
+        fetchUsers,
+        handleCreate,
+        handleDelete,
+        formattedData,
+        handleChangeRole,
+        handleCreateCoordinator,
+    }
 }

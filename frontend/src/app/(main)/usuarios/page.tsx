@@ -2,17 +2,21 @@
 
 import SearchBar from '@/components/search-bar'
 import List from '@/components/list.layout'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { ViewModal } from '@/components/view-modal'
 import { Button } from '@/components/buttons/default.button'
 import { PlusIcon } from '@heroicons/react/16/solid'
 import { RoleGuard } from '@/components/role-guard'
-import { User, UserRole } from '@/types/user.type'
+import { User, UserRole, UserWithCoursesRes } from '@/types/user.type'
 import { useUsers } from './hooks/use-users'
 import { UserDetails } from '@/components/user-details'
 import { UserModal } from '@/components/user-modal'
 import { useSession } from 'next-auth/react'
 import { UserCoordinatorModal } from '@/components/user-coordinator-modal'
+import { FilterButton } from '@/components/buttons/filter.button'
+import { getAllCourses } from '@/services/courses.service'
+import { useRole } from '@/hooks/use-role'
+import { UserEditModal } from '@/components/user-edit-modal'
 
 const rolePermissions: Record<UserRole, UserRole[]> = {
     SYSADMIN: [UserRole.COORDINATOR, UserRole.TEACHER],
@@ -36,8 +40,31 @@ export default function UsersPage() {
     const [nameFilter, setNameFilter] = useState<string | undefined>()
     const [selected, setSelected] = useState<User | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
-    const { formattedData, loading, totalPages, fetchUsers, handleCreateCoordinator, handleCreate, handleDelete } = useUsers()
+    const [courseIdFilter, setCourseIdFilter] = useState<string>()
+    const [selectedForEdit, setSelectedForEdit] = useState<UserWithCoursesRes | null>(null)
+    const {
+        handleCreateCoordinator,
+        handleChangeRole,
+        formattedData,
+        handleCreate,
+        handleDelete,
+        totalPages,
+        fetchUsers,
+        loading,
+        rawData,
+    } = useUsers()
     const { data: session } = useSession()
+    const { can } = useRole()
+
+    const fetchCourseOptions = useCallback(async () => {
+        const data = await getAllCourses({})
+        return (
+            data?.items.map(u => ({
+                label: `${u.name}`,
+                value: u.id,
+            })) || []
+        )
+    }, [])
 
     const allowedRoles = useMemo(() => {
         return session?.user.mainRole
@@ -55,9 +82,9 @@ export default function UsersPage() {
     useEffect(() => {
         if (activeRole) {
             const role = activeRole === UserRole.TEACHER ? [UserRole.COORDINATOR, UserRole.TEACHER] : [activeRole]
-            fetchUsers({ page, name: nameFilter, role: role })
+            fetchUsers({ page, name: nameFilter, role: role, courseId: courseIdFilter })
         }
-    }, [page, nameFilter, activeRole, fetchUsers])
+    }, [page, nameFilter, activeRole, fetchUsers, courseIdFilter])
 
     if (!activeRole) {
         return (
@@ -98,6 +125,23 @@ export default function UsersPage() {
                         />
                     </div>
 
+                    <RoleGuard roles={[UserRole.SYSADMIN]}>
+                        <FilterButton
+                            filters={[
+                                {
+                                    key: "courseId",
+                                    label: "Curso",
+                                    type: "select",
+                                    onLoadOptions: fetchCourseOptions,
+                                },
+                            ]}
+                            onApply={(values) => {
+                                setCourseIdFilter(values.courseId || undefined)
+                                setPage(1)
+                            }}
+                        />
+                    </RoleGuard>
+
                     <Button
                         onClick={() => {
                             setCreatingNew(true)
@@ -122,8 +166,13 @@ export default function UsersPage() {
                         totalPages={totalPages}
                         onPageChange={setPage}
                         showDeleteAction
+                        showEditAction={can(UserRole.SYSADMIN)}
                         onDelete={(id) => handleDelete(id, activeRole)}
                         onView={setSelected}
+                        onEdit={(row) => {
+                            const original = rawData.find(r => r.id === row.id) || null
+                            setSelectedForEdit(original)
+                        }}
                     />
                 )}
 
@@ -134,6 +183,17 @@ export default function UsersPage() {
                     title={(item) => item.name}
                     renderContent={(item) => <UserDetails user={item} />}
                 />
+
+                {selectedForEdit && (
+                    <UserEditModal
+                        isOpen={!!selectedForEdit}
+                        onClose={() => setSelectedForEdit(null)}
+                        user={selectedForEdit}
+                        onSave={(userId, updateReq) => {
+                            updateReq.forEach((req) => handleChangeRole(userId, req))
+                        }}
+                    />
+                )}
 
                 {activeRole === UserRole.COORDINATOR ? (
                     <UserCoordinatorModal

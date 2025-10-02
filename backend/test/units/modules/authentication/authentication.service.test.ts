@@ -76,6 +76,7 @@ describe("AuthenticationService", () => {
                 courses: userWithCoursesMock.UserCourse.map((uc) => ({
                     courseId: uc.courseId,
                     role: uc.role,
+                    name: uc.course?.name,
                 })),
                 mainCourseId: userWithCoursesMock.UserCourse[0].courseId,
                 mainRole: userWithCoursesMock.UserCourse[0].role,
@@ -120,6 +121,7 @@ describe("AuthenticationService", () => {
                 courses: user.userCourse.map((uc) => ({
                     courseId: uc.courseId,
                     role: uc.role,
+                    name: uc.name,
                 })),
                 mainCourseId: user.userCourse[0].courseId,
                 mainRole: user.userCourse[0].role,

@@ -150,6 +150,7 @@ describe("UserController", () => {
                     name: "",
                     page: 1,
                     role: ["STUDENT"],
+                    courseId: "",
                 },
                 requestMock,
             )

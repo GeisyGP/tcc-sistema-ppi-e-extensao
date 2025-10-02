@@ -154,6 +154,14 @@
             }
           },
           {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "role",
             "required": false,
             "in": "query",
@@ -363,6 +371,46 @@
         "responses": {
           "204": {
             "description": ""
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{userId}/role": {
+      "patch": {
+        "operationId": "UserController_changeUserRole",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeRoleBodyReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -908,6 +956,25 @@
         "required": [
           "newPassword",
           "currentPassword"
+        ]
+      },
+      "ChangeRoleBodyReqDto": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "type": "string"
+          },
+          "userRole": {
+            "type": "string",
+            "enum": [
+              "COORDINATOR",
+              "TEACHER"
+            ]
+          }
+        },
+        "required": [
+          "courseId",
+          "userRole"
         ]
       },
       "CreateCourseReqDto": {
