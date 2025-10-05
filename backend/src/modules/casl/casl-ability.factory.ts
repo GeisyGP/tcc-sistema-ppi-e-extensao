@@ -33,6 +33,8 @@ export class CaslAbilityFactory {
                 can(Action.Manage, CourseEntity)
                 can(Action.Create, "COORDINATOR")
                 can(Action.Delete, "COORDINATOR")
+                can(Action.Update, "COORDINATOR")
+                can(Action.Update, "TEACHER")
                 can(Action.ChangeRole, UserEntity)
                 break
             }
@@ -48,6 +50,10 @@ export class CaslAbilityFactory {
                 can(Action.Delete, "TEACHER")
                 can(Action.Delete, "VIEWER")
                 can(Action.Delete, "STUDENT")
+                can(Action.Update, "TEACHER")
+                can(Action.Update, "VIEWER")
+                can(Action.Update, "STUDENT")
+                can(Action.Update, "COORDINATOR")
                 break
             }
             case UserRole.TEACHER: {
@@ -57,6 +63,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, CourseEntity)
                 can(Action.Create, "STUDENT")
                 can(Action.Delete, "STUDENT")
+                can(Action.Update, "STUDENT")
                 break
             }
             case UserRole.STUDENT: {

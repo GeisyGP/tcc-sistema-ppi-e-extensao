@@ -1,5 +1,5 @@
 import * as bcrypt from "bcryptjs"
-import { ForbiddenException, Injectable } from "@nestjs/common"
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common"
 import { UserRepository } from "../repositories/user.repository"
 import { GetByRegistrationReqDto } from "../types/dtos/requests/get-by-registration-req.dto"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
@@ -21,6 +21,8 @@ import { UserWithCoursesResDto } from "../types/dtos/responses/user-with-courses
 import { UserRole } from "src/common/enums/user-role.enum"
 import { CourseService } from "src/modules/courses/services/course.service"
 import { ChangeRoleBodyReqDto } from "../types/dtos/requests/change-role-req.dto"
+import { validateCsvContent } from "../utils/validate-csv-content.util"
+import { UpdateByIdBodyReqDto } from "../types/dtos/requests/update-by-id-req.dto"
 
 @Injectable()
 export class UserService {
@@ -118,7 +120,7 @@ export class UserService {
         }
     }
 
-    async update(
+    async changePassword(
         id: string,
         dto: ChangePasswordBodyReqDto,
         currentUser: UserRequestDto,
@@ -147,7 +149,12 @@ export class UserService {
             await this.userRepository.changePassword(id, hashedPassword, currentCourseId)
             return new UserResBuilder().build(user)
         } catch (error) {
-            this.loggerService.error(this.constructor.name, this.update.name, `error: ${error.message}`, error.stack)
+            this.loggerService.error(
+                this.constructor.name,
+                this.changePassword.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
             throw error
         }
     }
@@ -158,10 +165,10 @@ export class UserService {
         currentCourseId: string,
     ): Promise<UserWithCoursesResDto> {
         try {
-            const validaRoles = [UserRole.COORDINATOR, UserRole.TEACHER]
+            const validRoles = [UserRole.COORDINATOR, UserRole.TEACHER]
             const user = await this.getById(userId, currentCourseId)
             const inInCourse = user.userCourse.find((uc) => uc.courseId === dto.courseId)
-            if (!inInCourse || !validaRoles.includes(inInCourse.role as any)) {
+            if (!inInCourse || !validRoles.includes(inInCourse.role as any)) {
                 throw new UserNotFoundException()
             }
 
@@ -177,5 +184,45 @@ export class UserService {
             )
             throw error
         }
+    }
+
+    async updateById(
+        userId: string,
+        dto: UpdateByIdBodyReqDto,
+        currentCourseId: string,
+    ): Promise<UserWithCoursesResDto> {
+        try {
+            await this.getById(userId, currentCourseId)
+            const updatedUser = await this.userRepository.updateById(userId, dto, currentCourseId)
+            return new UserResBuilder().buildWithCourses(updatedUser)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.updateById.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
+        }
+    }
+
+    async createUserStudentByCsv(file: Express.Multer.File, currentCourseId: string): Promise<void> {
+        const result = await validateCsvContent(file)
+        if (!result.valid || !result.data) {
+            throw new BadRequestException(result.message)
+        }
+
+        const dto: CreateUserReqDto[] = await Promise.all(
+            result.data.map(async (data) => {
+                const hashedPassword = await this.hashPassword(data.password)
+
+                return {
+                    ...data,
+                    password: hashedPassword,
+                } as CreateUserReqDto
+            }),
+        )
+
+        await this.userRepository.createMany(dto, UserRole.STUDENT, currentCourseId)
     }
 }

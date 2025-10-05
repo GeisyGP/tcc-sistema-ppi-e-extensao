@@ -6,6 +6,7 @@ import { Injectable } from "@nestjs/common"
 import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { ChangeRoleBodyReqDto } from "../types/dtos/requests/change-role-req.dto"
+import { UpdateByIdBodyReqDto } from "../types/dtos/requests/update-by-id-req.dto"
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
@@ -179,6 +180,53 @@ export class UserRepository implements UserRepositoryInterface {
             data: {
                 password: newPassword,
             },
+        })
+    }
+
+    async updateById(userId: string, dto: UpdateByIdBodyReqDto, currentCourseId: string): Promise<UserWithCourses> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        return await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+                name: dto.name,
+                registration: dto.registration,
+            },
+            include: {
+                UserCourse: {
+                    include: {
+                        course: { select: { name: true } },
+                    },
+                },
+            },
+        })
+    }
+
+    async createMany(dto: CreateUserReqDto[], role: UserRole, currentCourseId: string): Promise<void> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        await this.prisma.$transaction(async (prisma) => {
+            await prisma.user.createMany({
+                data: dto.map((d) => ({
+                    name: d.name,
+                    registration: d.registration,
+                    password: d.password,
+                })),
+                skipDuplicates: true,
+            })
+
+            const allUsers = await prisma.user.findMany({
+                where: {
+                    registration: { in: dto.map((d) => d.registration) },
+                },
+            })
+
+            await prisma.userCourse.createMany({
+                data: allUsers.map((user) => ({
+                    userId: user.id,
+                    courseId: currentCourseId,
+                    role,
+                })),
+                skipDuplicates: true,
+            })
         })
     }
 }

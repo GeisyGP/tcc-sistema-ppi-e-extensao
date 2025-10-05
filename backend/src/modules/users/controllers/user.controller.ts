@@ -1,4 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request, UseGuards } from "@nestjs/common"
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Param,
+    ParseFilePipeBuilder,
+    Patch,
+    Post,
+    Put,
+    Query,
+    Request,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors,
+} from "@nestjs/common"
 import { ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger"
 import { UserService } from "../services/user.service"
 import { CreateUserCoordinatorReqDto, CreateUserReqDto } from "../types/dtos/requests/create-user-req.dto"
@@ -16,8 +32,10 @@ import { UserEntity } from "../types/entities/user.entity"
 import { ChangePasswordBodyReqDto, ChangePasswordParamReqDto } from "../types/dtos/requests/change-password-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { UserRole } from "src/common/enums/user-role.enum"
-import { ROOT_COURSE_ID } from "src/common/constants"
+import { ONE_MB_IN_BYTES, ROOT_COURSE_ID } from "src/common/constants"
 import { ChangeRoleBodyReqDto, ChangeRoleParamReqDto } from "../types/dtos/requests/change-role-req.dto"
+import { FileInterceptor } from "@nestjs/platform-express"
+import { UpdateByIdBodyReqDto, UpdateByIdParamReqDto } from "../types/dtos/requests/update-by-id-req.dto"
 
 @ApiTags("users")
 @Controller("users")
@@ -219,20 +237,100 @@ export class UserController {
         await this.userService.removeFromCourse(param.id, request.user.mainCourseId)
     }
 
-    @Patch(":id")
+    @Put("/coordinator/:id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, "COORDINATOR"))
+    async updateCoordinatorById(
+        @Request() request: RequestDto,
+        @Param() param: UpdateByIdParamReqDto,
+        @Body() dto: UpdateByIdBodyReqDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.updateCoordinatorById.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.updateById(param.id, dto, request.user.mainCourseId)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
+    }
+
+    @Put("/teacher/:id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, "TEACHER"))
+    async updateTeacherById(
+        @Request() request: RequestDto,
+        @Param() param: UpdateByIdParamReqDto,
+        @Body() dto: UpdateByIdBodyReqDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.updateTeacherById.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.updateById(param.id, dto, request.user.mainCourseId)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
+    }
+
+    @Put("/student/:id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, "STUDENT"))
+    async updateStudentById(
+        @Request() request: RequestDto,
+        @Param() param: UpdateByIdParamReqDto,
+        @Body() dto: UpdateByIdBodyReqDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.updateStudentById.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.updateById(param.id, dto, request.user.mainCourseId)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
+    }
+
+    @Put("/viewer/:id")
+    @ApiOkResponse({
+        type: UserResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, "VIEWER"))
+    async updateViewerById(
+        @Request() request: RequestDto,
+        @Param() param: UpdateByIdParamReqDto,
+        @Body() dto: UpdateByIdBodyReqDto,
+    ): Promise<BaseResDto<UserResDto>> {
+        this.loggerService.info(this.constructor.name, this.updateViewerById.name, `user: ${request.user.sub}`)
+
+        const user = await this.userService.updateById(param.id, dto, request.user.mainCourseId)
+        return {
+            message: "User updated successfully",
+            data: user,
+        }
+    }
+
+    @Patch(":id/password")
     @ApiOkResponse({
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, UserEntity))
-    async update(
+    async changePassword(
         @Request() request: RequestDto,
         @Param() param: ChangePasswordParamReqDto,
         @Body() dto: ChangePasswordBodyReqDto,
     ): Promise<BaseResDto<UserResDto>> {
-        this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
+        this.loggerService.info(this.constructor.name, this.changePassword.name, `user: ${request.user.sub}`)
 
-        const user = await this.userService.update(param.id, dto, request.user, request.user.mainCourseId)
+        const user = await this.userService.changePassword(param.id, dto, request.user, request.user.mainCourseId)
         return {
             message: "User updated successfully",
             data: user,
@@ -258,5 +356,32 @@ export class UserController {
             message: "User updated successfully",
             data: user,
         }
+    }
+
+    @Post("/many")
+    @ApiNoContentResponse()
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "STUDENT"))
+    @UseInterceptors(FileInterceptor("file"))
+    async createUserStudentByCsv(
+        @Request() request: RequestDto,
+        @UploadedFile(
+            new ParseFilePipeBuilder()
+                .addFileTypeValidator({
+                    fileType: /(text\/csv|text\/plain)/,
+                    skipMagicNumbersValidation: true,
+                })
+                .addMaxSizeValidator({
+                    maxSize: ONE_MB_IN_BYTES,
+                })
+                .build({
+                    errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+                }),
+        )
+        file: Express.Multer.File,
+    ) {
+        this.loggerService.info(this.constructor.name, this.createUserStudentByCsv.name, `user: ${request.user.sub}`)
+
+        await this.userService.createUserStudentByCsv(file, request.user.mainCourseId)
     }
 }
