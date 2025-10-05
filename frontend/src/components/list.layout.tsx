@@ -1,12 +1,8 @@
-'use client'
+"use client"
 
-import { Button } from '@/components/buttons/default.button'
-import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    PencilIcon,
-} from '@heroicons/react/24/outline'
-import { DeleteButtonModal } from './buttons/delete.button'
+import { Button } from "@/components/buttons/default.button"
+import { ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/24/outline"
+import { DeleteButtonModal } from "./buttons/delete.button"
 
 type Column<T> = {
     key: keyof T
@@ -40,36 +36,33 @@ export default function List<T extends { id: string }>({
     onView,
 }: ListProps<T>) {
     return (
-        <div className="w-full p-6 space-y-4 border rounded-lg bg-gray-50">
+        <div className="w-full p-8 space-y-6 rounded-xl bg-gray-50 shadow-md">
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-100">
+                    <thead className="bg-gray-50">
                         <tr>
                             {columns.map((col) => (
                                 <th
                                     key={String(col.key)}
-                                    className="px-4 py-3 text-left text-sm font-medium text-gray-700"
+                                    className="px-4 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wide"
                                 >
                                     {col.label}
                                 </th>
                             ))}
-
                             {(showEditAction || showDeleteAction) && (
-                                <th className="px-4 py-3 text-sm font-medium text-gray-700 text-right">
+                                <th className="px-4 py-3 text-sm font-semibold text-gray-700 text-right uppercase tracking-wide">
                                     Ações
                                 </th>
                             )}
                         </tr>
                     </thead>
+
                     <tbody className="divide-y divide-gray-200 bg-white">
                         {data.length === 0 ? (
                             <tr>
                                 <td
-                                    colSpan={
-                                        columns.length +
-                                        (showEditAction || showDeleteAction ? 1 : 0)
-                                    }
-                                    className="px-4 py-6 text-center text-gray-500"
+                                    colSpan={columns.length + (showEditAction || showDeleteAction ? 1 : 0)}
+                                    className="px-4 py-4 text-center text-gray-500"
                                 >
                                     Nenhum registro encontrado
                                 </td>
@@ -78,28 +71,25 @@ export default function List<T extends { id: string }>({
                             data.map((row) => (
                                 <tr
                                     key={row.id}
-                                    className="hover:bg-gray-50 cursor-pointer"
+                                    className="hover:bg-gray-100 cursor-pointer transition-colors"
                                     onClick={(e) => {
                                         const target = e.target as HTMLElement
-                                        if (target.closest('button')) return
+                                        if (target.closest("button")) return
                                         onView?.(row)
                                     }}
                                 >
                                     {columns.map((col) => (
-                                        <td
-                                            key={String(col.key)}
-                                            className="px-4 py-3 text-sm text-gray-700"
-                                        >
+                                        <td key={String(col.key)} className="px-4 py-3 text-sm text-gray-700">
                                             {col.render ? col.render(row[col.key], row) : String(row[col.key])}
                                         </td>
                                     ))}
 
                                     {(showEditAction || showDeleteAction) && (
-                                        <td className="px-4 py-3 text-sm text-right space-x-2">
+                                        <td className="px-4 py-3 text-sm text-right flex justify-end items-center gap-3">
                                             {showEditAction && (
                                                 <button
                                                     onClick={() => onEdit?.(row)}
-                                                    className="text-black-100 hover:text-black-900"
+                                                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-700 transition"
                                                     title="Editar"
                                                 >
                                                     <PencilIcon className="h-5 w-5" />
@@ -115,23 +105,25 @@ export default function List<T extends { id: string }>({
                 </table>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-4">
                 <Button
                     variant="secondary"
-                    className="flex items-center gap-1"
-                    aria-disabled={page === 1}
+                    className="flex items-center gap-2 min-w-[90px] h-9"
+                    disabled={page === 1}
                     onClick={() => onPageChange(page - 1)}
                 >
                     <ChevronLeftIcon className="h-4 w-4" />
                     Anterior
                 </Button>
-                <span className="text-sm text-gray-600">
+
+                <span className="text-sm text-gray-500 mx-2">
                     Página {page} de {totalPages}
                 </span>
+
                 <Button
                     variant="secondary"
-                    className="flex items-center gap-1"
-                    aria-disabled={page === totalPages}
+                    className="flex items-center gap-2 min-w-[90px] h-9"
+                    disabled={page === totalPages}
                     onClick={() => onPageChange(page + 1)}
                 >
                     Próxima

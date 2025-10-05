@@ -1,22 +1,22 @@
-'use client'
+"use client"
 
-import SearchBar from '@/components/search-bar'
-import List from '@/components/list.layout'
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { ViewModal } from '@/components/view-modal'
-import { Button } from '@/components/buttons/default.button'
-import { PlusIcon } from '@heroicons/react/16/solid'
-import { RoleGuard } from '@/components/role-guard'
-import { User, UserRole, UserWithCoursesRes } from '@/types/user.type'
-import { useUsers } from './hooks/use-users'
-import { UserDetails } from '@/components/user-details'
-import { UserModal } from '@/components/user-modal'
-import { useSession } from 'next-auth/react'
-import { UserCoordinatorModal } from '@/components/user-coordinator-modal'
-import { FilterButton } from '@/components/buttons/filter.button'
-import { getAllCourses } from '@/services/courses.service'
-import { useRole } from '@/hooks/use-role'
-import { UserEditModal } from '@/components/user-edit-modal'
+import SearchBar from "@/components/search-bar"
+import List from "@/components/list.layout"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { ViewModal } from "@/components/view-modal"
+import { Button } from "@/components/buttons/default.button"
+import { PlusIcon } from "@heroicons/react/16/solid"
+import { RoleGuard } from "@/components/role-guard"
+import { User, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import { useUsers } from "./hooks/use-users"
+import { UserDetails } from "@/components/user-details"
+import { UserModal } from "@/components/user-modal"
+import { useSession } from "next-auth/react"
+import { UserCoordinatorModal } from "@/components/user-coordinator-modal"
+import { FilterButton } from "@/components/buttons/filter.button"
+import { getAllCourses } from "@/services/courses.service"
+import { useRole } from "@/hooks/use-role"
+import { UserEditModal } from "@/components/user-edit-modal"
 
 const rolePermissions: Record<UserRole, UserRole[]> = {
     SYSADMIN: [UserRole.COORDINATOR, UserRole.TEACHER],
@@ -27,11 +27,11 @@ const rolePermissions: Record<UserRole, UserRole[]> = {
 }
 
 const roleLabels: Record<UserRole, string> = {
-    SYSADMIN: 'Administradores',
-    COORDINATOR: 'Coordenadores',
-    TEACHER: 'Docentes',
-    STUDENT: 'Discentes',
-    VIEWER: 'Visualizadores',
+    SYSADMIN: "Administradores",
+    COORDINATOR: "Coordenadores",
+    TEACHER: "Docentes",
+    STUDENT: "Discentes",
+    VIEWER: "Visualizadores",
 }
 
 export default function UsersPage() {
@@ -59,7 +59,7 @@ export default function UsersPage() {
     const fetchCourseOptions = useCallback(async () => {
         const data = await getAllCourses({})
         return (
-            data?.items.map(u => ({
+            data?.items.map((u) => ({
                 label: `${u.name}`,
                 value: u.id,
             })) || []
@@ -67,11 +67,8 @@ export default function UsersPage() {
     }, [])
 
     const allowedRoles = useMemo(() => {
-        return session?.user.mainRole
-            ? rolePermissions[session.user.mainRole as UserRole] || []
-            : []
+        return session?.user.mainRole ? rolePermissions[session.user.mainRole as UserRole] || [] : []
     }, [session?.user.mainRole])
-
 
     useEffect(() => {
         if (allowedRoles.length > 0 && !activeRole) {
@@ -87,11 +84,7 @@ export default function UsersPage() {
     }, [page, nameFilter, activeRole, fetchUsers, courseIdFilter])
 
     if (!activeRole) {
-        return (
-            <div className="w-full mx-auto p-6 text-gray-500">
-                Carregando...
-            </div>
-        )
+        return <div className="w-full mx-auto p-6 text-gray-500">Carregando...</div>
     }
 
     return (
@@ -103,7 +96,7 @@ export default function UsersPage() {
                     {allowedRoles.map((r) => (
                         <Button
                             key={r}
-                            variant={activeRole === r ? 'primary' : 'secondary'}
+                            variant={activeRole === r ? "primary" : "secondary"}
                             onClick={() => {
                                 setActiveRole(r)
                                 setPage(1)
@@ -146,9 +139,9 @@ export default function UsersPage() {
                         onClick={() => {
                             setCreatingNew(true)
                         }}
-                        className="flex items-center gap-1"
+                        className="flex items-center gap-1 shadow-sm"
                     >
-                        <PlusIcon className="h-5 w-5" />
+                        <PlusIcon className="h-6 w-5" />
                         Criar
                     </Button>
                 </div>
@@ -158,19 +151,19 @@ export default function UsersPage() {
                 ) : (
                     <List
                         columns={[
-                            { key: 'name', label: 'Usuário' },
-                            { key: 'registration', label: 'Matrícula/SIAPE' },
+                            { key: "name", label: "Usuário" },
+                            { key: "registration", label: "Matrícula/SIAPE" },
                         ]}
                         data={formattedData}
                         page={page}
                         totalPages={totalPages}
                         onPageChange={setPage}
-                        showDeleteAction
+                        showDeleteAction={can(UserRole.COORDINATOR, UserRole.TEACHER)}
                         showEditAction={can(UserRole.SYSADMIN)}
                         onDelete={(id) => handleDelete(id, activeRole)}
                         onView={setSelected}
                         onEdit={(row) => {
-                            const original = rawData.find(r => r.id === row.id) || null
+                            const original = rawData.find((r) => r.id === row.id) || null
                             setSelectedForEdit(original)
                         }}
                     />
@@ -197,12 +190,14 @@ export default function UsersPage() {
 
                 {activeRole === UserRole.COORDINATOR ? (
                     <UserCoordinatorModal
+                        key={creatingNew ? "new" : "old"}
                         isOpen={creatingNew}
                         onClose={() => setCreatingNew(false)}
                         onSave={(newUser) => handleCreateCoordinator(newUser)}
                     />
                 ) : (
                     <UserModal
+                        key={creatingNew ? "new" : "old"}
                         isOpen={creatingNew}
                         onClose={() => setCreatingNew(false)}
                         role={activeRole}

@@ -1,23 +1,24 @@
-'use client'
+"use client"
 
-import SearchBar from '@/components/search-bar'
-import List from '@/components/list.layout'
-import { useState, useEffect, useCallback } from 'react'
-import { ViewModal } from '@/components/view-modal'
-import { Subject, SubjectRes } from '@/types/subject.types'
-import { SubjectModal } from '@/components/subject-modal'
-import { Button } from '@/components/buttons/default.button'
-import { PlusIcon } from '@heroicons/react/16/solid'
-import { FilterButton } from '@/components/buttons/filter.button'
-import { getAllUsers } from '@/services/users.service'
-import { SubjectDetails } from '@/components/subject-details'
-import { useSubjects } from './hooks/use-subjects'
-import { RoleGuard } from '@/components/role-guard'
-import { UserRole } from '@/types/user.type'
-import { useRole } from '@/hooks/use-role'
+import SearchBar from "@/components/search-bar"
+import List from "@/components/list.layout"
+import { useState, useEffect, useCallback } from "react"
+import { ViewModal } from "@/components/view-modal"
+import { Subject, SubjectRes } from "@/types/subject.types"
+import { SubjectModal } from "@/components/subject-modal"
+import { Button } from "@/components/buttons/default.button"
+import { PlusIcon } from "@heroicons/react/16/solid"
+import { FilterButton } from "@/components/buttons/filter.button"
+import { getAllUsers } from "@/services/users.service"
+import { SubjectDetails } from "@/components/subject-details"
+import { useSubjects } from "./hooks/use-subjects"
+import { RoleGuard } from "@/components/role-guard"
+import { UserRole } from "@/types/user.type"
+import { useRole } from "@/hooks/use-role"
 
 export default function SubjectsPage() {
-    const { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete } = useSubjects()
+    const { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete } =
+        useSubjects()
     const [page, setPage] = useState(1)
     const [nameFilter, setNameFilter] = useState<string | undefined>()
     const [selected, setSelected] = useState<Subject | null>(null)
@@ -26,12 +27,14 @@ export default function SubjectsPage() {
     const [teacherIdFilter, setTeacherIdFilter] = useState<string>()
     const { can } = useRole()
 
-    useEffect(() => { fetchSubjects({ page, name: nameFilter, teacherId: teacherIdFilter }) }, [page, nameFilter, teacherIdFilter, fetchSubjects])
+    useEffect(() => {
+        fetchSubjects({ page, name: nameFilter, teacherId: teacherIdFilter })
+    }, [page, nameFilter, teacherIdFilter, fetchSubjects])
 
     const fetchTeacherOptions = useCallback(async () => {
         const data = await getAllUsers({ role: ["TEACHER"] })
         return (
-            data?.items.map(u => ({
+            data?.items.map((u) => ({
                 label: `${u.name} (${u.registration})`,
                 value: u.id,
             })) || []
@@ -73,22 +76,21 @@ export default function SubjectsPage() {
                             onClick={() => {
                                 setCreatingNew(true)
                             }}
-                            className="flex items-center gap-1"
+                            className="flex items-center gap-1 shadow-sm"
                         >
-                            <PlusIcon className="h-5 w-5" />
+                            <PlusIcon className="h-6 w-5" />
                             Criar
                         </Button>
                     </RoleGuard>
                 </div>
-
 
                 {loading ? (
                     <p className="text-gray-500">Carregando...</p>
                 ) : (
                     <List
                         columns={[
-                            { key: 'name', label: 'Disciplina' },
-                            { key: 'teachers', label: 'Docentes' },
+                            { key: "name", label: "Disciplina" },
+                            { key: "teachers", label: "Docentes" },
                         ]}
                         data={formattedData}
                         page={page}
@@ -99,7 +101,7 @@ export default function SubjectsPage() {
                         onDelete={(id) => handleDelete(id)}
                         onView={setSelected}
                         onEdit={(row) => {
-                            const original = rawData.find(r => r.id === row.id) || null
+                            const original = rawData.find((r) => r.id === row.id) || null
                             setSelectedForEdit(original)
                         }}
                     />

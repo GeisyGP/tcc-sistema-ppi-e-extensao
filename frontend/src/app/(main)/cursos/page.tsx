@@ -1,27 +1,30 @@
-'use client'
+"use client"
 
-import SearchBar from '@/components/search-bar'
-import List from '@/components/list.layout'
-import { useState, useEffect } from 'react'
-import { ViewModal } from '@/components/view-modal'
-import { Button } from '@/components/buttons/default.button'
-import { PlusIcon } from '@heroicons/react/16/solid'
-import { useCourses } from './hooks/use-courses'
-import { CourseDetails } from '@/components/course-details'
-import { Course, CourseRes } from '@/types/course.types'
-import { CourseModal } from '@/components/course-modal'
-import { RoleGuard } from '@/components/role-guard'
-import { UserRole } from '@/types/user.type'
+import SearchBar from "@/components/search-bar"
+import List from "@/components/list.layout"
+import { useState, useEffect } from "react"
+import { ViewModal } from "@/components/view-modal"
+import { Button } from "@/components/buttons/default.button"
+import { PlusIcon } from "@heroicons/react/16/solid"
+import { useCourses } from "./hooks/use-courses"
+import { CourseDetails } from "@/components/course-details"
+import { Course, CourseRes } from "@/types/course.types"
+import { CourseModal } from "@/components/course-modal"
+import { RoleGuard } from "@/components/role-guard"
+import { UserRole } from "@/types/user.type"
 
 export default function CoursesPage() {
-    const { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete } = useCourses()
+    const { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete } =
+        useCourses()
     const [page, setPage] = useState(1)
     const [nameFilter, setNameFilter] = useState<string | undefined>()
     const [selected, setSelected] = useState<Course | null>(null)
     const [selectedForEdit, setSelectedForEdit] = useState<CourseRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
 
-    useEffect(() => { fetchCourses({ page, name: nameFilter }) }, [page, nameFilter, fetchCourses])
+    useEffect(() => {
+        fetchCourses({ page, name: nameFilter })
+    }, [page, nameFilter, fetchCourses])
 
     return (
         <RoleGuard roles={[UserRole.SYSADMIN]}>
@@ -42,23 +45,22 @@ export default function CoursesPage() {
                         onClick={() => {
                             setCreatingNew(true)
                         }}
-                        className="flex items-center gap-1"
+                        className="flex items-center gap-1 shadow-sm"
                     >
-                        <PlusIcon className="h-5 w-5" />
+                        <PlusIcon className="h-6 w-5" />
                         Criar
                     </Button>
                 </div>
-
 
                 {loading ? (
                     <p className="text-gray-500">Carregando...</p>
                 ) : (
                     <List
                         columns={[
-                            { key: 'name', label: 'Curso' },
-                            { key: 'educationLevel', label: 'Forma' },
-                            { key: 'degree', label: 'Grau' },
-                            { key: 'shift', label: 'Turno' },
+                            { key: "name", label: "Curso" },
+                            { key: "educationLevel", label: "Forma" },
+                            { key: "degree", label: "Grau" },
+                            { key: "shift", label: "Turno" },
                         ]}
                         data={formattedData}
                         page={page}
@@ -69,7 +71,7 @@ export default function CoursesPage() {
                         onDelete={(id) => handleDelete(id)}
                         onView={setSelected}
                         onEdit={(row) => {
-                            const original = rawData.find(r => r.id === row.id) || null
+                            const original = rawData.find((r) => r.id === row.id) || null
                             setSelectedForEdit(original)
                         }}
                     />

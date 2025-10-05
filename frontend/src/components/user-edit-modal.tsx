@@ -1,9 +1,9 @@
-'use client'
+"use client"
 
-import { Button } from '@/components/buttons/default.button'
-import { ChangeRoleReq, UserRole, UserWithCoursesRes } from '@/types/user.type'
-import { useState, useEffect } from 'react'
-import { UserField } from './user-field'
+import { Button } from "@/components/buttons/default.button"
+import { ChangeRoleReq, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import { useState, useEffect } from "react"
+import { UserField } from "./user-field"
 
 type UserEditModalProps = {
     isOpen: boolean
@@ -21,7 +21,7 @@ export function UserEditModal({ isOpen, onClose, user, onSave }: UserEditModalPr
                 user.userCourse.map((c) => ({
                     courseId: c.courseId,
                     userRole: c.role as UserRole,
-                }))
+                })),
             )
         }
     }, [user])
@@ -33,14 +33,11 @@ export function UserEditModal({ isOpen, onClose, user, onSave }: UserEditModalPr
             prev.map((c) =>
                 c.courseId === courseId
                     ? {
-                        ...c,
-                        userRole:
-                            c.userRole === UserRole.COORDINATOR
-                                ? UserRole.TEACHER
-                                : UserRole.COORDINATOR,
-                    }
-                    : c
-            )
+                          ...c,
+                          userRole: c.userRole === UserRole.COORDINATOR ? UserRole.TEACHER : UserRole.COORDINATOR,
+                      }
+                    : c,
+            ),
         )
     }
 
@@ -57,7 +54,7 @@ export function UserEditModal({ isOpen, onClose, user, onSave }: UserEditModalPr
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl max-h-[80vh] overflow-y-auto">
-                <h2 className="text-lg font-semibold mb-4">Editar usuário</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Editar usuário</h2>
 
                 <div className="space-y-4 mb-6">
                     <UserField label="Nome" value={user.name} readOnly />
@@ -82,12 +79,14 @@ export function UserEditModal({ isOpen, onClose, user, onSave }: UserEditModalPr
                                 <button
                                     type="button"
                                     onClick={() => handleToggle(course.courseId)}
-                                    className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${isCoordinator ? 'bg-green-500' : 'bg-gray-300'
-                                        }`}
+                                    className={`relative inline-flex h-5 w-10 items-center rounded-full transition ${
+                                        isCoordinator ? "bg-green-500" : "bg-gray-300"
+                                    }`}
                                 >
                                     <span
-                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${isCoordinator ? 'translate-x-5' : 'translate-x-1'
-                                            }`}
+                                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                                            isCoordinator ? "translate-x-5" : "translate-x-1"
+                                        }`}
                                     />
                                 </button>
                             </div>
