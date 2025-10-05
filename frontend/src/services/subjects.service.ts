@@ -8,11 +8,15 @@ export async function createSubject(body: SubjectCreateInput): Promise<SubjectRe
     if (!session?.accessToken) {
         return
     }
-    const response = await backendApi.post(`/subjects`, { ...body }, {
-        headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
-    })
+    const response = await backendApi.post(
+        `/subjects`,
+        { ...body },
+        {
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+            },
+        },
+    )
     return response.data?.data
 }
 
@@ -21,12 +25,12 @@ export async function getAllSubjects(payload: GetAllSubjectsReq): Promise<Pagina
     if (!session?.accessToken) {
         return
     }
-    
+
     const response = await backendApi.get("/subjects", {
         params: payload,
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -39,8 +43,8 @@ export async function getSubjectById(id: string): Promise<SubjectRes | void> {
 
     const response = await backendApi.get(`/subjects/${id}`, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -53,8 +57,8 @@ export async function updateSubjectById(id: string, body: SubjectUpdateInput): P
 
     const response = await backendApi.put(`/subjects/${id}`, body, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -67,8 +71,8 @@ export async function deleteSubjectById(id: string): Promise<void> {
 
     await backendApi.delete(`/subjects/${id}`, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return
 }

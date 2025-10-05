@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
-import { Button } from '@/components/buttons/default.button'
-import { CreateUserReq, UserRole } from '@/types/user.type'
-import { createUserSchema } from '@/validations/user.schema'
-import { roleMap } from '@/app/(main)/usuarios/utils/format-user'
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { useState } from "react"
+import { Button } from "@/components/buttons/default.button"
+import { CreateUserReq, UserRole } from "@/types/user.type"
+import { createUserSchema } from "@/validations/user.schema"
+import { roleMap } from "@/app/(main)/usuarios/utils/format-user"
 
 type ExtendedUserReq = CreateUserReq & {
     confirmPassword: string
@@ -71,13 +71,11 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl">
-                <h2 className="text-lg font-semibold mb-4">
-                    Novo {roleMap[role]}
-                </h2>
+                <h2 className="text-lg font-semibold mb-4">Novo {roleMap[role]}</h2>
 
                 <div className="space-y-3">
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium text-gray-700">Nome do usuário</label>
+                        <label className="text-sm font-medium text-gray-700">Nome</label>
                         <input
                             type="text"
                             value={formData.name}

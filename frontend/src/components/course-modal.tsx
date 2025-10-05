@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { Button } from '@/components/buttons/default.button'
-import { CourseRes } from '@/types/course.types'
-import { createCourseSchema } from '@/validations/course.schema'
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect } from "react"
+import { Button } from "@/components/buttons/default.button"
+import { CourseRes } from "@/types/course.types"
+import { createCourseSchema } from "@/validations/course.schema"
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 
 type CourseModalProps = {
     isOpen: boolean
@@ -63,9 +63,7 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl">
-                <h2 className="text-lg font-semibold mb-4">
-                    {course ? "Editar curso" : "Novo curso"}
-                </h2>
+                <h2 className="text-lg font-semibold mb-4">{course ? "Editar curso" : "Novo curso"}</h2>
 
                 <div className="space-y-3">
                     <div className="flex flex-col">
@@ -123,7 +121,7 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.degree}
                             onChange={(e) => setFormData({ ...formData, degree: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
+                        />
                         {errors.degree && (
                             <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
                                 <ExclamationCircleIcon className="h-4 w-4" />
@@ -139,7 +137,7 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.modality}
                             onChange={(e) => setFormData({ ...formData, modality: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
+                        />
                         {errors.modality && (
                             <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
                                 <ExclamationCircleIcon className="h-4 w-4" />
@@ -155,13 +153,13 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
                             value={formData.shift}
                             onChange={(e) => setFormData({ ...formData, shift: e.target.value })}
                             className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                            {errors.shift && (
-                                <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
-                                    <ExclamationCircleIcon className="h-4 w-4" />
-                                    <span>{errors.shift}</span>
-                                </div>
-                            )}
+                        />
+                        {errors.shift && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.shift}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 

@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
-import { useState, useEffect, useCallback } from 'react'
-import { Button } from '@/components/buttons/default.button'
-import { getAllUsers } from '@/services/users.service'
-import { SubjectRes } from '@/types/subject.types'
-import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
-import { createSubjectSchema } from '@/validations/subject.schema'
+import { useState, useEffect, useCallback } from "react"
+import { Button } from "@/components/buttons/default.button"
+import { getAllUsers } from "@/services/users.service"
+import { SubjectRes } from "@/types/subject.types"
+import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { createSubjectSchema } from "@/validations/subject.schema"
 
 export type TeacherOption = {
     label: string
@@ -24,14 +24,14 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     const [allTeachers, setAllTeachers] = useState<TeacherOption[]>([])
     const [teachersLoaded, setTeachersLoaded] = useState(false)
     const [showTeacherSelect, setShowTeacherSelect] = useState(false)
-    const [search, setSearch] = useState('')
+    const [search, setSearch] = useState("")
     const [errors, setErrors] = useState<Record<string, string>>({})
 
     useEffect(() => {
         if (subject) {
             setFormData({
                 ...subject,
-                teachers: subject.teachers.map(t => ({ id: t.id, name: t.name }))
+                teachers: subject.teachers.map((t) => ({ id: t.id, name: t.name })),
             })
         } else {
             setFormData({
@@ -44,9 +44,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
 
     const fetchTeachers = useCallback(async (query?: string) => {
         const data = await getAllUsers({ role: ["TEACHER", "COORDINATOR"], name: query })
-        setAllTeachers(
-            data?.items.map(u => ({ label: `${u.name} (${u.registration})`, value: u.id })) || []
-        )
+        setAllTeachers(data?.items.map((u) => ({ label: `${u.name} (${u.registration})`, value: u.id })) || [])
     }, [])
 
     useEffect(() => {
@@ -64,19 +62,19 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     const toggleTeacher = (id: string) => {
         if (!formData) return
         const arr = formData.teachers || []
-        const exists = arr.find(t => t.id === id)
+        const exists = arr.find((t) => t.id === id)
 
         if (exists) {
             setFormData({
                 ...formData,
-                teachers: arr.filter(t => t.id !== id)
+                teachers: arr.filter((t) => t.id !== id),
             })
         } else {
-            const teacherObj = allTeachers.find(t => t.value === id)
+            const teacherObj = allTeachers.find((t) => t.value === id)
             if (teacherObj) {
                 setFormData({
                     ...formData,
-                    teachers: [...arr, { id: teacherObj.value, name: teacherObj.label }]
+                    teachers: [...arr, { id: teacherObj.value, name: teacherObj.label }],
                 })
             }
         }
@@ -85,7 +83,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     const handleSubmit = () => {
         const formattedData = {
             ...formData,
-            teachers: [...formData.teachers]
+            teachers: [...formData.teachers],
         }
         const result = createSubjectSchema.safeParse(formattedData)
 
@@ -110,9 +108,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl">
-                <h2 className="text-lg font-semibold mb-4">
-                    {subject ? "Editar disciplina" : "Nova disciplina"}
-                </h2>
+                <h2 className="text-lg font-semibold mb-4">{subject ? "Editar disciplina" : "Nova disciplina"}</h2>
 
                 <div className="space-y-3">
                     <div className="flex flex-col">
@@ -142,7 +138,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                             }}
                         >
                             <div className="flex flex-wrap gap-1">
-                                {formData.teachers.map(t => (
+                                {formData.teachers.map((t) => (
                                     <span
                                         key={t.id}
                                         className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -193,14 +189,14 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                                             Nenhum docente encontrado
                                         </span>
                                     ) : (
-                                        allTeachers.map(t => (
+                                        allTeachers.map((t) => (
                                             <label
                                                 key={t.value}
                                                 className="flex items-center gap-2 text-sm hover:bg-gray-100 p-1 rounded cursor-pointer"
                                             >
                                                 <input
                                                     type="checkbox"
-                                                    checked={formData.teachers.some(tr => tr.id === t.value)}
+                                                    checked={formData.teachers.some((tr) => tr.id === t.value)}
                                                     onChange={() => toggleTeacher(t.value)}
                                                     className="w-4 h-4"
                                                 />

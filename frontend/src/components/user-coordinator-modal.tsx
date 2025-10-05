@@ -1,12 +1,12 @@
-'use client'
+"use client"
 
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
-import { useCallback, useEffect, useState } from 'react'
-import { Button } from '@/components/buttons/default.button'
-import { CreateUserReq, UserRole } from '@/types/user.type'
-import { createUserSchema } from '@/validations/user.schema'
-import { getAllCourses } from '@/services/courses.service'
-import { roleMap } from '@/app/(main)/usuarios/utils/format-user'
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { useCallback, useEffect, useState } from "react"
+import { Button } from "@/components/buttons/default.button"
+import { CreateUserReq, UserRole } from "@/types/user.type"
+import { createUserSchema } from "@/validations/user.schema"
+import { getAllCourses } from "@/services/courses.service"
+import { roleMap } from "@/app/(main)/usuarios/utils/format-user"
 
 type ExtendedUserReq = CreateUserReq & {
     confirmPassword: string
@@ -32,9 +32,7 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
 
     const fetchCourses = useCallback(async () => {
         const data = await getAllCourses({})
-        setCourses(
-            data?.items.map(c => ({ label: `${c.name}`, value: c.id })) || []
-        )
+        setCourses(data?.items.map((c) => ({ label: `${c.name}`, value: c.id })) || [])
     }, [])
 
     useEffect(() => {
@@ -90,9 +88,7 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg p-6 w-full max-w-xl">
-                <h2 className="text-lg font-semibold mb-4">
-                    Novo {roleMap[UserRole.COORDINATOR]}
-                </h2>
+                <h2 className="text-lg font-semibold mb-4">Novo {roleMap[UserRole.COORDINATOR]}</h2>
 
                 <div className="space-y-3">
                     <div className="flex flex-col">
@@ -128,19 +124,14 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
                     </div>
 
                     <div className="flex flex-col">
-                        <label
-                            htmlFor="courseId"
-                            className="text-sm font-medium text-gray-700 mb-1"
-                        >
+                        <label htmlFor="courseId" className="text-sm font-medium text-gray-700 mb-1">
                             Curso
                         </label>
                         <select
                             id="courseId"
                             name="courseId"
                             value={formData.courseId}
-                            onChange={(e) =>
-                                setFormData({ ...formData, courseId: e.target.value })
-                            }
+                            onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
                             className="bg-white text-gray-800 text-sm border border-gray-300 rounded-md px-2 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="" disabled>

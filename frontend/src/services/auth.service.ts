@@ -16,10 +16,14 @@ export async function selectCourse(courseId: string) {
     if (!session?.accessToken) {
         return
     }
-    const response = await backendApi.patch("/select-course", { courseId }, {
-        headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
-    })
+    const response = await backendApi.patch(
+        "/select-course",
+        { courseId },
+        {
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+            },
+        },
+    )
     return response.data
 }

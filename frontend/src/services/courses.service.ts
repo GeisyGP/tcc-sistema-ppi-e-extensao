@@ -11,8 +11,8 @@ export async function createCourse(body: CourseCreateInput): Promise<CourseRes |
 
     const response = await backendApi.post(`/courses`, body, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -26,8 +26,8 @@ export async function getAllCourses(payload: GetAllCoursesReq): Promise<Paginati
     const response = await backendApi.get("/courses", {
         params: payload,
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -40,8 +40,8 @@ export async function getCourseById(id: string): Promise<CourseRes | void> {
 
     const response = await backendApi.get(`/courses/${id}`, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -54,8 +54,8 @@ export async function updateCourseById(id: string, body: CourseUpdateInput): Pro
 
     const response = await backendApi.put(`/courses/${id}`, body, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
@@ -68,8 +68,8 @@ export async function deleteCourseById(id: string): Promise<void> {
 
     await backendApi.delete(`/courses/${id}`, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return
 }

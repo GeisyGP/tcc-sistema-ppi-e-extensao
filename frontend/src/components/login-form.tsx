@@ -1,34 +1,22 @@
-'use client';
+"use client"
 
-import {
-    UserIcon,
-    KeyIcon,
-    ExclamationCircleIcon,
-} from '@heroicons/react/24/outline';
-import { useActionState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { authenticate } from '@/actions/authenticate';
-import { Button } from '@/components/buttons/default.button';
+import { UserIcon, KeyIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { useActionState } from "react"
+import { useSearchParams } from "next/navigation"
+import { authenticate } from "@/actions/authenticate"
+import { Button } from "@/components/buttons/default.button"
 
 export default function LoginForm() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') || '/home';
-    const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
-        undefined,
-    );
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl") || "/home"
+    const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined)
 
     return (
         <form action={formAction} className="w-full mx-auto p-6 space-y-6">
-            <h1 className="mb-3 text-2xl">
-                Login
-            </h1>
+            <h1 className="mb-3 text-2xl">Login</h1>
             <div className="w-full">
                 <div>
-                    <label
-                        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                        htmlFor="matricula"
-                    >
+                    <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="matricula">
                         Matrícula/SIAPE
                     </label>
                     <div className="relative">
@@ -44,10 +32,7 @@ export default function LoginForm() {
                     </div>
                 </div>
                 <div className="mt-4">
-                    <label
-                        className="mb-3 mt-5 block text-xs font-medium text-gray-900"
-                        htmlFor="senha"
-                    >
+                    <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="senha">
                         Senha
                     </label>
                     <div className="relative">
@@ -64,14 +49,10 @@ export default function LoginForm() {
                 </div>
             </div>
             <input type="hidden" name="redirectTo" value={callbackUrl} />
-            <Button variant='primary' className="mt-4 w-full" aria-disabled={isPending}>
+            <Button variant="primary" className="mt-4 w-full" aria-disabled={isPending}>
                 Entrar
             </Button>
-            <div
-                className="flex h-8 items-end space-x-1"
-                aria-live="polite"
-                aria-atomic="true"
-            >
+            <div className="flex h-8 items-end space-x-1" aria-live="polite" aria-atomic="true">
                 {errorMessage && (
                     <>
                         <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
@@ -80,5 +61,5 @@ export default function LoginForm() {
                 )}
             </div>
         </form>
-    );
+    )
 }

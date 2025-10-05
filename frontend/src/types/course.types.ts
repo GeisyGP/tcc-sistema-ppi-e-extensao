@@ -47,7 +47,7 @@ export interface Course {
 }
 
 export interface CoursesJwt {
-    courseId: string,
-    role: string,
-    name: string,
+    courseId: string
+    role: string
+    name: string
 }

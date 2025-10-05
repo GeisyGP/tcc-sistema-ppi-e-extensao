@@ -15,7 +15,7 @@ export async function getAllUsers(payload: GetAllUsersReq): Promise<PaginationRe
             const searchParams = new URLSearchParams()
             Object.entries(params).forEach(([key, value]) => {
                 if (Array.isArray(value)) {
-                    value.forEach(v => searchParams.append(key, String(v)))
+                    value.forEach((v) => searchParams.append(key, String(v)))
                 } else if (value !== undefined && value !== null) {
                     searchParams.append(key, String(value))
                 }
@@ -23,17 +23,14 @@ export async function getAllUsers(payload: GetAllUsersReq): Promise<PaginationRe
             return searchParams.toString()
         },
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
 
     return response.data?.data
 }
 
-export async function createUser(
-    userRole: UserRole,
-    body: CreateUserReq
-): Promise<UserRes | void> {
+export async function createUser(userRole: UserRole, body: CreateUserReq): Promise<UserRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -41,16 +38,13 @@ export async function createUser(
 
     const response = await backendApi.post(`/users/${userRole.toLowerCase()}`, body, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
 
-export async function deleteUser(
-    userRole: UserRole,
-    userId: string,
-): Promise<UserRes | void> {
+export async function deleteUser(userRole: UserRole, userId: string): Promise<UserRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -58,16 +52,13 @@ export async function deleteUser(
 
     const response = await backendApi.delete(`/users/${userRole.toLowerCase()}/${userId}`, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }
 
-export async function changeRole(
-    userId: string,
-    body: ChangeRoleReq
-): Promise<UserWithCoursesRes | void> {
+export async function changeRole(userId: string, body: ChangeRoleReq): Promise<UserWithCoursesRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -75,8 +66,8 @@ export async function changeRole(
 
     const response = await backendApi.patch(`/users/${userId}/role`, body, {
         headers: {
-            "Authorization": `Bearer ${session.accessToken}`
-        }
+            Authorization: `Bearer ${session.accessToken}`,
+        },
     })
     return response.data?.data
 }

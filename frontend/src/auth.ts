@@ -19,7 +19,7 @@ export interface AppJwtPayload extends JwtPayload {
 declare module "next-auth" {
     interface User {
         exp: number
-        accessToken?: string;
+        accessToken?: string
         id?: string
         name?: string
         courses?: CoursesJwt[]
@@ -49,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Credentials({
             async authorize(credentials) {
-                 if (credentials?.accessToken && typeof credentials.accessToken === "string") {
+                if (credentials?.accessToken && typeof credentials.accessToken === "string") {
                     const decoded = jwtDecode(credentials.accessToken) as AppJwtPayload
                     return {
                         id: decoded.sub,
@@ -64,7 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 const parsed = z
                     .object({
                         registration: z.string(),
-                        password: z.string()
+                        password: z.string(),
                     })
                     .safeParse(credentials)
 
@@ -77,7 +77,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     })
                     if (!data?.accessToken) return null
 
-                    const decoded = jwtDecode(data.accessToken) as AppJwtPayload;
+                    const decoded = jwtDecode(data.accessToken) as AppJwtPayload
 
                     return {
                         id: decoded.sub,
@@ -91,8 +91,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 } catch {
                     return null
                 }
-            }
-        })
+            },
+        }),
     ],
     callbacks: {
         async jwt({ token, user }) {
@@ -121,22 +121,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
         authorized({ auth, request: { nextUrl } }) {
             const now = Date.now()
-            const expires = auth?.exp ? new Date(auth.exp*1000).getTime() : 0
-            const isLoggedIn = !!auth && expires > now;
-            const isRequiredAuth = !nextUrl.pathname.startsWith('/login') && !nextUrl.pathname.startsWith('/error')
+            const expires = auth?.exp ? new Date(auth.exp * 1000).getTime() : 0
+            const isLoggedIn = !!auth && expires > now
+            const isRequiredAuth = !nextUrl.pathname.startsWith("/login") && !nextUrl.pathname.startsWith("/error")
             if (isRequiredAuth) {
-                return isLoggedIn;
+                return isLoggedIn
             } else if (isLoggedIn) {
-                return Response.redirect(new URL('/home', nextUrl));
+                return Response.redirect(new URL("/home", nextUrl))
             }
-            return true;
+            return true
         },
     },
     experimental: { enableWebAuthn: true },
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
     },
     pages: {
-        signIn: "/login"
+        signIn: "/login",
     },
 })

@@ -12,8 +12,8 @@ export function UserField({ label, value, onChange, readOnly }: UserFieldProps) 
             <input
                 className={`border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
                     readOnly
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200'
-                        : 'border-gray-300 focus:ring-blue-500'
+                        ? "bg-gray-100 text-gray-500 cursor-not-allowed border-gray-200"
+                        : "border-gray-300 focus:ring-blue-500"
                 }`}
                 value={value}
                 onChange={(e) => onChange && onChange(e.target.value)}

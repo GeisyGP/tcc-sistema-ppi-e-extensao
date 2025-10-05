@@ -2,7 +2,7 @@ export interface User {
     id: string
     registration: string
     name: string
-    courses?: { name: string, role: string }[]
+    courses?: { name: string; role: string }[]
     createdAt: string
     updatedAt: string
 }
