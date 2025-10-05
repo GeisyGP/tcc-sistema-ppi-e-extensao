@@ -3,6 +3,8 @@ import { Course, CourseRes } from "@/types/course.types"
 import { useCallback, useState } from "react"
 import { formatCourse } from "../utils/format-course"
 import toast from "react-hot-toast"
+import { ApiError } from "@/exceptions/api-error.exception"
+import { GENERIC_ERROR_MESSAGE } from "@/constants"
 
 export function useCourses() {
     const [rawData, setRawData] = useState<CourseRes[]>([])
@@ -10,7 +12,7 @@ export function useCourses() {
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
 
-    const fetchCourses = useCallback(async (params: { page: number, name?: string }) => {
+    const fetchCourses = useCallback(async (params: { page: number; name?: string }) => {
         setLoading(true)
         try {
             const response = await getAllCourses(params)
@@ -20,7 +22,8 @@ export function useCourses() {
                 setTotalPages(response.metadata.totalPages)
             }
         } catch (error: any) {
-            toast.error(error.message)
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -36,10 +39,11 @@ export function useCourses() {
                 modality: newCourse.modality,
                 shift: newCourse.shift,
             })
-            if (created) setFormattedData(prev => [...prev, formatCourse(created)])
+            if (created) setFormattedData((prev) => [...prev, formatCourse(created)])
             toast.success("Curso criado com sucesso")
         } catch (error: any) {
-            toast.error(error.message)
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
         }
     }, [])
 
@@ -53,20 +57,22 @@ export function useCourses() {
                 modality: updated.modality,
                 shift: updated.shift,
             })
-            setFormattedData(prev => prev.map(d => d.id === updated.id ? formatCourse(updated) : d))
+            setFormattedData((prev) => prev.map((d) => (d.id === updated.id ? formatCourse(updated) : d)))
             toast.success("Curso atualizado com sucesso")
         } catch (error: any) {
-            toast.error(error.message)
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
         }
     }, [])
 
     const handleDelete = useCallback(async (id: string) => {
         try {
             await deleteCourseById(id)
-            setFormattedData(prev => prev.filter(d => d.id !== id))
+            setFormattedData((prev) => prev.filter((d) => d.id !== id))
             toast.success("Curso deletado com sucesso")
         } catch (error: any) {
-            toast.error(error.message)
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
         }
     }, [])
 
