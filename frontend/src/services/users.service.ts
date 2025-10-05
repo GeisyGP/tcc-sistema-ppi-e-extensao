@@ -1,5 +1,13 @@
 import { PaginationResDto } from "@/types/pagination.type"
-import { ChangeRoleReq, CreateUserReq, GetAllUsersReq, UserRes, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import {
+    ChangeRoleReq,
+    CreateUserReq,
+    GetAllUsersReq,
+    UpdateUserReq,
+    UserRes,
+    UserRole,
+    UserWithCoursesRes,
+} from "@/types/user.type"
 import { getSession } from "next-auth/react"
 import backendApi from "./api"
 
@@ -69,5 +77,40 @@ export async function changeRole(userId: string, body: ChangeRoleReq): Promise<U
             Authorization: `Bearer ${session.accessToken}`,
         },
     })
+    return response.data?.data
+}
+
+export async function updateUserById(
+    userRole: UserRole,
+    body: UpdateUserReq,
+    userId: string,
+): Promise<UserWithCoursesRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.put(`/users/${userRole.toLowerCase()}/${userId}`, body, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
+export async function createMany(file: File): Promise<void> {
+    const session = await getSession()
+    if (!session?.accessToken) return
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await backendApi.post(`/users/many`, formData, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+            "Content-Type": "multipart/form-data",
+        },
+    })
+
     return response.data?.data
 }

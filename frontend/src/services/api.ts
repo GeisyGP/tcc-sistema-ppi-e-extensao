@@ -23,7 +23,16 @@ backendApi.interceptors.response.use(
             return Promise.reject(new ApiError("Sem permissão para acessar"))
         }
 
-        console.log(error.message)
+        const errorMessage = error?.response?.data?.message || error.message
+        if (errorMessage.includes("File does not contain required columns")) {
+            const column = errorMessage.split(": ")[1]
+            return Promise.reject(new ApiError(`O arquivo não contém a coluna obrigatória: ${column}`))
+        } else if (errorMessage.startsWith("Validation failed (current file type")) {
+            return Promise.reject(new ApiError("Extensão não permitida. Use um arquivo CSV ou TXT"))
+        } else if (errorMessage == "Invalid file") {
+            return Promise.reject(new ApiError("Arquivo inválido"))
+        }
+
         return Promise.reject(new ApiError(GENERIC_ERROR_MESSAGE))
     },
 )

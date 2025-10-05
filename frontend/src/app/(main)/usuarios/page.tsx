@@ -5,7 +5,7 @@ import List from "@/components/list.layout"
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { ViewModal } from "@/components/view-modal"
 import { Button } from "@/components/buttons/default.button"
-import { PlusIcon } from "@heroicons/react/16/solid"
+import { ArrowUpTrayIcon, PlusIcon } from "@heroicons/react/16/solid"
 import { RoleGuard } from "@/components/role-guard"
 import { User, UserRole, UserWithCoursesRes } from "@/types/user.type"
 import { useUsers } from "./hooks/use-users"
@@ -17,6 +17,7 @@ import { FilterButton } from "@/components/buttons/filter.button"
 import { getAllCourses } from "@/services/courses.service"
 import { useRole } from "@/hooks/use-role"
 import { UserEditModal } from "@/components/user-edit-modal"
+import { UploadCsvModal } from "@/components/user-csv-modal"
 
 const rolePermissions: Record<UserRole, UserRole[]> = {
     SYSADMIN: [UserRole.COORDINATOR, UserRole.TEACHER],
@@ -42,9 +43,12 @@ export default function UsersPage() {
     const [creatingNew, setCreatingNew] = useState(false)
     const [courseIdFilter, setCourseIdFilter] = useState<string>()
     const [selectedForEdit, setSelectedForEdit] = useState<UserWithCoursesRes | null>(null)
+    const [uploading, setUploading] = useState(false)
     const {
         handleCreateCoordinator,
+        handleCreateManyUsers,
         handleChangeRole,
+        handleUpdateUser,
         formattedData,
         handleCreate,
         handleDelete,
@@ -144,6 +148,17 @@ export default function UsersPage() {
                         <PlusIcon className="h-6 w-5" />
                         Criar
                     </Button>
+
+                    {activeRole == UserRole.STUDENT && (
+                        <Button
+                            onClick={() => setUploading(true)}
+                            className="flex items-center gap-1 shadow-sm"
+                            variant="secondary"
+                        >
+                            <ArrowUpTrayIcon className="h-6 w-5" />
+                            Importar
+                        </Button>
+                    )}
                 </div>
 
                 {loading ? (
@@ -159,7 +174,7 @@ export default function UsersPage() {
                         totalPages={totalPages}
                         onPageChange={setPage}
                         showDeleteAction={can(UserRole.COORDINATOR, UserRole.TEACHER)}
-                        showEditAction={can(UserRole.SYSADMIN)}
+                        showEditAction
                         onDelete={(id) => handleDelete(id, activeRole)}
                         onView={setSelected}
                         onEdit={(row) => {
@@ -182,9 +197,10 @@ export default function UsersPage() {
                         isOpen={!!selectedForEdit}
                         onClose={() => setSelectedForEdit(null)}
                         user={selectedForEdit}
-                        onSave={(userId, updateReq) => {
+                        onChangeRole={(userId, updateReq) => {
                             updateReq.forEach((req) => handleChangeRole(userId, req))
                         }}
+                        onUpdate={(userId, updateReq) => handleUpdateUser(userId, updateReq, activeRole)}
                     />
                 )}
 
@@ -204,6 +220,16 @@ export default function UsersPage() {
                         onSave={(newUser, role) => handleCreate(newUser, role)}
                     />
                 )}
+
+                <UploadCsvModal
+                    isOpen={uploading}
+                    onClose={() => setUploading(false)}
+                    onUpload={async (file: File) => {
+                        await handleCreateManyUsers(file)
+                        setUploading(false)
+                    }}
+                    role={activeRole}
+                />
             </div>
         </RoleGuard>
     )

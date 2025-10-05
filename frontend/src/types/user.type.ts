@@ -53,3 +53,8 @@ export interface ChangeRoleReq {
     courseId: string
     userRole: UserRole
 }
+
+export interface UpdateUserReq {
+    registration: string
+    name: string
+}

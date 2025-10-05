@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react"
 import { formatUser, formatUserWithCourses } from "../utils/format-user"
 import toast from "react-hot-toast"
-import { ChangeRoleReq, CreateUserReq, User, UserRole, UserWithCoursesRes } from "@/types/user.type"
-import { changeRole, createUser, deleteUser, getAllUsers } from "@/services/users.service"
+import { ChangeRoleReq, CreateUserReq, UpdateUserReq, User, UserRole, UserWithCoursesRes } from "@/types/user.type"
+import { changeRole, createMany, createUser, deleteUser, getAllUsers, updateUserById } from "@/services/users.service"
 import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
 
@@ -80,8 +80,33 @@ export function useUsers() {
             if (updated) {
                 setFormattedData((prev) => prev.map((d) => (d.id === updated.id ? formatUserWithCourses(updated) : d)))
             }
+            toast.success("Permissão do usuário atualizada com sucesso")
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        }
+    }, [])
+
+    const handleUpdateUser = useCallback(async (userId: string, req: UpdateUserReq, userRole: UserRole) => {
+        try {
+            const updated = await updateUserById(userRole, req, userId)
+            if (updated) {
+                setFormattedData((prev) => prev.map((d) => (d.id === updated.id ? formatUserWithCourses(updated) : d)))
+            }
             toast.success("Usuário atualizado com sucesso")
         } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        }
+    }, [])
+
+    const handleCreateManyUsers = useCallback(async (file: File) => {
+        try {
+            await createMany(file)
+
+            toast.success("Usuários criados com sucesso")
+        } catch (error: any) {
+            console.log(error, error.message)
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
             toast.error(errorMessage)
         }
@@ -95,7 +120,9 @@ export function useUsers() {
         handleCreate,
         handleDelete,
         formattedData,
+        handleUpdateUser,
         handleChangeRole,
+        handleCreateManyUsers,
         handleCreateCoordinator,
     }
 }
