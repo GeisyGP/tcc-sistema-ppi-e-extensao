@@ -2,7 +2,13 @@ import { Test } from "@nestjs/testing"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { PrismaService } from "src/config/prisma.service"
 import { UserService } from "src/modules/users/services/user.service"
-import { userWithCoursesMock, userMock, userWithCoursesResponseMock, userResponseMock } from "./mocks/user.mock"
+import {
+    userWithCoursesMock,
+    userMock,
+    userWithCoursesResponseMock,
+    userResponseMock,
+    makeMockFile,
+} from "./mocks/user.mock"
 import { paginationMock } from "test/units/mocks"
 import { UserExistsException } from "src/common/exceptions/user-exists.exception"
 import { UserNotFoundException } from "src/common/exceptions/user-not-found.exception"
@@ -210,6 +216,44 @@ describe("UserService", () => {
             expect(userRepository.changeUserRole).toHaveBeenCalledWith(
                 userWithCoursesMock.id,
                 dto,
+                requestMock.user.mainCourseId,
+            )
+        })
+    })
+
+    describe("updateById", () => {
+        it("should update an user", async () => {
+            const user = userWithCoursesResponseMock()
+            const dto = {
+                name: user.name,
+                registration: user.registration,
+            }
+            jest.spyOn(userService, "getById").mockResolvedValueOnce(user)
+            jest.spyOn(userService, "updateById").mockResolvedValueOnce(user)
+
+            const result = await userService.updateById(userWithCoursesMock.id, dto, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(user)
+        })
+    })
+
+    describe("createUserStudentByCsv", () => {
+        it("should call repository with data from file and hashed password", async () => {
+            jest.spyOn(userService as any, "hashPassword").mockResolvedValue("hashedPassword")
+            jest.spyOn(userRepository, "createMany").mockResolvedValueOnce()
+
+            const result = await userService.createUserStudentByCsv(
+                makeMockFile("name,registration,password\nJohn,123,abc\nJane,456,def"),
+                requestMock.user.mainCourseId,
+            )
+
+            expect(result).toBeUndefined()
+            expect(userRepository.createMany).toHaveBeenCalledWith(
+                [
+                    { name: "John", registration: "123", password: "hashedPassword" },
+                    { name: "Jane", registration: "456", password: "hashedPassword" },
+                ],
+                userWithCoursesMock.UserCourse[0].role,
                 requestMock.user.mainCourseId,
             )
         })

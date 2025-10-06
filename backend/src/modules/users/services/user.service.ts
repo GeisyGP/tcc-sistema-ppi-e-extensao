@@ -35,7 +35,9 @@ export class UserService {
 
     async create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<UserResDto> {
         try {
-            await this.courseService.getById(dto.courseId)
+            if (dto.courseId) {
+                await this.courseService.getById(dto.courseId)
+            }
 
             const userExists = await this.getByRegistration({ registration: dto.registration }, currentCourseId)
             if (userExists && userExists.UserCourse.find((uc) => uc.courseId == dto.courseId)) {

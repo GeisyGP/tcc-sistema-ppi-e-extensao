@@ -42,3 +42,9 @@ export const userWithCoursesMock: UserWithCourses = {
         },
     ],
 }
+
+export function makeMockFile(content: string): Express.Multer.File {
+    return {
+        buffer: Buffer.from(content, "utf-8"),
+    } as Express.Multer.File
+}

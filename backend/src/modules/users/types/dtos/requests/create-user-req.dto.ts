@@ -21,7 +21,7 @@ export class CreateUserReqDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    courseId: string
+    courseId?: string
 }
 
 export class CreateUserCoordinatorReqDto {

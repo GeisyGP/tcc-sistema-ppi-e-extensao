@@ -2,7 +2,13 @@ import { Test } from "@nestjs/testing"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { PrismaService } from "src/config/prisma.service"
 import { UserService } from "src/modules/users/services/user.service"
-import { userMock, userResponseMock, userWithCoursesMock, userWithCoursesResponseMock } from "./mocks/user.mock"
+import {
+    makeMockFile,
+    userMock,
+    userResponseMock,
+    userWithCoursesMock,
+    userWithCoursesResponseMock,
+} from "./mocks/user.mock"
 import { baseResponseMock, paginationMock } from "test/units/mocks"
 import { UserController } from "src/modules/users/controllers/user.controller"
 import { UserResDto } from "src/modules/users/types/dtos/responses/user-res.dto"
@@ -218,6 +224,79 @@ describe("UserController", () => {
             jest.spyOn(userService, "removeFromCourse").mockResolvedValueOnce()
 
             const result = await userController.deleteViewer({ id: userMock.id }, requestMock)
+
+            expect(result).toBeUndefined()
+        })
+    })
+
+    describe("updateCoordinatorById", () => {
+        it("should update an user", async () => {
+            const responseMock = userWithCoursesResponseMock()
+            const dto = {
+                name: responseMock.name,
+                registration: responseMock.registration,
+            }
+            jest.spyOn(userService, "updateById").mockResolvedValueOnce(responseMock)
+
+            const result = await userController.updateCoordinatorById(requestMock, { id: userMock.id }, dto)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User updated successfully", responseMock))
+        })
+    })
+
+    describe("updateTeacherById", () => {
+        it("should update an user", async () => {
+            const responseMock = userWithCoursesResponseMock()
+            const dto = {
+                name: responseMock.name,
+                registration: responseMock.registration,
+            }
+            jest.spyOn(userService, "updateById").mockResolvedValueOnce(responseMock)
+
+            const result = await userController.updateTeacherById(requestMock, { id: userMock.id }, dto)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User updated successfully", responseMock))
+        })
+    })
+
+    describe("updateStudentById", () => {
+        it("should update an user", async () => {
+            const responseMock = userWithCoursesResponseMock()
+            const dto = {
+                name: responseMock.name,
+                registration: responseMock.registration,
+            }
+            jest.spyOn(userService, "updateById").mockResolvedValueOnce(responseMock)
+
+            const result = await userController.updateStudentById(requestMock, { id: userMock.id }, dto)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User updated successfully", responseMock))
+        })
+    })
+
+    describe("updateViewerById", () => {
+        it("should update an user", async () => {
+            const responseMock = userWithCoursesResponseMock()
+            const dto = {
+                name: responseMock.name,
+                registration: responseMock.registration,
+            }
+            jest.spyOn(userService, "updateById").mockResolvedValueOnce(responseMock)
+
+            const result = await userController.updateViewerById(requestMock, { id: userMock.id }, dto)
+
+            expect(result).toEqual(baseResponseMock<UserResDto>("User updated successfully", responseMock))
+        })
+    })
+
+    describe("createUserStudentByCsv", () => {
+        it("should call userService with file", async () => {
+            jest.spyOn(userService, "createUserStudentByCsv").mockResolvedValueOnce()
+
+            const result = await userController.createUserStudentByCsv(
+                requestMock,
+                makeMockFile("name,registration,password\nJohn,123,abc\nJane,456,def"),
+            )
 
             expect(result).toBeUndefined()
         })

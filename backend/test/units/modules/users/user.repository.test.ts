@@ -271,4 +271,56 @@ describe("UserRepository", () => {
             })
         })
     })
+
+    describe("updateById", () => {
+        it("should update a user", async () => {
+            jest.spyOn(prismaService.user, "update").mockResolvedValueOnce(userMock)
+            const dto = {
+                name: userWithCoursesMock.name,
+                registration: userWithCoursesMock.registration,
+            }
+            const result = await userRepository.updateById(userMock.id, dto, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(userMock)
+            expect(prismaService.user.update).toHaveBeenCalledWith({
+                where: { id: userMock.id },
+                data: {
+                    name: dto.name,
+                    registration: dto.registration,
+                },
+                include: {
+                    UserCourse: {
+                        include: {
+                            course: { select: { name: true } },
+                        },
+                    },
+                },
+            })
+        })
+    })
+
+    describe("createMany", () => {
+        it("should create many users", async () => {
+            const usersMock = [userWithCoursesMock, userWithCoursesMock]
+            jest.spyOn(prismaService, "$transaction").mockResolvedValueOnce({})
+            jest.spyOn(prismaService.user, "createMany").mockResolvedValueOnce({ count: 2 })
+            jest.spyOn(prismaService.user, "findMany").mockResolvedValueOnce(usersMock)
+            jest.spyOn(prismaService.userCourse, "createMany").mockResolvedValueOnce({ count: 2 })
+            const dto = [
+                {
+                    name: userMock.name,
+                    registration: userMock.registration,
+                    password: userMock.password,
+                },
+                {
+                    name: userMock.name,
+                    registration: userMock.registration,
+                    password: userMock.password,
+                },
+            ]
+            const result = await userRepository.createMany(dto, "STUDENT", requestMock.user.mainCourseId)
+
+            expect(result).toBeUndefined()
+        })
+    })
 })

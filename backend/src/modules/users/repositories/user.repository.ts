@@ -25,7 +25,7 @@ export class UserRepository implements UserRepositoryInterface {
                 password: dto.password,
                 UserCourse: {
                     create: {
-                        courseId: dto.courseId,
+                        courseId: dto?.courseId || currentCourseId,
                         role,
                     },
                 },
@@ -33,7 +33,7 @@ export class UserRepository implements UserRepositoryInterface {
             update: {
                 UserCourse: {
                     create: {
-                        courseId: dto.courseId,
+                        courseId: dto?.courseId || currentCourseId,
                         role,
                     },
                 },
