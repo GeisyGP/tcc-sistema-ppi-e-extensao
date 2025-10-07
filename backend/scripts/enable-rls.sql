@@ -5,7 +5,8 @@ DECLARE
 BEGIN
   FOR tbl, policy IN 
     SELECT * FROM (VALUES
-      ('Subject', 'subject_rls_policy')
+      ('Subject', 'subject_rls_policy'),
+      ('PPI', 'ppi_rls_policy')
     ) AS t(table_name, policy_name)
   LOOP
     PERFORM enable_rls_with_policy(

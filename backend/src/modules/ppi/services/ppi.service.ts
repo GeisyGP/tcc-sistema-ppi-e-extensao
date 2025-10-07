@@ -75,12 +75,15 @@ export class PPIService {
         }
     }
 
-    async updateSubjectPPIById(id: string, dto: UpdateSubjectPPIReqDto, currentCourseId: string): Promise<void> {
+    async updateSubjectPPIById(id: string, dto: UpdateSubjectPPIReqDto, currentCourseId: string): Promise<PPIResDto> {
         try {
+            await this.getById(id, currentCourseId)
             for (const subject of dto.subjects) {
                 await this.subjectService.getById(subject.id, currentCourseId)
             }
             await this.ppiRepository.updateSubjectPPIById(id, dto, currentCourseId)
+
+            return await this.getById(id, currentCourseId)
         } catch (error) {
             this.loggerService.error(
                 this.constructor.name,

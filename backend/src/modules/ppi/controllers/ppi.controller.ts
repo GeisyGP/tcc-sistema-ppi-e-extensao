@@ -107,10 +107,15 @@ export class PPIController {
         @Param() param: UpdatePPIParamsReqDto,
         @Body() dto: UpdateSubjectPPIReqDto,
         @Request() request: RequestDto,
-    ): Promise<void> {
+    ): Promise<BaseResDto<PPIResDto>> {
         this.loggerService.info(this.constructor.name, this.updateSubjectPPIById.name, `user: ${request.user.sub}`)
 
-        await this.ppiService.updateSubjectPPIById(param.id, dto, request.user.mainCourseId)
+        const ppi = await this.ppiService.updateSubjectPPIById(param.id, dto, request.user.mainCourseId)
+
+        return {
+            message: "PPI updated successfully",
+            data: ppi,
+        }
     }
 
     @Delete(":id")
