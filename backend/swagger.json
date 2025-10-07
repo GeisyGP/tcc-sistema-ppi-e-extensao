@@ -983,6 +983,201 @@
           "subjects"
         ]
       }
+    },
+    "/ppis": {
+      "post": {
+        "operationId": "PPIController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePPIReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPIResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      },
+      "get": {
+        "operationId": "PPIController_getAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "classPeriod",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      }
+    },
+    "/ppis/{id}": {
+      "get": {
+        "operationId": "PPIController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPIResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      },
+      "put": {
+        "operationId": "PPIController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePPIReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPIResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      },
+      "patch": {
+        "operationId": "PPIController_updateSubjectPPIById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubjectPPIReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      },
+      "delete": {
+        "operationId": "PPIController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "ppis"
+        ]
+      }
     }
   },
   "info": {
@@ -1399,6 +1594,93 @@
         "required": [
           "name",
           "teachers"
+        ]
+      },
+      "CreatePPIReqDto": {
+        "type": "object",
+        "properties": {
+          "classPeriod": {
+            "type": "string"
+          },
+          "workload": {
+            "type": "number"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "classPeriod",
+          "workload",
+          "subjects"
+        ]
+      },
+      "PPIResDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "classPeriod": {
+            "type": "string"
+          },
+          "workload": {
+            "type": "number"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "classPeriod",
+          "workload",
+          "subjects",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdatePPIReqDto": {
+        "type": "object",
+        "properties": {
+          "classPeriod": {
+            "type": "string"
+          },
+          "workload": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "classPeriod",
+          "workload"
+        ]
+      },
+      "UpdateSubjectPPIReqDto": {
+        "type": "object",
+        "properties": {
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "subjects"
         ]
       }
     }

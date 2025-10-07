@@ -7,6 +7,7 @@ import { AuthGuard } from "./modules/authentication/auth.guard"
 import { CaslModule } from "./modules/casl/casl.module"
 import { SubjectModule } from "./modules/subjects/subject.module"
 import { CourseModule } from "./modules/courses/course.module"
+import { PPIModule } from "./modules/ppi/ppi.module"
 
 @Module({
     providers: [
@@ -15,6 +16,6 @@ import { CourseModule } from "./modules/courses/course.module"
             useClass: AuthGuard,
         },
     ],
-    imports: [PrismaModule, UserModule, AuthenticationModule, CaslModule, SubjectModule, CourseModule],
+    imports: [PrismaModule, UserModule, AuthenticationModule, CaslModule, SubjectModule, CourseModule, PPIModule],
 })
 export class AppModule {}

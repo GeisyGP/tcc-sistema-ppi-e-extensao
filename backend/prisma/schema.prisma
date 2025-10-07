@@ -19,6 +19,7 @@ model Course {
   updatedAt         DateTime     @updatedAt
   deletedAt         DateTime?
   UserCourse        UserCourse[]
+  ppi               PPI[]
 }
 
 model UserCourse {
@@ -41,6 +42,7 @@ model User {
   deletedAt    DateTime?
   subjects     Subject[]
   UserCourse   UserCourse[]
+  groups       Group[]
 }
 
 enum UserRole {
@@ -52,11 +54,95 @@ enum UserRole {
 }
 
 model Subject {
+  id         String       @id @default(uuid())
+  name       String
+  teachers   User[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+  courseId   String
+  SubjectPPI SubjectPPI[]
+}
+
+model SubjectPPI {
+  subject   Subject   @relation(fields: [subjectId], references: [id])
+  subjectId String
+  ppi       PPI       @relation(fields: [ppiId], references: [id])
+  ppiId     String
+  workload  Float
+  deletedAt DateTime?
+
+  @@id([subjectId, ppiId])
+}
+
+model PPI {
+  id          String       @id @default(uuid())
+  classPeriod String
+  workload    Float
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+  course      Course       @relation(fields: [courseId], references: [id])
+  courseId    String
+  Projeto     Project[]
+  SubjectPPI  SubjectPPI[]
+}
+
+model Project {
+  id                  String        @id @default(uuid())
+  class               String
+  actualYear          String
+  topic               String
+  scope               String
+  justification       String
+  generalObjective    String
+  specificObjectives  String
+  courseContributions String
+  methodology         String
+  timeline            String
+  status              ProjectStatus
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  deletedAt           DateTime?
+  createdBy           String
+  updatedBy           String
+  ppi                 PPI           @relation(fields: [ppiId], references: [id])
+  ppiId               String
+  courseId            String
+  Group               Group[]
+}
+
+enum ProjectStatus {
+  NOT_STARTED
+  STARTED
+  FINISHED
+}
+
+model Group {
+  id          String        @id @default(uuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  project     Project       @relation(fields: [projectId], references: [id])
+  projectId   String
+  users       User[]
+  Deliverable Deliverable[]
+  courseId    String
+}
+
+model Deliverable {
   id        String    @id @default(uuid())
   name      String
-  teachers  User[]
+  local     String
+  startDate DateTime
+  endDate   DateTime
+  createdBy String
+  updatedBy String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   String
   courseId  String
 }

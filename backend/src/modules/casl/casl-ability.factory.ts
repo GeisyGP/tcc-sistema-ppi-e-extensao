@@ -16,6 +16,7 @@ type Subjects =
           | "COORDINATOR"
           | "STUDENT"
           | "VIEWER"
+          | "PPI"
       >
     | "all"
 
@@ -54,6 +55,7 @@ export class CaslAbilityFactory {
                 can(Action.Update, "VIEWER")
                 can(Action.Update, "STUDENT")
                 can(Action.Update, "COORDINATOR")
+                can(Action.Manage, "PPI")
                 break
             }
             case UserRole.TEACHER: {
@@ -64,6 +66,7 @@ export class CaslAbilityFactory {
                 can(Action.Create, "STUDENT")
                 can(Action.Delete, "STUDENT")
                 can(Action.Update, "STUDENT")
+                can(Action.Read, "PPI")
                 break
             }
             case UserRole.STUDENT: {
