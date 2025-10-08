@@ -3,7 +3,7 @@ import { PrismaService } from "src/config/prisma.service"
 import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
-import { PPIRepository } from "src/modules/ppi/repositories/ppi.repository"
+import { PPIRepository } from "src/modules/ppis/repositories/ppi.repository"
 import { ppiMock, ppiResMock } from "./mocks/ppi.mock"
 
 describe("PPIRepository", () => {
@@ -213,7 +213,6 @@ describe("PPIRepository", () => {
                     subject: { connect: { id: dto.subjects[0].id } },
                     workload: dto.subjects[0].workload,
                 },
-                select: {},
             })
         })
     })

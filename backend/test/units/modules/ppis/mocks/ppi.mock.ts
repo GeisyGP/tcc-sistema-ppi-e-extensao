@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker/."
-import { PPIWithSubjects } from "src/modules/ppi/repositories/ppi.repository.interface"
-import { PPIResDto } from "src/modules/ppi/types/dtos/responses/ppi-res.dto"
+import { PPIWithSubjects } from "src/modules/ppis/repositories/ppi.repository.interface"
+import { PPIResDto } from "src/modules/ppis/types/dtos/responses/ppi-res.dto"
 
 const ppiSubjectsMock = {
     id: faker.string.uuid(),

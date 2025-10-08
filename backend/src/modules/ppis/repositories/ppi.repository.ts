@@ -149,7 +149,6 @@ export class PPIRepository implements PPIRepositoryInterface {
                         subject: { connect: { id: subject.id } },
                         workload: subject.workload,
                     },
-                    select: {},
                 }),
             ),
         )

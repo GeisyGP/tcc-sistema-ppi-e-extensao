@@ -230,17 +230,22 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                                                             {s.label}
                                                         </label>
                                                         {selected && (
-                                                            <input
-                                                                type="number"
-                                                                min={1}
-                                                                placeholder="h"
-                                                                value={selected.workload}
-                                                                onChange={(e) =>
-                                                                    updateWorkload(s.value, Number(e.target.value))
-                                                                }
-                                                                onClick={(e) => e.stopPropagation()}
-                                                                className="w-16 border rounded px-1 py-0.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
-                                                            />
+                                                            <div className="flex items-center gap-1">
+                                                                <span className="text-xs text-gray-500">
+                                                                    Carga horária:
+                                                                </span>
+                                                                <input
+                                                                    type="number"
+                                                                    min={1}
+                                                                    placeholder="h"
+                                                                    value={selected.workload}
+                                                                    onChange={(e) =>
+                                                                        updateWorkload(s.value, Number(e.target.value))
+                                                                    }
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    className="w-16 border rounded px-1 py-0.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
+                                                                />
+                                                            </div>
                                                         )}
                                                     </div>
                                                 )
