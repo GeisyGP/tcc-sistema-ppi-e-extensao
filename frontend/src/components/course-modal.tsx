@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/buttons/default.button"
-import { CourseRes } from "@/types/course.types"
+import { CourseRes } from "@/types/course.type"
 import { createCourseSchema } from "@/validations/course.schema"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
 

@@ -1,5 +1,5 @@
 import { createCourse, deleteCourseById, getAllCourses, updateCourseById } from "@/services/courses.service"
-import { Course, CourseRes } from "@/types/course.types"
+import { Course, CourseRes } from "@/types/course.type"
 import { useCallback, useState } from "react"
 import { formatCourse } from "../utils/format-course"
 import toast from "react-hot-toast"

@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials"
 import { z } from "zod"
 import { jwtDecode, JwtPayload } from "jwt-decode"
 import { login } from "@/services/auth.service"
-import { CoursesJwt } from "./types/course.types"
+import { CoursesJwt } from "./types/course.type"
 
 export interface AppJwtPayload extends JwtPayload {
     sub: string

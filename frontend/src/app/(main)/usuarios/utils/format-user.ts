@@ -31,5 +31,5 @@ export const roleMap: Record<UserRole, string> = {
     TEACHER: "Docente",
     STUDENT: "Discente",
     SYSADMIN: "Administrador do sistema",
-    VIEWER: "Visualizador",
+    VIEWER: "Consultor",
 }

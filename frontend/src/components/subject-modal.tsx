@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/buttons/default.button"
 import { getAllUsers } from "@/services/users.service"
-import { SubjectRes } from "@/types/subject.types"
+import { SubjectRes } from "@/types/subject.type"
 import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline"
 import { createSubjectSchema } from "@/validations/subject.schema"
 

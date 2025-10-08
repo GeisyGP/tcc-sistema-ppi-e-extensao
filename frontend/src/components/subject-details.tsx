@@ -1,4 +1,4 @@
-import { Subject } from "@/types/subject.types"
+import { Subject } from "@/types/subject.type"
 
 export function SubjectDetails({ subject }: { subject: Subject }) {
     return (

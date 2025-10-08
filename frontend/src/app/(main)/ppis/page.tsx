@@ -6,36 +6,45 @@ import { useState, useEffect } from "react"
 import { ViewModal } from "@/components/view-modal"
 import { Button } from "@/components/buttons/default.button"
 import { PlusIcon } from "@heroicons/react/16/solid"
-import { useCourses } from "./hooks/use-courses"
-import { CourseDetails } from "@/components/course-details"
-import { Course, CourseRes } from "@/types/course.type"
-import { CourseModal } from "@/components/course-modal"
 import { RoleGuard } from "@/components/role-guard"
 import { UserRole } from "@/types/user.type"
+import { usePPIs } from "./hooks/use-ppis"
+import { PPI, PPIRes } from "@/types/ppi.type"
+import { PPIDetails } from "@/components/ppis/ppi-detail"
+import { PPIModal } from "@/components/ppis/ppi-modal"
 
-export default function CoursesPage() {
-    const { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete } =
-        useCourses()
+export default function PPIsPage() {
+    const {
+        rawData,
+        loading,
+        fetchPPIs,
+        totalPages,
+        handleCreate,
+        handleUpdate,
+        handleDelete,
+        formattedData,
+        handleUpdatePPISubjects,
+    } = usePPIs()
     const [page, setPage] = useState(1)
-    const [nameFilter, setNameFilter] = useState<string | undefined>()
-    const [selected, setSelected] = useState<Course | null>(null)
-    const [selectedForEdit, setSelectedForEdit] = useState<CourseRes | null>(null)
+    const [classPeriodFilter, setClassPeriodFilter] = useState<string | undefined>()
+    const [selected, setSelected] = useState<PPI | null>(null)
+    const [selectedForEdit, setSelectedForEdit] = useState<PPIRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
 
     useEffect(() => {
-        fetchCourses({ page, name: nameFilter })
-    }, [page, nameFilter, fetchCourses])
+        fetchPPIs({ page, classPeriod: classPeriodFilter })
+    }, [page, classPeriodFilter, fetchPPIs])
 
     return (
-        <RoleGuard roles={[UserRole.SYSADMIN]}>
+        <RoleGuard roles={[UserRole.COORDINATOR, UserRole.TEACHER]}>
             <div className="w-full mx-auto p-6">
-                <h1 className="text-2xl font-semibold mb-6">Cursos</h1>
+                <h1 className="text-2xl font-semibold mb-6">PPIs</h1>
                 <div className="flex items-center gap-2 mb-4">
                     <div className="flex-1">
                         <SearchBar
-                            placeholder="Buscar curso..."
+                            placeholder="Buscar PPI..."
                             onSearch={(value) => {
-                                setNameFilter(value)
+                                setClassPeriodFilter(value)
                                 setPage(1)
                             }}
                         />
@@ -57,10 +66,8 @@ export default function CoursesPage() {
                 ) : (
                     <List
                         columns={[
-                            { key: "name", label: "Curso" },
-                            { key: "educationLevel", label: "Forma" },
-                            { key: "degree", label: "Grau" },
-                            { key: "shift", label: "Turno" },
+                            { key: "classPeriod", label: "Ano/Semestre" },
+                            { key: "subjectsNames", label: "Disciplinas" },
                         ]}
                         data={formattedData}
                         page={page}
@@ -81,22 +88,24 @@ export default function CoursesPage() {
                     isOpen={!!selected}
                     item={selected}
                     onClose={() => setSelected(null)}
-                    title={(item) => item.name}
-                    renderContent={(item) => <CourseDetails course={item} />}
+                    title="PPI"
+                    renderContent={(item) => <PPIDetails ppi={item} />}
                 />
 
-                <CourseModal
-                    isOpen={creatingNew}
-                    course={null}
-                    onClose={() => setCreatingNew(false)}
-                    onSave={handleCreate}
-                />
+                <PPIModal isOpen={creatingNew} PPI={null} onClose={() => setCreatingNew(false)} onSave={handleCreate} />
 
-                <CourseModal
+                <PPIModal
                     isOpen={!!selectedForEdit}
-                    course={selectedForEdit}
+                    PPI={selectedForEdit}
                     onClose={() => setSelectedForEdit(null)}
-                    onSave={handleUpdate}
+                    onSave={async (updated, changed) => {
+                        if (changed?.workload || changed?.classPeriod) {
+                            handleUpdate(selectedForEdit?.id as string, updated)
+                        }
+                        if (changed?.subjects) {
+                            handleUpdatePPISubjects(selectedForEdit?.id as string, updated)
+                        }
+                    }}
                 />
             </div>
         </RoleGuard>

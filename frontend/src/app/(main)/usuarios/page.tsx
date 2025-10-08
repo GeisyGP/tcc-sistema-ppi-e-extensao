@@ -32,7 +32,7 @@ const roleLabels: Record<UserRole, string> = {
     COORDINATOR: "Coordenadores",
     TEACHER: "Docentes",
     STUDENT: "Discentes",
-    VIEWER: "Visualizadores",
+    VIEWER: "Consultores",
 }
 
 export default function UsersPage() {

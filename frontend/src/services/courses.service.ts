@@ -1,4 +1,4 @@
-import { CourseCreateInput, CourseRes, CourseUpdateInput, GetAllCoursesReq } from "@/types/course.types"
+import { CourseCreateInput, CourseRes, CourseUpdateInput, GetAllCoursesReq } from "@/types/course.type"
 import backendApi from "./api"
 import { PaginationResDto } from "@/types/pagination.type"
 import { getSession } from "next-auth/react"

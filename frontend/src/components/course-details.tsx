@@ -1,4 +1,4 @@
-import { Course } from "@/types/course.types"
+import { Course } from "@/types/course.type"
 
 export function CourseDetails({ course }: { course: Course }) {
     return (

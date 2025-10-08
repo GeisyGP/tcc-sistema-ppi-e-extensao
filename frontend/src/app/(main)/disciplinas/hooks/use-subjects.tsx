@@ -1,5 +1,5 @@
 import { createSubject, deleteSubjectById, getAllSubjects, updateSubjectById } from "@/services/subjects.service"
-import { Subject, SubjectRes } from "@/types/subject.types"
+import { Subject, SubjectRes } from "@/types/subject.type"
 import { useCallback, useState } from "react"
 import { formatSubject } from "../utils/format-subject"
 import toast from "react-hot-toast"

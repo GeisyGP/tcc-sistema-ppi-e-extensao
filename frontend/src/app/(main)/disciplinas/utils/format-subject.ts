@@ -1,4 +1,4 @@
-import { Subject, SubjectRes } from "@/types/subject.types"
+import { Subject, SubjectRes } from "@/types/subject.type"
 
 export function formatSubject(res: SubjectRes): Subject {
     return {

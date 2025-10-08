@@ -1,16 +1,21 @@
-import { GetAllSubjectsReq, SubjectCreateInput, SubjectRes, SubjectUpdateInput } from "@/types/subject.type"
 import backendApi from "./api"
 import { PaginationResDto } from "@/types/pagination.type"
+import { GetAllPPIsReq, PPICreateInput, PPIRes, PPIUpdateInput, PPIUpdateSubjectInput } from "@/types/ppi.type"
 import { getSession } from "next-auth/react"
 
-export async function createSubject(body: SubjectCreateInput): Promise<SubjectRes | void> {
+export async function createPPI(body: PPICreateInput): Promise<PPIRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
+
     const response = await backendApi.post(
-        `/subjects`,
-        { ...body },
+        `/ppis`,
+        {
+            classPeriod: body.classPeriod,
+            workload: body.workload,
+            subjects: body.subjects,
+        },
         {
             headers: {
                 Authorization: `Bearer ${session.accessToken}`,
@@ -20,13 +25,13 @@ export async function createSubject(body: SubjectCreateInput): Promise<SubjectRe
     return response.data?.data
 }
 
-export async function getAllSubjects(payload: GetAllSubjectsReq): Promise<PaginationResDto<SubjectRes[]> | void> {
+export async function getAllPPIs(payload: GetAllPPIsReq): Promise<PaginationResDto<PPIRes[]> | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.get("/subjects", {
+    const response = await backendApi.get("/ppis", {
         params: payload,
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
@@ -35,13 +40,13 @@ export async function getAllSubjects(payload: GetAllSubjectsReq): Promise<Pagina
     return response.data?.data
 }
 
-export async function getSubjectById(id: string): Promise<SubjectRes | void> {
+export async function getPPIById(id: string): Promise<PPIRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.get(`/subjects/${id}`, {
+    const response = await backendApi.get(`/ppis/${id}`, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },
@@ -49,13 +54,13 @@ export async function getSubjectById(id: string): Promise<SubjectRes | void> {
     return response.data?.data
 }
 
-export async function updateSubjectById(id: string, body: SubjectUpdateInput): Promise<SubjectRes | void> {
+export async function updatePPIById(id: string, body: PPIUpdateInput): Promise<PPIRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.put(`/subjects/${id}`, body, {
+    const response = await backendApi.put(`/ppis/${id}`, body, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },
@@ -63,13 +68,27 @@ export async function updateSubjectById(id: string, body: SubjectUpdateInput): P
     return response.data?.data
 }
 
-export async function deleteSubjectById(id: string): Promise<void> {
+export async function updatePPISubjectById(id: string, body: PPIUpdateSubjectInput): Promise<PPIRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    await backendApi.delete(`/subjects/${id}`, {
+    const response = await backendApi.patch(`/ppis/${id}`, body, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
+export async function deletePPIById(id: string): Promise<void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    await backendApi.delete(`/ppis/${id}`, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },

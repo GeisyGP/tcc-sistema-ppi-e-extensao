@@ -1,4 +1,4 @@
-import { Course, CourseRes } from "@/types/course.types"
+import { Course, CourseRes } from "@/types/course.type"
 
 export function formatCourse(res: CourseRes): Course {
     return {

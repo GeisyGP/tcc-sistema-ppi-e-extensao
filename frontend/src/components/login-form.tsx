@@ -49,7 +49,7 @@ export default function LoginForm() {
                 </div>
             </div>
             <input type="hidden" name="redirectTo" value={callbackUrl} />
-            <Button variant="primary" className="mt-4 w-full" aria-disabled={isPending}>
+            <Button variant="primary" className="mt-4 w-full bg-green-900 hover:bg-stone-800" aria-disabled={isPending}>
                 Entrar
             </Button>
             <div className="flex h-8 items-end space-x-1" aria-live="polite" aria-atomic="true">
