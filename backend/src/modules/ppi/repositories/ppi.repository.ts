@@ -132,26 +132,25 @@ export class PPIRepository implements PPIRepositoryInterface {
         })
 
         await Promise.all(
-            await Promise.all(
-                dto.subjects.map((subject) =>
-                    this.prisma.subjectPPI.upsert({
-                        where: {
-                            subjectId_ppiId: {
-                                ppiId: id,
-                                subjectId: subject.id,
-                            },
+            dto.subjects.map((subject) =>
+                this.prisma.subjectPPI.upsert({
+                    where: {
+                        subjectId_ppiId: {
+                            ppiId: id,
+                            subjectId: subject.id,
                         },
-                        update: {
-                            workload: subject.workload,
-                            deletedAt: null,
-                        },
-                        create: {
-                            ppi: { connect: { id } },
-                            subject: { connect: { id: subject.id } },
-                            workload: subject.workload,
-                        },
-                    }),
-                ),
+                    },
+                    update: {
+                        workload: subject.workload,
+                        deletedAt: null,
+                    },
+                    create: {
+                        ppi: { connect: { id } },
+                        subject: { connect: { id: subject.id } },
+                        workload: subject.workload,
+                    },
+                    select: {},
+                }),
             ),
         )
     }
