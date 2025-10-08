@@ -20,9 +20,10 @@ export class PPIRepository implements PPIRepositoryInterface {
                 workload: dto.workload,
                 courseId: currentCourseId,
                 SubjectPPI: {
-                    create: dto.subjects.map((subject: { id: string; workload: number }) => ({
+                    create: dto.subjects.map((subject: { id: string; workload: number; isCoordinator: boolean }) => ({
                         subject: { connect: { id: subject.id } },
                         workload: subject.workload,
+                        isCoordinator: subject.isCoordinator,
                     })),
                 },
             },
@@ -141,6 +142,7 @@ export class PPIRepository implements PPIRepositoryInterface {
                         },
                     },
                     update: {
+                        isCoordinator: subject.isCoordinator,
                         workload: subject.workload,
                         deletedAt: null,
                     },
@@ -148,6 +150,7 @@ export class PPIRepository implements PPIRepositoryInterface {
                         ppi: { connect: { id } },
                         subject: { connect: { id: subject.id } },
                         workload: subject.workload,
+                        isCoordinator: subject.isCoordinator,
                     },
                 }),
             ),

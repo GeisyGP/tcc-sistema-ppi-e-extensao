@@ -43,7 +43,13 @@ describe("PPIRepository", () => {
             const dto = {
                 classPeriod: ppiResMock.classPeriod,
                 workload: ppiResMock.workload,
-                subjects: [{ workload: ppiResMock.subjects[0].workload, id: ppiResMock.subjects[0].id }],
+                subjects: [
+                    {
+                        workload: ppiResMock.subjects[0].workload,
+                        id: ppiResMock.subjects[0].id,
+                        isCoordinator: ppiResMock.subjects[0].isCoordinator,
+                    },
+                ],
             }
             jest.spyOn(prismaService.pPI, "create").mockResolvedValueOnce(ppiMock)
 
@@ -56,10 +62,13 @@ describe("PPIRepository", () => {
                     workload: dto.workload,
                     courseId: requestMock.user.mainCourseId,
                     SubjectPPI: {
-                        create: dto.subjects.map((subject: { id: string; workload: number }) => ({
-                            subject: { connect: { id: subject.id } },
-                            workload: subject.workload,
-                        })),
+                        create: dto.subjects.map(
+                            (subject: { id: string; workload: number; isCoordinator: boolean }) => ({
+                                subject: { connect: { id: subject.id } },
+                                workload: subject.workload,
+                                isCoordinator: subject.isCoordinator,
+                            }),
+                        ),
                     },
                 },
                 include: {
@@ -178,7 +187,13 @@ describe("PPIRepository", () => {
     describe("updateSubjectPPIById", () => {
         it("should update a ppi", async () => {
             const dto = {
-                subjects: [{ workload: ppiResMock.subjects[0].workload, id: ppiResMock.subjects[0].id }],
+                subjects: [
+                    {
+                        workload: ppiResMock.subjects[0].workload,
+                        id: ppiResMock.subjects[0].id,
+                        isCoordinator: ppiResMock.subjects[0].isCoordinator,
+                    },
+                ],
             }
             jest.spyOn(prismaService.subjectPPI, "deleteMany").mockResolvedValueOnce({ count: 1 })
             jest.spyOn(prismaService.subjectPPI, "upsert").mockResolvedValueOnce({
@@ -186,6 +201,7 @@ describe("PPIRepository", () => {
                 deletedAt: null,
                 ppiId: ppiMock.id,
                 subjectId: dto.subjects[0].id,
+                isCoordinator: dto.subjects[0].isCoordinator,
             })
 
             const result = await ppiRepository.updateSubjectPPIById(ppiMock.id, dto, requestMock.user.mainCourseId)
@@ -206,12 +222,14 @@ describe("PPIRepository", () => {
                 },
                 update: {
                     workload: dto.subjects[0].workload,
+                    isCoordinator: dto.subjects[0].isCoordinator,
                     deletedAt: null,
                 },
                 create: {
                     ppi: { connect: { id: ppiMock.id } },
                     subject: { connect: { id: dto.subjects[0].id } },
                     workload: dto.subjects[0].workload,
+                    isCoordinator: dto.subjects[0].isCoordinator,
                 },
             })
         })

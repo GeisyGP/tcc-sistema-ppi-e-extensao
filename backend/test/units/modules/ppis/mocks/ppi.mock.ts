@@ -6,6 +6,7 @@ const ppiSubjectsMock = {
     id: faker.string.uuid(),
     workload: 2,
     name: faker.word.sample(),
+    isCoordinator: false,
 }
 
 export const ppiMock: PPIWithSubjects = {
@@ -13,7 +14,12 @@ export const ppiMock: PPIWithSubjects = {
     classPeriod: "1º",
     workload: 12,
     SubjectPPI: [
-        { subjectId: ppiSubjectsMock.id, workload: ppiSubjectsMock.workload, subject: { name: ppiSubjectsMock.name } },
+        {
+            subjectId: ppiSubjectsMock.id,
+            workload: ppiSubjectsMock.workload,
+            isCoordinator: ppiSubjectsMock.isCoordinator,
+            subject: { name: ppiSubjectsMock.name },
+        },
     ],
     courseId: faker.string.uuid(),
     createdAt: new Date(),

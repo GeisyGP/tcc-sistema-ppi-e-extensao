@@ -23,10 +23,15 @@ export function PPIDetails({ ppi }: { ppi: PPI }) {
                                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
                                     {subject.workload}h
                                 </span>
+                                {subject.isCoordinator && (
+                                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                                        Coordenador
+                                    </span>
+                                )}
                             </div>
                         ))
                     ) : (
-                        <p className="text-gray-500">Sem vínculos</p>
+                        <p className="text-gray-500">Sem disciplinas</p>
                     )}
                 </dd>
             </div>

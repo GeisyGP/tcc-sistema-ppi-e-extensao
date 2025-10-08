@@ -29,5 +29,8 @@ class PPISubjectResDto {
     name?: string
 
     @ApiProperty()
+    isCoordinator: boolean
+
+    @ApiProperty()
     workload: number
 }

@@ -5,7 +5,7 @@ import { UpdatePPIReqDto } from "../types/dtos/requests/update-ppi-req.dto"
 import { UpdateSubjectPPIReqDto } from "../types/dtos/requests/update-subject-ppi-req.dto"
 
 export type PPIWithSubjects = PPI & {
-    SubjectPPI: { subjectId: string; workload: number; subject?: { name: string } }[]
+    SubjectPPI: { subjectId: string; workload: number; isCoordinator: boolean; subject?: { name: string } }[]
 }
 
 export interface PPIRepositoryInterface {

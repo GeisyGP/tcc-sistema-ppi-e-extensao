@@ -12,6 +12,7 @@ export class PPIResBuilder {
                 id: subject.subjectId,
                 name: subject.subject?.name,
                 workload: subject.workload,
+                isCoordinator: subject.isCoordinator,
             })),
             createdAt: ppi.createdAt,
             updatedAt: ppi.updatedAt,

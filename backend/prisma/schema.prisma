@@ -65,12 +65,13 @@ model Subject {
 }
 
 model SubjectPPI {
-  subject   Subject   @relation(fields: [subjectId], references: [id])
-  subjectId String
-  ppi       PPI       @relation(fields: [ppiId], references: [id])
-  ppiId     String
-  workload  Float
-  deletedAt DateTime?
+  subject       Subject   @relation(fields: [subjectId], references: [id])
+  subjectId     String
+  ppi           PPI       @relation(fields: [ppiId], references: [id])
+  ppiId         String
+  workload      Float
+  isCoordinator Boolean   @default(false)
+  deletedAt     DateTime?
 
   @@id([subjectId, ppiId])
 }
@@ -91,7 +92,7 @@ model PPI {
 model Project {
   id                  String        @id @default(uuid())
   class               String
-  actualYear          String
+  currentYear         String
   topic               String
   scope               String
   justification       String

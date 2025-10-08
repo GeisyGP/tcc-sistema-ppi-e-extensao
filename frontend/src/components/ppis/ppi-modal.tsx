@@ -68,7 +68,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
         } else {
             setFormData({
                 ...formData,
-                subjects: [...formData.subjects, { id, name, workload: 0 }],
+                subjects: [...formData.subjects, { id, name, workload: 0, isCoordinator: false }],
             })
         }
     }
@@ -77,6 +77,16 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
         setFormData({
             ...formData,
             subjects: formData.subjects.map((s) => (s.id === id ? { ...s, workload: newWorkload } : s)),
+        })
+    }
+
+    const handleCoordinatorSelect = (id: string) => {
+        setFormData({
+            ...formData,
+            subjects: formData.subjects.map((s) => ({
+                ...s,
+                isCoordinator: s.id === id, // apenas um true
+            })),
         })
     }
 
@@ -122,6 +132,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                 <h2 className="text-lg font-semibold mb-4">{PPI ? "Editar PPI" : "Nova PPI"}</h2>
 
                 <div className="space-y-3">
+                    {/* Ano/Semestre */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700">Ano/Semestre da turma</label>
                         <input
@@ -138,6 +149,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                         )}
                     </div>
 
+                    {/* Carga Horária Total */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700">Carga Horária</label>
                         <input
@@ -154,6 +166,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                         )}
                     </div>
 
+                    {/* Disciplinas */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700 mb-1">Disciplinas</label>
 
@@ -167,7 +180,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                                         key={s.id}
                                         className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
                                     >
-                                        {s.name} ({s.workload}h)
+                                        {s.name} ({s.workload}h{s.isCoordinator ? ", Coord." : ""})
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation()
@@ -229,22 +242,41 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                                                             />
                                                             {s.label}
                                                         </label>
+
                                                         {selected && (
-                                                            <div className="flex items-center gap-1">
-                                                                <span className="text-xs text-gray-500">
-                                                                    Carga horária:
-                                                                </span>
-                                                                <input
-                                                                    type="number"
-                                                                    min={1}
-                                                                    placeholder="h"
-                                                                    value={selected.workload}
-                                                                    onChange={(e) =>
-                                                                        updateWorkload(s.value, Number(e.target.value))
-                                                                    }
-                                                                    onClick={(e) => e.stopPropagation()}
-                                                                    className="w-16 border rounded px-1 py-0.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
-                                                                />
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="flex items-center gap-1">
+                                                                    <span className="text-xs text-gray-500">
+                                                                        Carga horária:
+                                                                    </span>
+                                                                    <input
+                                                                        type="number"
+                                                                        min={1}
+                                                                        placeholder="h"
+                                                                        value={selected.workload}
+                                                                        onChange={(e) =>
+                                                                            updateWorkload(
+                                                                                s.value,
+                                                                                Number(e.target.value),
+                                                                            )
+                                                                        }
+                                                                        onClick={(e) => e.stopPropagation()}
+                                                                        className="w-16 border rounded px-1 py-0.5 text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-400"
+                                                                    />
+                                                                </div>
+
+                                                                <label className="flex items-center gap-1 text-xs text-gray-600">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="coordinator"
+                                                                        checked={selected.isCoordinator}
+                                                                        onChange={() =>
+                                                                            handleCoordinatorSelect(s.value)
+                                                                        }
+                                                                        className="w-4 h-4 text-blue-500"
+                                                                    />
+                                                                    Coordenadora
+                                                                </label>
                                                             </div>
                                                         )}
                                                     </div>

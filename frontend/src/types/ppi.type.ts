@@ -11,6 +11,7 @@ export interface PPISubjectResDto {
     id: string
     name?: string
     workload: number
+    isCoordinator: boolean
 }
 
 export interface GetAllPPIsReq {
@@ -31,6 +32,7 @@ export interface PPIUpdateSubjectInput {
 interface SubectReqDto {
     id: string
     workload: number
+    isCoordinator?: boolean
 }
 
 export interface PPICreateInput {

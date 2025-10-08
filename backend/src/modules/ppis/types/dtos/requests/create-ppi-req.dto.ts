@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsArray, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator"
 
 export class CreatePPIReqDto {
     @ApiProperty()
@@ -14,6 +14,7 @@ export class CreatePPIReqDto {
 
     @ApiProperty()
     @IsArray()
+    @ValidateNested()
     @IsNotEmpty()
     subjects: Array<SubjectPPIReq>
 }
@@ -25,7 +26,12 @@ export class SubjectPPIReq {
     id: string
 
     @ApiProperty()
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
     workload: number
+
+    @ApiPropertyOptional()
+    @IsBoolean()
+    @IsNotEmpty()
+    isCoordinator?: boolean
 }
