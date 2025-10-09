@@ -9,6 +9,7 @@ import { SubjectModule } from "../subjects/subject.module"
 
 @Module({
     imports: [PrismaModule, SubjectModule],
+    exports: [PPIService],
     controllers: [PPIController],
     providers: [PPIService, PPIRepository, CaslAbilityFactory, CustomLoggerService],
 })

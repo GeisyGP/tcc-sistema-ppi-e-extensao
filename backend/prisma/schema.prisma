@@ -90,27 +90,27 @@ model PPI {
 }
 
 model Project {
-  id                  String        @id @default(uuid())
-  class               String
-  currentYear         String
-  topic               String
-  scope               String
-  justification       String
-  generalObjective    String
-  specificObjectives  String
-  courseContributions String
-  methodology         String
-  timeline            String
-  status              ProjectStatus
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-  deletedAt           DateTime?
-  createdBy           String
-  updatedBy           String
-  ppi                 PPI           @relation(fields: [ppiId], references: [id])
-  ppiId               String
-  courseId            String
-  Group               Group[]
+  id                    String        @id @default(uuid())
+  class                 String
+  currentYear           Int
+  topic                 String
+  scope                 String?
+  justification         String?
+  generalObjective      String?
+  specificObjectives    String?
+  subjectsContributions String?
+  methodology           String?
+  timeline              String?
+  status                ProjectStatus
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  deletedAt             DateTime?
+  createdBy             String
+  updatedBy             String
+  ppi                   PPI           @relation(fields: [ppiId], references: [id])
+  ppiId                 String
+  courseId              String
+  Group                 Group[]
 }
 
 enum ProjectStatus {

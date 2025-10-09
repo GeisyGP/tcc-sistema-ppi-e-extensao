@@ -15,7 +15,7 @@ import { UpdateSubjectParamsReqDto, UpdateSubjectReqDto } from "../types/dtos/re
 import { DeleteSubjectReqDto } from "../types/dtos/requests/delete-subject-req.dto"
 import { SubjectEntity } from "../types/entities/subject.entity"
 import { CustomLoggerService } from "src/common/logger"
-import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
+import { RequestDto } from "src/modules/authentication/types/dtos/requests/request.dto"
 
 @ApiTags("subjects")
 @Controller("subjects")

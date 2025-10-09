@@ -15,4 +15,5 @@ module.exports = {
         "^src/(.*)$": "<rootDir>/src/$1",
         "^test/(.*)$": "<rootDir>/test/$1",
     },
+    coveragePathIgnorePatterns: ["/node_modules/", "<rootDir>/src/.*/types/", "<rootDir>/test/.*/mocks/"],
 }

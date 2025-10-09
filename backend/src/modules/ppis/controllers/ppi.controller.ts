@@ -13,7 +13,7 @@ import { GetAllPPIsReqDto } from "../types/dtos/requests/get-all-ppis-req.dto"
 import { UpdatePPIParamsReqDto, UpdatePPIReqDto } from "../types/dtos/requests/update-ppi-req.dto"
 import { DeletePPIReqDto } from "../types/dtos/requests/delete-ppi-req.dto"
 import { CustomLoggerService } from "src/common/logger"
-import { RequestDto } from "src/modules/authentication/dtos/requests/request.dto"
+import { RequestDto } from "src/modules/authentication/types/dtos/requests/request.dto"
 import { UpdateSubjectPPIReqDto } from "../types/dtos/requests/update-subject-ppi-req.dto"
 import { PPIResDto } from "../types/dtos/responses/ppi-res.dto"
 

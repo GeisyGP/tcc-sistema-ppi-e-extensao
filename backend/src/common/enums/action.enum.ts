@@ -5,4 +5,5 @@ export enum Action {
     Update = "update",
     Delete = "delete",
     ChangeRole = "change-role",
+    ChangeStatus = "change-status",
 }

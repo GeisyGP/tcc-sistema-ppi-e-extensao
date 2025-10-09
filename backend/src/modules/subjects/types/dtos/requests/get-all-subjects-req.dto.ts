@@ -6,10 +6,10 @@ export class GetAllSubjectsReqDto extends PaginationReqDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    name: string
+    name?: string
 
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    teacherId: string
+    teacherId?: string
 }

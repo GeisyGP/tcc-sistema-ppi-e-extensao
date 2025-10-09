@@ -6,7 +6,7 @@ const ppiSubjectsMock = {
     id: faker.string.uuid(),
     workload: 2,
     name: faker.word.sample(),
-    isCoordinator: false,
+    isCoordinator: true,
 }
 
 export const ppiMock: PPIWithSubjects = {
