@@ -75,7 +75,7 @@ export class ProjectController {
     ): Promise<BaseResDto<PaginationResDto<ProjectResDto[]>>> {
         this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
-        const response = await this.projectService.getAll(queryParams, request.user.mainCourseId)
+        const response = await this.projectService.getAll(queryParams, request.user.mainCourseId, request.user.mainRole)
         return {
             message: "Project found successfully",
             data: response,

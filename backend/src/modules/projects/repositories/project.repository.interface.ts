@@ -1,6 +1,6 @@
 import { Project } from "@prisma/client"
 import { CreateProjectReqDto } from "../types/dtos/requests/create-project-req.dto"
-import { GetAllProjectsReqDto } from "../types/dtos/requests/get-all-projects-req.dto"
+import { GetAllProjectsReq } from "../types/dtos/requests/get-all-projects-req.dto"
 import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.dto"
 import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto"
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
@@ -22,10 +22,7 @@ export type ProjectWithPPI = Omit<
 export interface ProjectRepositoryInterface {
     create(dto: CreateProjectReqDto, currentCourseId: string, currentUserId: string): Promise<ProjectWithPPI>
     getFullById(id: string, currentCourseId: string): Promise<ProjectFullResDto | null>
-    getAll(
-        dto: GetAllProjectsReqDto,
-        currentCourseId: string,
-    ): Promise<{ projects: ProjectWithPPI[]; totalItems: number }>
+    getAll(dto: GetAllProjectsReq, currentCourseId: string): Promise<{ projects: ProjectWithPPI[]; totalItems: number }>
     updateById(
         id: string,
         dto: UpdateProjectReqDto,

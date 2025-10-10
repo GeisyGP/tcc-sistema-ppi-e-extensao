@@ -39,3 +39,13 @@ export class GetAllProjectsReqDto extends PaginationReqDto {
     @IsOptional()
     teacherId?: string
 }
+
+export class GetAllProjectsReq extends PaginationReqDto {
+    ppiId?: string
+    status?: ProjectStatus[]
+    executionPeriod?: string
+    class?: string
+    theme?: string
+    studentId?: string
+    teacherId?: string
+}

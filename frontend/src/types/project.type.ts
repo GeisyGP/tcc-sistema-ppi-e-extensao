@@ -1,9 +1,9 @@
 export interface ProjectRes {
     id: string
     class: string
-    currentYear: number
+    executionPeriod: string
     status: ProjectStatus
-    topic: string
+    theme: string
     ppiId: string
     ppiClassPeriod: string
     createdBy: string
@@ -20,7 +20,7 @@ export enum ProjectStatus {
 
 export interface ProjectFullRes {
     id: string
-    topic: string
+    theme: string
     scope: string | null
     justification: string | null
     generalObjective: string | null
@@ -35,28 +35,28 @@ export interface GetAllProjectsReq {
     limit?: number
     ppiId?: string
     status?: ProjectStatus
-    currentYear?: string
+    executionPeriod?: string
     class?: string
-    topic?: string
+    theme?: string
     studentId?: string
     teacherId?: string
 }
 
 export interface ProjectCreateInput {
     class: string
-    currentYear: number
-    topic: string
+    executionPeriod: string
+    theme: string
     ppiId: string
 }
 
 export interface ProjectUpdateInput {
     class: string
-    currentYear: number
-    topic: string
+    executionPeriod: string
+    theme: string
 }
 
 export interface ProjectContentUpdateInput {
-    topic: string
+    theme: string
     scope: string
     justification: string
     generalObjective: string
@@ -73,12 +73,18 @@ export interface ChangeProjectStatusInput {
 export interface Project {
     id: string
     class: string
-    currentYear: number
-    status: ProjectStatus
-    topic: string
+    executionPeriod: string
+    status: ProjectStatusMapped | "Desconhecido"
+    theme: string
     ppiClassPeriod: string
     createdBy: string
     updatedBy: string
     createdAt: string
     updatedAt: string
+}
+
+export enum ProjectStatusMapped {
+    NOT_STARTED = "Não iniciado",
+    STARTED = "Em andamento",
+    FINISHED = "Concluído",
 }

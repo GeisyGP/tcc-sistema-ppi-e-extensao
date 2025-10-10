@@ -72,9 +72,31 @@ export class ProjectService {
         }
     }
 
-    async getAll(dto: GetAllProjectsReqDto, currentCourseId: string): Promise<PaginationResDto<ProjectResDto[]>> {
+    async getAll(
+        dto: GetAllProjectsReqDto,
+        currentCourseId: string,
+        role: UserRole,
+    ): Promise<PaginationResDto<ProjectResDto[]>> {
         try {
-            const { projects, totalItems } = await this.projectRepository.getAll(dto, currentCourseId)
+            const shouldRestrictStatus = [UserRole.STUDENT, UserRole.VIEWER].includes(role as any)
+            let statusList: ProjectStatus[] | undefined
+
+            if (shouldRestrictStatus) {
+                if (!dto.status) {
+                    statusList = [ProjectStatus.STARTED, ProjectStatus.FINISHED]
+                } else {
+                    const status = Array.isArray(dto.status) ? dto.status : [dto.status]
+                    statusList = status.filter((s) => s !== ProjectStatus.NOT_STARTED)
+                }
+            } else {
+                statusList = dto?.status ? [dto.status] : undefined
+            }
+
+            const formattedDto = {
+                ...dto,
+                status: statusList,
+            }
+            const { projects, totalItems } = await this.projectRepository.getAll(formattedDto, currentCourseId)
 
             return ProjectResBuilder.buildMany(projects, dto.page, dto.limit, totalItems)
         } catch (error) {
@@ -236,6 +258,7 @@ export class ProjectService {
                     ppiId: ppiId,
                 },
                 currentCourseId,
+                UserRole.TEACHER,
             )
 
             if (projectsByPPIAndTeacher.metadata.totalItems === 0) return false

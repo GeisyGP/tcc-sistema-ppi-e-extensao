@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common"
 import { Prisma } from "@prisma/client"
 import { CreateProjectReqDto } from "../types/dtos/requests/create-project-req.dto"
-import { GetAllProjectsReqDto } from "../types/dtos/requests/get-all-projects-req.dto"
+import { GetAllProjectsReq } from "../types/dtos/requests/get-all-projects-req.dto"
 import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.dto"
 import { ProjectRepositoryInterface, ProjectWithPPI } from "./project.repository.interface"
 import { PrismaService } from "src/config/prisma.service"
@@ -95,14 +95,16 @@ export class ProjectRepository implements ProjectRepositoryInterface {
     }
 
     async getAll(
-        dto: GetAllProjectsReqDto,
+        dto: GetAllProjectsReq,
         currentCourseId: string,
     ): Promise<{ projects: ProjectWithPPI[]; totalItems: number }> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
 
         const filter = {
             ppiId: dto?.ppiId,
-            status: dto?.status,
+            status: {
+                in: dto.status,
+            },
             executionPeriod: dto?.executionPeriod,
             class: {
                 contains: dto?.class,
@@ -122,7 +124,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             where: filter,
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
-            orderBy: [{ theme: "asc" }],
+            orderBy: [{ executionPeriod: "desc" }],
             select: {
                 id: true,
                 class: true,

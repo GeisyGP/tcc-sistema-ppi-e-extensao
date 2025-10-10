@@ -5,8 +5,9 @@ import { UserRole } from "@/types/user.type"
 export function useRole() {
     const { data: session } = useSession()
     const userRole = session?.user?.mainRole as UserRole | undefined
+    const userId = session?.user.id
 
     const can = (...roles: UserRole[]) => !!userRole && roles.includes(userRole)
 
-    return { userRole, can }
+    return { userRole, can, userId }
 }

@@ -1984,7 +1984,7 @@
             "type": "string"
           },
           "executionPeriod": {
-            "type": "number"
+            "type": "string"
           },
           "theme": {
             "type": "string"
@@ -2010,7 +2010,7 @@
             "type": "string"
           },
           "executionPeriod": {
-            "type": "number"
+            "type": "string"
           },
           "status": {
             "type": "string",
@@ -2101,7 +2101,7 @@
             "type": "string"
           },
           "executionPeriod": {
-            "type": "number"
+            "type": "string"
           },
           "theme": {
             "type": "string"

@@ -24,7 +24,7 @@ export async function createProject(body: ProjectCreateInput): Promise<ProjectRe
     return response.data?.data
 }
 
-export async function getAllprojects(payload: GetAllProjectsReq): Promise<PaginationResDto<ProjectRes[]> | void> {
+export async function getAllProjects(payload: GetAllProjectsReq): Promise<PaginationResDto<ProjectRes[]> | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
