@@ -141,7 +141,7 @@ export function SubjectModal({ isOpen, subject, onClose, onSave }: EditSubjectMo
                                 {formData.teachers.map((t) => (
                                     <span
                                         key={t.id}
-                                        className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                        className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
                                     >
                                         {t.name}
                                         <button

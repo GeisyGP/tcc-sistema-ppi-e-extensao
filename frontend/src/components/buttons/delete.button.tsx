@@ -37,13 +37,17 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
                     <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-xl text-center transform transition-transform scale-100">
-                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-4">
-                            <ExclamationTriangleIcon className="h-8 w-8 text-yellow-600" />
+                        <div className="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-gray-100 mb-4">
+                            <ExclamationTriangleIcon className="h-6 w-6 text-gray-600" />
                         </div>
-                        <h2 className="text-2xl font-bold mb-2">Tem certeza que deseja excluir?</h2>
-                        <p className="text-sm text-gray-500 mb-6">Essa ação não poderá ser desfeita.</p>
-                        <div className="flex justify-center gap-4">
-                            <Button variant="secondary" className="w-32" onClick={handleClose} disabled={loading}>
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800">Tem certeza que deseja excluir?</h2>
+                        <div className="flex justify-center gap-6">
+                            <Button
+                                variant="secondary"
+                                className="w-32 transition-colors hover:bg-gray-100"
+                                onClick={handleClose}
+                                disabled={loading}
+                            >
                                 Cancelar
                             </Button>
                             <Button

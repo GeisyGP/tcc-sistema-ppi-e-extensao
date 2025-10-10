@@ -37,6 +37,7 @@ export class UserRepository implements UserRepositoryInterface {
                         role,
                     },
                 },
+                deletedAt: null,
             },
         })
     }
@@ -189,7 +190,6 @@ export class UserRepository implements UserRepositoryInterface {
             where: { id: userId },
             data: {
                 name: dto.name,
-                registration: dto.registration,
             },
             include: {
                 UserCourse: {

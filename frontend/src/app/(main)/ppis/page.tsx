@@ -12,6 +12,7 @@ import { usePPIs } from "./hooks/use-ppis"
 import { PPI, PPIRes } from "@/types/ppi.type"
 import { PPIDetails } from "@/components/ppis/ppi-detail"
 import { PPIModal } from "@/components/ppis/ppi-modal"
+import { useRole } from "@/hooks/use-role"
 
 export default function PPIsPage() {
     const {
@@ -30,6 +31,7 @@ export default function PPIsPage() {
     const [selected, setSelected] = useState<PPI | null>(null)
     const [selectedForEdit, setSelectedForEdit] = useState<PPIRes | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
+    const { can } = useRole()
 
     useEffect(() => {
         fetchPPIs({ page, classPeriod: classPeriodFilter })
@@ -76,8 +78,8 @@ export default function PPIsPage() {
                         totalPages={metadata.totalPages}
                         totalItems={metadata.totalItems}
                         onPageChange={setPage}
-                        showEditAction
-                        showDeleteAction
+                        showEditAction={can(UserRole.COORDINATOR)}
+                        showDeleteAction={can(UserRole.COORDINATOR)}
                         onDelete={(id) => handleDelete(id)}
                         onView={setSelected}
                         onEdit={(row) => {

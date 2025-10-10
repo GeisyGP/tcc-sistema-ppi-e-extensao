@@ -1608,9 +1608,6 @@
         "properties": {
           "name": {
             "type": "string"
-          },
-          "registration": {
-            "type": "string"
           }
         }
       },

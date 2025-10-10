@@ -13,9 +13,4 @@ export class UpdateByIdBodyReqDto {
     @IsString()
     @IsOptional()
     name: string
-
-    @ApiPropertyOptional()
-    @IsString()
-    @IsOptional()
-    registration: string
 }

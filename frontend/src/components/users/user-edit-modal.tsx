@@ -78,11 +78,7 @@ export function UserEditModal({ isOpen, onClose, user, onChangeRole, onUpdate }:
                         onChange={(newValue) => setFormData((prev) => ({ ...prev, name: newValue }))}
                     />
 
-                    <UserField
-                        label="Matrícula/SIAPE"
-                        value={formData.registration}
-                        onChange={(newValue) => setFormData((prev) => ({ ...prev, registration: newValue }))}
-                    />
+                    <UserField label="Matrícula/SIAPE" value={formData.registration} readOnly />
                 </div>
 
                 <RoleGuard roles={[UserRole.SYSADMIN]}>

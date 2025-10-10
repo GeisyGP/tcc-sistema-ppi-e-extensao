@@ -25,7 +25,7 @@ export function PPIDetails({ ppi }: { ppi: PPI }) {
                                 </span>
                                 {subject.isCoordinator && (
                                     <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
-                                        Coordenador
+                                        Coordenadora
                                     </span>
                                 )}
                             </div>
