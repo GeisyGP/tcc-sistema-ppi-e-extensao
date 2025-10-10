@@ -15,6 +15,6 @@ export const createUserSchema = z
         confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
     })
     .refine((data) => data.password === data.confirmPassword, {
-        message: "As senhas não coincidem",
+        message: "As senhas precisam ser iguais",
         path: ["confirmPassword"],
     })

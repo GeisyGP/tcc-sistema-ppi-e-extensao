@@ -52,7 +52,7 @@ export default function UsersPage() {
         formattedData,
         handleCreate,
         handleDelete,
-        totalPages,
+        metadata,
         fetchUsers,
         loading,
         rawData,
@@ -171,7 +171,8 @@ export default function UsersPage() {
                         ]}
                         data={formattedData}
                         page={page}
-                        totalPages={totalPages}
+                        totalPages={metadata.totalPages}
+                        totalItems={metadata.totalItems}
                         onPageChange={setPage}
                         showDeleteAction={can(UserRole.COORDINATOR, UserRole.TEACHER)}
                         showEditAction

@@ -10,7 +10,12 @@ export function useSubjects() {
     const [rawData, setRawData] = useState<SubjectRes[]>([])
     const [formattedData, setFormattedData] = useState<Subject[]>([])
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
+    const [metadata, setMetadata] = useState({
+        page: 1,
+        itemsPerPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+    })
 
     const fetchSubjects = useCallback(async (params: { page: number; name?: string; teacherId?: string }) => {
         setLoading(true)
@@ -19,7 +24,7 @@ export function useSubjects() {
             if (response) {
                 setRawData(response.items)
                 setFormattedData(response.items.map(formatSubject))
-                setTotalPages(response.metadata.totalPages)
+                setMetadata(response.metadata)
             }
         } catch (error: any) {
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
@@ -66,5 +71,5 @@ export function useSubjects() {
         }
     }, [])
 
-    return { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete }
+    return { rawData, formattedData, loading, metadata, fetchSubjects, handleCreate, handleUpdate, handleDelete }
 }

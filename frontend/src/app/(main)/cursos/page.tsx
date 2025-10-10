@@ -14,7 +14,7 @@ import { RoleGuard } from "@/components/role-guard"
 import { UserRole } from "@/types/user.type"
 
 export default function CoursesPage() {
-    const { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete } =
+    const { rawData, formattedData, loading, metadata, fetchCourses, handleCreate, handleUpdate, handleDelete } =
         useCourses()
     const [page, setPage] = useState(1)
     const [nameFilter, setNameFilter] = useState<string | undefined>()
@@ -64,7 +64,8 @@ export default function CoursesPage() {
                         ]}
                         data={formattedData}
                         page={page}
-                        totalPages={totalPages}
+                        totalPages={metadata.totalPages}
+                        totalItems={metadata.totalItems}
                         onPageChange={setPage}
                         showEditAction
                         showDeleteAction

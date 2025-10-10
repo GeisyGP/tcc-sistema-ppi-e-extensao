@@ -10,7 +10,12 @@ export function useCourses() {
     const [rawData, setRawData] = useState<CourseRes[]>([])
     const [formattedData, setFormattedData] = useState<Course[]>([])
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
+    const [metadata, setMetadata] = useState({
+        page: 1,
+        itemsPerPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+    })
 
     const fetchCourses = useCallback(async (params: { page: number; name?: string }) => {
         setLoading(true)
@@ -19,7 +24,7 @@ export function useCourses() {
             if (response) {
                 setRawData(response.items)
                 setFormattedData(response.items.map(formatCourse))
-                setTotalPages(response.metadata.totalPages)
+                setMetadata(response.metadata)
             }
         } catch (error: any) {
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
@@ -76,5 +81,5 @@ export function useCourses() {
         }
     }, [])
 
-    return { rawData, formattedData, loading, totalPages, fetchCourses, handleCreate, handleUpdate, handleDelete }
+    return { rawData, formattedData, loading, metadata, fetchCourses, handleCreate, handleUpdate, handleDelete }
 }

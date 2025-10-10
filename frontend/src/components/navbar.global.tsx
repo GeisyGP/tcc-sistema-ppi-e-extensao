@@ -23,7 +23,7 @@ export default function Navbar() {
         {
             href: "/disciplinas",
             label: "Disciplinas",
-            roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER],
+            roles: [UserRole.COORDINATOR, UserRole.TEACHER],
         },
         { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR, UserRole.TEACHER] },
         { href: "/cursos", label: "Cursos", roles: [UserRole.SYSADMIN] },

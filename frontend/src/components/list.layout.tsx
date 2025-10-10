@@ -15,6 +15,7 @@ type ListProps<T extends { id: string | number }> = {
     data: T[]
     page: number
     totalPages: number
+    totalItems: number
     onPageChange: (page: number) => void
     onView?: (item: T) => void
     showDeleteAction?: boolean
@@ -28,6 +29,7 @@ export default function List<T extends { id: string }>({
     data,
     page,
     totalPages,
+    totalItems,
     onPageChange,
     showDeleteAction = false,
     onDelete,
@@ -117,7 +119,7 @@ export default function List<T extends { id: string }>({
                 </Button>
 
                 <span className="text-sm text-gray-500 mx-2">
-                    Página {page} de {totalPages}
+                    Exibindo {data.length} de {totalItems} - Página {page} de {totalPages}
                 </span>
 
                 <Button

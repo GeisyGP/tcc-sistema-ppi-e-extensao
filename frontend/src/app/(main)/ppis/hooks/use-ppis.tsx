@@ -10,7 +10,12 @@ export function usePPIs() {
     const [rawData, setRawData] = useState<PPIRes[]>([])
     const [formattedData, setFormattedData] = useState<PPI[]>([])
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
+    const [metadata, setMetadata] = useState({
+        page: 1,
+        itemsPerPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+    })
 
     const fetchPPIs = useCallback(async (params: { page: number; classPeriod?: string; courseId?: string }) => {
         setLoading(true)
@@ -19,7 +24,7 @@ export function usePPIs() {
             if (response) {
                 setRawData(response.items)
                 setFormattedData(response.items.map(formatPPI))
-                setTotalPages(response.metadata.totalPages)
+                setMetadata(response.metadata)
             }
         } catch (error: any) {
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
@@ -83,7 +88,7 @@ export function usePPIs() {
     return {
         rawData,
         loading,
-        totalPages,
+        metadata,
         fetchPPIs,
         handleCreate,
         handleDelete,

@@ -10,17 +10,22 @@ export function useUsers() {
     const [rawData, setRawData] = useState<UserWithCoursesRes[]>([])
     const [formattedData, setFormattedData] = useState<User[]>([])
     const [loading, setLoading] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
+    const [metadata, setMetadata] = useState({
+        page: 1,
+        itemsPerPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+    })
 
     const fetchUsers = useCallback(
-        async (params: { page: number; role: UserRole[]; name?: string; courseId?: string }) => {
+        async (params: { page: number; role: UserRole[]; name?: string; courseId?: string; limit?: number }) => {
             setLoading(true)
             try {
                 const response = await getAllUsers(params)
                 if (response) {
                     setRawData(response.items)
                     setFormattedData(response.items.map(formatUserWithCourses))
-                    setTotalPages(response.metadata.totalPages)
+                    setMetadata(response.metadata)
                 }
             } catch (error: any) {
                 const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
@@ -115,7 +120,7 @@ export function useUsers() {
     return {
         rawData,
         loading,
-        totalPages,
+        metadata,
         fetchUsers,
         handleCreate,
         handleDelete,

@@ -18,7 +18,7 @@ export default function PPIsPage() {
         rawData,
         loading,
         fetchPPIs,
-        totalPages,
+        metadata,
         handleCreate,
         handleUpdate,
         handleDelete,
@@ -50,15 +50,17 @@ export default function PPIsPage() {
                         />
                     </div>
 
-                    <Button
-                        onClick={() => {
-                            setCreatingNew(true)
-                        }}
-                        className="flex items-center gap-1 shadow-sm"
-                    >
-                        <PlusIcon className="h-6 w-5" />
-                        Criar
-                    </Button>
+                    <RoleGuard roles={[UserRole.COORDINATOR]}>
+                        <Button
+                            onClick={() => {
+                                setCreatingNew(true)
+                            }}
+                            className="flex items-center gap-1 shadow-sm"
+                        >
+                            <PlusIcon className="h-6 w-5" />
+                            Criar
+                        </Button>
+                    </RoleGuard>
                 </div>
 
                 {loading ? (
@@ -71,7 +73,8 @@ export default function PPIsPage() {
                         ]}
                         data={formattedData}
                         page={page}
-                        totalPages={totalPages}
+                        totalPages={metadata.totalPages}
+                        totalItems={metadata.totalItems}
                         onPageChange={setPage}
                         showEditAction
                         showDeleteAction

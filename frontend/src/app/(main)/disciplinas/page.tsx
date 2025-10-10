@@ -17,7 +17,7 @@ import { UserRole } from "@/types/user.type"
 import { useRole } from "@/hooks/use-role"
 
 export default function SubjectsPage() {
-    const { rawData, formattedData, loading, totalPages, fetchSubjects, handleCreate, handleUpdate, handleDelete } =
+    const { rawData, formattedData, loading, metadata, fetchSubjects, handleCreate, handleUpdate, handleDelete } =
         useSubjects()
     const [page, setPage] = useState(1)
     const [nameFilter, setNameFilter] = useState<string | undefined>()
@@ -94,7 +94,8 @@ export default function SubjectsPage() {
                         ]}
                         data={formattedData}
                         page={page}
-                        totalPages={totalPages}
+                        totalPages={metadata.totalPages}
+                        totalItems={metadata.totalItems}
                         onPageChange={setPage}
                         showEditAction={can(UserRole.COORDINATOR)}
                         showDeleteAction={can(UserRole.COORDINATOR)}
