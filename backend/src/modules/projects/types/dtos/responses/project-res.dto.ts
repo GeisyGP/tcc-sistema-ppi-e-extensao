@@ -16,7 +16,7 @@ export class ProjectResDto {
     status: ProjectStatus
 
     @ApiProperty()
-    topic: string
+    theme: string
 
     @ApiProperty({ type: randomUUID })
     ppiId: string
@@ -42,7 +42,7 @@ export class ProjectFullResDto {
     id: string
 
     @ApiProperty()
-    topic: string
+    theme: string
 
     @ApiPropertyOptional()
     scope: string | null

@@ -15,7 +15,7 @@ export class UpdateProjectReqDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    topic: string
+    theme: string
 }
 
 export class UpdateProjectParamsReqDto {

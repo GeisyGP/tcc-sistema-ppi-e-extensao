@@ -21,7 +21,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             data: {
                 class: dto.class,
                 currentYear: dto.currentYear,
-                topic: dto.topic,
+                theme: dto.theme,
                 status: ProjectStatus.NOT_STARTED,
                 ppiId: dto.ppiId,
                 courseId: currentCourseId,
@@ -33,7 +33,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 class: true,
                 currentYear: true,
                 status: true,
-                topic: true,
+                theme: true,
                 ppiId: true,
                 createdBy: true,
                 updatedBy: true,
@@ -52,7 +52,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             where: { id },
             select: {
                 id: true,
-                topic: true,
+                theme: true,
                 scope: true,
                 justification: true,
                 generalObjective: true,
@@ -77,7 +77,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 class: true,
                 currentYear: true,
                 status: true,
-                topic: true,
+                theme: true,
                 ppiId: true,
                 createdBy: true,
                 updatedBy: true,
@@ -108,8 +108,8 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 contains: dto?.class,
                 mode: Prisma.QueryMode.insensitive,
             },
-            topic: {
-                contains: dto?.topic,
+            theme: {
+                contains: dto?.theme,
                 mode: Prisma.QueryMode.insensitive,
             },
             Group: dto?.studentId ? { some: { users: { some: { id: dto.studentId } } } } : undefined,
@@ -122,13 +122,13 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             where: filter,
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
-            orderBy: [{ topic: "asc" }],
+            orderBy: [{ theme: "asc" }],
             select: {
                 id: true,
                 class: true,
                 currentYear: true,
                 status: true,
-                topic: true,
+                theme: true,
                 ppiId: true,
                 createdBy: true,
                 updatedBy: true,
@@ -166,7 +166,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             data: {
                 class: dto.class,
                 currentYear: dto.currentYear,
-                topic: dto.topic,
+                theme: dto.theme,
                 updatedBy: currentUserId,
             },
             select: {
@@ -174,7 +174,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 class: true,
                 currentYear: true,
                 status: true,
-                topic: true,
+                theme: true,
                 ppiId: true,
                 createdBy: true,
                 updatedBy: true,
@@ -197,7 +197,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         return await this.prisma.project.update({
             where: { id },
             data: {
-                topic: dto.topic,
+                theme: dto.theme,
                 scope: dto.scope,
                 justification: dto.justification,
                 generalObjective: dto.generalObjective,
@@ -209,7 +209,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             },
             select: {
                 id: true,
-                topic: true,
+                theme: true,
                 scope: true,
                 justification: true,
                 generalObjective: true,
@@ -239,7 +239,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 class: true,
                 currentYear: true,
                 status: true,
-                topic: true,
+                theme: true,
                 ppiId: true,
                 createdBy: true,
                 updatedBy: true,

@@ -93,7 +93,7 @@ model Project {
   id                    String        @id @default(uuid())
   class                 String
   currentYear           Int
-  topic                 String
+  theme                 String
   scope                 String?
   justification         String?
   generalObjective      String?

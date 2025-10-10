@@ -1266,7 +1266,7 @@
             }
           },
           {
-            "name": "topic",
+            "name": "theme",
             "required": false,
             "in": "query",
             "schema": {
@@ -1986,7 +1986,7 @@
           "currentYear": {
             "type": "number"
           },
-          "topic": {
+          "theme": {
             "type": "string"
           },
           "ppiId": {
@@ -1996,7 +1996,7 @@
         "required": [
           "class",
           "currentYear",
-          "topic",
+          "theme",
           "ppiId"
         ]
       },
@@ -2020,7 +2020,7 @@
               "FINISHED"
             ]
           },
-          "topic": {
+          "theme": {
             "type": "string"
           },
           "ppiId": {
@@ -2049,7 +2049,7 @@
           "class",
           "currentYear",
           "status",
-          "topic",
+          "theme",
           "ppiId",
           "ppiClassPeriod",
           "createdBy",
@@ -2064,7 +2064,7 @@
           "id": {
             "$ref": "#/components/schemas/randomUUID"
           },
-          "topic": {
+          "theme": {
             "type": "string"
           },
           "scope": {
@@ -2091,7 +2091,7 @@
         },
         "required": [
           "id",
-          "topic"
+          "theme"
         ]
       },
       "UpdateProjectReqDto": {
@@ -2103,20 +2103,20 @@
           "currentYear": {
             "type": "number"
           },
-          "topic": {
+          "theme": {
             "type": "string"
           }
         },
         "required": [
           "class",
           "currentYear",
-          "topic"
+          "theme"
         ]
       },
       "UpdateProjectContentReqDto": {
         "type": "object",
         "properties": {
-          "topic": {
+          "theme": {
             "type": "string"
           },
           "scope": {
@@ -2142,7 +2142,7 @@
           }
         },
         "required": [
-          "topic"
+          "theme"
         ]
       },
       "ChangeStatusReqDto": {

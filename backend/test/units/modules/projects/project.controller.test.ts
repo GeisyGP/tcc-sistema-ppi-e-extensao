@@ -63,7 +63,7 @@ describe("ProjectController", () => {
             const dto = {
                 class: projectMock.class,
                 currentYear: projectMock.currentYear,
-                topic: projectMock.topic,
+                theme: projectMock.theme,
                 ppiId: projectMock.ppiId,
             }
             jest.spyOn(projectService, "create").mockResolvedValueOnce(projectResMock)
@@ -104,7 +104,7 @@ describe("ProjectController", () => {
                     status: projectMock.status,
                     currentYear: "",
                     class: "",
-                    topic: "",
+                    theme: "",
                     teacherId: "",
                     studentId: "",
                 },
@@ -122,7 +122,7 @@ describe("ProjectController", () => {
             const dto = {
                 class: projectMock.class,
                 currentYear: projectMock.currentYear,
-                topic: projectMock.topic,
+                theme: projectMock.theme,
             }
 
             jest.spyOn(projectService, "updateById").mockResolvedValueOnce(projectResMock)
@@ -136,7 +136,7 @@ describe("ProjectController", () => {
     describe("updateContentByID", () => {
         it("should return a project", async () => {
             const dto = {
-                topic: projectFullResMock.topic,
+                theme: projectFullResMock.theme,
                 scope: projectFullResMock.scope,
                 justification: projectFullResMock.justification,
                 generalObjective: projectFullResMock.generalObjective,

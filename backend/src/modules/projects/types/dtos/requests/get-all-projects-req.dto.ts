@@ -27,7 +27,7 @@ export class GetAllProjectsReqDto extends PaginationReqDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    topic?: string
+    theme?: string
 
     @ApiPropertyOptional()
     @IsString()

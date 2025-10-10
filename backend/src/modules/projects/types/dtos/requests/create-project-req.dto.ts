@@ -15,7 +15,7 @@ export class CreateProjectReqDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    topic: string
+    theme: string
 
     @ApiProperty()
     @IsString()

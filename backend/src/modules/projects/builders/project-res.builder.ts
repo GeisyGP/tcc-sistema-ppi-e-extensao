@@ -7,7 +7,7 @@ export class ProjectResBuilder {
         return {
             id: project.id,
             class: project.class,
-            topic: project.topic,
+            theme: project.theme,
             currentYear: Number(project.currentYear),
             status: project.status,
             ppiId: project.ppiId,
@@ -22,7 +22,7 @@ export class ProjectResBuilder {
     static buildFull(project: ProjectFullResDto): ProjectFullResDto {
         return {
             id: project.id,
-            topic: project.topic,
+            theme: project.theme,
             scope: project.scope,
             justification: project.justification,
             generalObjective: project.generalObjective,

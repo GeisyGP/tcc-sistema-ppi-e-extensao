@@ -5,7 +5,7 @@ export class UpdateProjectContentReqDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    topic: string
+    theme: string
 
     @ApiPropertyOptional()
     @IsString()
