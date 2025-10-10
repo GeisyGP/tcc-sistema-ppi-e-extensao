@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { logout } from "@/actions/logout"
 import { RoleGuard } from "./role-guard"
 import { UserRole } from "@/types/user.type"
-import { CourseSelector } from "./course-selector"
+import { CourseSelector } from "./courses/course-selector"
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false)

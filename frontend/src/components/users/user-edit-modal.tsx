@@ -4,7 +4,7 @@ import { Button } from "@/components/buttons/default.button"
 import { ChangeRoleReq, UpdateUserReq, UserRole, UserWithCoursesRes } from "@/types/user.type"
 import { useState, useEffect } from "react"
 import { UserField } from "./user-field"
-import { RoleGuard } from "./role-guard"
+import { RoleGuard } from "../role-guard"
 
 type UserEditModalProps = {
     isOpen: boolean
