@@ -20,7 +20,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         return await this.prisma.project.create({
             data: {
                 class: dto.class,
-                currentYear: dto.currentYear,
+                executionPeriod: dto.executionPeriod,
                 theme: dto.theme,
                 status: ProjectStatus.NOT_STARTED,
                 ppiId: dto.ppiId,
@@ -31,7 +31,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             select: {
                 id: true,
                 class: true,
-                currentYear: true,
+                executionPeriod: true,
                 status: true,
                 theme: true,
                 ppiId: true,
@@ -75,7 +75,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             select: {
                 id: true,
                 class: true,
-                currentYear: true,
+                executionPeriod: true,
                 status: true,
                 theme: true,
                 ppiId: true,
@@ -103,7 +103,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         const filter = {
             ppiId: dto?.ppiId,
             status: dto?.status,
-            currentYear: dto?.currentYear ? Number(dto.currentYear) : undefined,
+            executionPeriod: dto?.executionPeriod,
             class: {
                 contains: dto?.class,
                 mode: Prisma.QueryMode.insensitive,
@@ -126,7 +126,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             select: {
                 id: true,
                 class: true,
-                currentYear: true,
+                executionPeriod: true,
                 status: true,
                 theme: true,
                 ppiId: true,
@@ -165,14 +165,14 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             where: { id },
             data: {
                 class: dto.class,
-                currentYear: dto.currentYear,
+                executionPeriod: dto.executionPeriod,
                 theme: dto.theme,
                 updatedBy: currentUserId,
             },
             select: {
                 id: true,
                 class: true,
-                currentYear: true,
+                executionPeriod: true,
                 status: true,
                 theme: true,
                 ppiId: true,
@@ -237,7 +237,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             select: {
                 id: true,
                 class: true,
-                currentYear: true,
+                executionPeriod: true,
                 status: true,
                 theme: true,
                 ppiId: true,

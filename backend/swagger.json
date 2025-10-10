@@ -1250,7 +1250,7 @@
             }
           },
           {
-            "name": "currentYear",
+            "name": "executionPeriod",
             "required": false,
             "in": "query",
             "schema": {
@@ -1983,7 +1983,7 @@
           "class": {
             "type": "string"
           },
-          "currentYear": {
+          "executionPeriod": {
             "type": "number"
           },
           "theme": {
@@ -1995,7 +1995,7 @@
         },
         "required": [
           "class",
-          "currentYear",
+          "executionPeriod",
           "theme",
           "ppiId"
         ]
@@ -2009,7 +2009,7 @@
           "class": {
             "type": "string"
           },
-          "currentYear": {
+          "executionPeriod": {
             "type": "number"
           },
           "status": {
@@ -2047,7 +2047,7 @@
         "required": [
           "id",
           "class",
-          "currentYear",
+          "executionPeriod",
           "status",
           "theme",
           "ppiId",
@@ -2100,7 +2100,7 @@
           "class": {
             "type": "string"
           },
-          "currentYear": {
+          "executionPeriod": {
             "type": "number"
           },
           "theme": {
@@ -2109,7 +2109,7 @@
         },
         "required": [
           "class",
-          "currentYear",
+          "executionPeriod",
           "theme"
         ]
       },

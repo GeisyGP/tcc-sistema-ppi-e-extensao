@@ -5,7 +5,7 @@ import { ProjectWithPPI } from "src/modules/projects/repositories/project.reposi
 export const baseProjectMock = {
     id: faker.string.uuid(),
     class: "cc2000",
-    currentYear: 2025,
+    executionPeriod: "2025",
     status: ProjectStatus.NOT_STARTED,
     theme: "Intelligent System for Monitoring Computer Lab Resources",
     ppiId: faker.string.uuid(),
@@ -34,7 +34,7 @@ export const baseProjectMock = {
 export const projectMock: ProjectWithPPI = {
     id: baseProjectMock.id,
     class: baseProjectMock.class,
-    currentYear: baseProjectMock.currentYear,
+    executionPeriod: baseProjectMock.executionPeriod,
     status: baseProjectMock.status,
     theme: baseProjectMock.theme,
     ppiId: baseProjectMock.ppiId,
@@ -50,7 +50,7 @@ export const projectMock: ProjectWithPPI = {
 export const projectResMock = {
     id: baseProjectMock.id,
     class: baseProjectMock.class,
-    currentYear: baseProjectMock.currentYear,
+    executionPeriod: baseProjectMock.executionPeriod,
     status: baseProjectMock.status,
     theme: baseProjectMock.theme,
     ppiId: baseProjectMock.ppiId,

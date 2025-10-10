@@ -8,7 +8,7 @@ export class ProjectResBuilder {
             id: project.id,
             class: project.class,
             theme: project.theme,
-            currentYear: Number(project.currentYear),
+            executionPeriod: project.executionPeriod,
             status: project.status,
             ppiId: project.ppiId,
             ppiClassPeriod: project.ppi.classPeriod,

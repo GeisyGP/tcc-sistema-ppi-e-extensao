@@ -42,7 +42,7 @@ describe("ProjectRepository", () => {
         it("should create a project", async () => {
             const dto = {
                 class: baseProjectMock.class,
-                currentYear: baseProjectMock.currentYear,
+                executionPeriod: baseProjectMock.executionPeriod,
                 theme: baseProjectMock.theme,
                 ppiId: baseProjectMock.ppiId,
             }
@@ -84,7 +84,7 @@ describe("ProjectRepository", () => {
                 page: 1,
                 ppiId: "",
                 status: baseProjectMock.status,
-                currentYear: "",
+                executionPeriod: "",
                 class: "",
                 theme: "",
                 teacherId: "",
@@ -108,7 +108,7 @@ describe("ProjectRepository", () => {
         it("should update a project", async () => {
             const dto = {
                 class: baseProjectMock.class,
-                currentYear: baseProjectMock.currentYear,
+                executionPeriod: baseProjectMock.executionPeriod,
                 theme: baseProjectMock.theme,
             }
             jest.spyOn(prismaService.project, "update").mockResolvedValueOnce(baseProjectMock)

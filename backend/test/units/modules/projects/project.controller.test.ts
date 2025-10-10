@@ -62,7 +62,7 @@ describe("ProjectController", () => {
         it("should return a project", async () => {
             const dto = {
                 class: projectMock.class,
-                currentYear: projectMock.currentYear,
+                executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
                 ppiId: projectMock.ppiId,
             }
@@ -102,7 +102,7 @@ describe("ProjectController", () => {
                     page: 1,
                     ppiId: "",
                     status: projectMock.status,
-                    currentYear: "",
+                    executionPeriod: "",
                     class: "",
                     theme: "",
                     teacherId: "",
@@ -121,7 +121,7 @@ describe("ProjectController", () => {
         it("should return a project", async () => {
             const dto = {
                 class: projectMock.class,
-                currentYear: projectMock.currentYear,
+                executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
             }
 

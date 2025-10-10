@@ -10,7 +10,7 @@ export class ProjectResDto {
     class: string
 
     @ApiProperty()
-    currentYear: number
+    executionPeriod: string
 
     @ApiProperty({ enum: ProjectStatus })
     status: ProjectStatus

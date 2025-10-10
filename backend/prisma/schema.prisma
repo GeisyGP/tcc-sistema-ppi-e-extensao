@@ -92,7 +92,7 @@ model PPI {
 model Project {
   id                    String        @id @default(uuid())
   class                 String
-  currentYear           Int
+  executionPeriod       String
   theme                 String
   scope                 String?
   justification         String?

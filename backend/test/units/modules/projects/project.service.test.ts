@@ -71,7 +71,7 @@ describe("ProjectService", () => {
         it("should create a project", async () => {
             const dto = {
                 class: projectMock.class,
-                currentYear: projectMock.currentYear,
+                executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
                 ppiId: projectMock.ppiId,
             }
@@ -137,7 +137,7 @@ describe("ProjectService", () => {
                     page: 1,
                     ppiId: "",
                     status: projectMock.status,
-                    currentYear: "",
+                    executionPeriod: "",
                     class: "",
                     theme: "",
                     teacherId: "",
@@ -153,7 +153,7 @@ describe("ProjectService", () => {
     describe("updateById", () => {
         const dto = {
             class: projectMock.class,
-            currentYear: projectMock.currentYear,
+            executionPeriod: projectMock.executionPeriod,
             theme: projectMock.theme,
         }
         it("should return a project", async () => {

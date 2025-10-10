@@ -17,7 +17,7 @@ export class GetAllProjectsReqDto extends PaginationReqDto {
     @ApiPropertyOptional()
     @IsString()
     @IsOptional()
-    currentYear?: string
+    executionPeriod?: string
 
     @ApiPropertyOptional()
     @IsString()

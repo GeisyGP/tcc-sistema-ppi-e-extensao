@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { IsNotEmpty, IsString } from "class-validator"
 
 export class CreateProjectReqDto {
     @ApiProperty()
@@ -8,9 +8,9 @@ export class CreateProjectReqDto {
     class: string
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    currentYear: number
+    executionPeriod: string
 
     @ApiProperty()
     @IsString()

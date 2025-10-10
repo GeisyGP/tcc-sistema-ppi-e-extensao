@@ -84,6 +84,7 @@ describe("UserRepository", () => {
                             role: userWithCoursesMock.UserCourse[0].role,
                         },
                     },
+                    deletedAt: null,
                 },
             })
         })
@@ -286,7 +287,6 @@ describe("UserRepository", () => {
                 where: { id: userMock.id },
                 data: {
                     name: dto.name,
-                    registration: dto.registration,
                 },
                 include: {
                     UserCourse: {
