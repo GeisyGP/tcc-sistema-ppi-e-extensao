@@ -51,3 +51,28 @@ export interface CoursesJwt {
     role: string
     name: string
 }
+
+export enum EducationLevelEnum {
+    MEDIO = "Médio",
+    SUPERIOR = "Superior",
+}
+
+export enum DegreeEnum {
+    TECNICO = "Técnico",
+    TECNOLOGO = "Tecnólogo",
+    BACHARELADO = "Bacharelado",
+    LICENCIATURA = "Licenciatura",
+}
+
+export enum ModalityEnum {
+    PRESENCIAL = "Presencial",
+    SEMIPRESENCIAL = "Semipresencial",
+    EAD = "Educação a Distância (EaD)",
+}
+
+export enum ShiftEnum {
+    INTEGRAL = "Integral",
+    MATUTINO = "Matutino",
+    VESPERTINO = "Vespertino",
+    NOTURNO = "Noturno",
+}

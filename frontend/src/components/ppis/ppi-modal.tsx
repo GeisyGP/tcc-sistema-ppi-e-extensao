@@ -85,7 +85,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
             ...formData,
             subjects: formData.subjects.map((s) => ({
                 ...s,
-                isCoordinator: s.id === id, // apenas um true
+                isCoordinator: s.id === id,
             })),
         })
     }
@@ -132,7 +132,6 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                 <h2 className="text-lg font-semibold mb-4">{PPI ? "Editar PPI" : "Nova PPI"}</h2>
 
                 <div className="space-y-3">
-                    {/* Ano/Semestre */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700">Ano/Semestre da turma</label>
                         <input
@@ -149,7 +148,6 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                         )}
                     </div>
 
-                    {/* Carga Horária Total */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700">Carga Horária</label>
                         <input
@@ -166,7 +164,6 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
                         )}
                     </div>
 
-                    {/* Disciplinas */}
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700 mb-1">Disciplinas</label>
 
