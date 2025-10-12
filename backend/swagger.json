@@ -1475,6 +1475,172 @@
           "projects"
         ]
       }
+    },
+    "/groups": {
+      "post": {
+        "operationId": "GroupController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "groups"
+        ]
+      }
+    },
+    "/groups/{id}": {
+      "get": {
+        "operationId": "GroupController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "groups"
+        ]
+      },
+      "put": {
+        "operationId": "GroupController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "groups"
+        ]
+      },
+      "delete": {
+        "operationId": "GroupController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "groups"
+        ]
+      }
+    },
+    "/groups/project/{projectId}": {
+      "get": {
+        "operationId": "GroupController_getAllByProjectId",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "groups"
+        ]
+      }
     }
   },
   "info": {
@@ -2183,6 +2349,82 @@
         },
         "required": [
           "status"
+        ]
+      },
+      "CreateGroupReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "projectId",
+          "userIds"
+        ]
+      },
+      "GroupResDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "projectId",
+          "users",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateGroupReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "userIds"
         ]
       }
     }

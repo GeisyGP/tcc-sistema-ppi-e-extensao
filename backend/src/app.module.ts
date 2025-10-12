@@ -9,6 +9,7 @@ import { SubjectModule } from "./modules/subjects/subject.module"
 import { CourseModule } from "./modules/courses/course.module"
 import { PPIModule } from "./modules/ppis/ppi.module"
 import { ProjectModule } from "./modules/projects/project.module"
+import { GroupModule } from "./modules/groups/group.module"
 
 @Module({
     providers: [
@@ -26,6 +27,7 @@ import { ProjectModule } from "./modules/projects/project.module"
         CourseModule,
         PPIModule,
         ProjectModule,
+        GroupModule,
     ],
 })
 export class AppModule {}

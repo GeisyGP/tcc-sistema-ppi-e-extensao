@@ -18,6 +18,7 @@ type Subjects =
           | "VIEWER"
           | "PPI"
           | "PROJECT"
+          | "GROUP"
       >
     | "all"
 
@@ -56,6 +57,7 @@ export class CaslAbilityFactory {
                 can(Action.Update, "COORDINATOR")
                 can(Action.Manage, "PPI")
                 can(Action.Manage, "PROJECT")
+                can(Action.Manage, "GROUP")
                 break
             }
             case UserRole.TEACHER: {
@@ -72,6 +74,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, "PROJECT")
                 can(Action.ChangeStatus, "PROJECT")
                 can(Action.Delete, "PROJECT")
+                can(Action.Manage, "GROUP")
                 break
             }
             case UserRole.STUDENT: {
@@ -80,6 +83,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, CourseEntity)
                 can(Action.Read, "PROJECT")
+                can(Action.Read, "GROUP")
                 break
             }
             case UserRole.VIEWER: {
@@ -88,6 +92,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, CourseEntity)
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, "PROJECT")
+                can(Action.Read, "GROUP")
                 break
             }
             default: {

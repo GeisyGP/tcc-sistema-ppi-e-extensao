@@ -11,6 +11,7 @@ import { PPIModule } from "../ppis/ppi.module"
 @Module({
     imports: [PrismaModule, SubjectModule, PPIModule],
     controllers: [ProjectController],
+    exports: [ProjectService],
     providers: [ProjectService, ProjectRepository, CaslAbilityFactory, CustomLoggerService],
 })
 export class ProjectModule {}
