@@ -3,6 +3,7 @@
 import { Button } from "@/components/buttons/default.button"
 import { Card } from "../card"
 import { Project, ProjectStatusMapped } from "@/types/project.type"
+import { useRouter } from "next/navigation"
 
 type Props = {
     data: Project[]
@@ -10,10 +11,10 @@ type Props = {
     totalPages: number
     totalItems: number
     onPageChange: (page: number) => void
-    onView: (project: Project) => void
 }
 
-export default function ProjectListHorizontal({ data, page, totalPages, totalItems, onPageChange, onView }: Props) {
+export default function ProjectListHorizontal({ data, page, totalPages, totalItems, onPageChange }: Props) {
+    const router = useRouter()
     return (
         <div className="space-y-6">
             <div className="text-sm text-gray-600">{totalItems} resultado(s) encontrado(s)</div>
@@ -24,7 +25,10 @@ export default function ProjectListHorizontal({ data, page, totalPages, totalIte
                         key={project.id}
                         className="p-4 shadow-sm hover:shadow-md transition rounded-xl border border-gray-200 flex flex-col justify-between"
                     >
-                        <div className="cursor-pointer flex flex-col" onClick={() => onView(project)}>
+                        <div
+                            className="cursor-pointer flex flex-col"
+                            onClick={() => router.push(`/projetos/${project.id}`)}
+                        >
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
                                     {project.theme}

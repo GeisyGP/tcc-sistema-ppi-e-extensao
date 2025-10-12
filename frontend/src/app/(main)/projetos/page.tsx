@@ -153,7 +153,6 @@ export default function ProjectsPage() {
                         totalPages={metadata.totalPages}
                         totalItems={metadata.totalItems}
                         onPageChange={setPage}
-                        onView={(p) => console.log("Ver", p)}
                     />
                 )}
 

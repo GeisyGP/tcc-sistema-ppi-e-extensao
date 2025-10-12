@@ -39,7 +39,7 @@ export default function Navbar() {
 
             <ul className="hidden sm:flex justify-center space-x-8 text-white">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
                     return (
                         <RoleGuard key={item.href} roles={item.roles}>
                             <li>
