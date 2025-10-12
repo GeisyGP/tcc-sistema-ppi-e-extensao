@@ -39,10 +39,13 @@ export function UploadCsvModal({ isOpen, onClose, onUpload, role }: UploadCsvMod
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
             <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Importar {roleMap[role]}s via arquivo</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                    Importar {roleMap[role].toLowerCase()}s via arquivo
+                </h2>
 
                 <p className="text-sm text-gray-600 mb-4">
-                    Selecione um arquivo .csv ou .txt formatado com as colunas: <b>name, registration, password</b>.
+                    Selecione um arquivo <b>.csv</b> ou <b>.txt</b> que contenha as colunas <b>name</b>,{" "}
+                    <b>registration</b> e <b>password</b> no cabeçalho do arquivo.
                 </p>
 
                 <input
