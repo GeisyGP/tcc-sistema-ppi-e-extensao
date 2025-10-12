@@ -74,6 +74,8 @@ describe("ProjectService", () => {
                 executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
                 ppiId: projectMock.ppiId,
+                campusDirector: projectMock.campusDirector,
+                academicDirector: projectMock.academicDirector,
             }
             jest.spyOn(ppiService, "getById").mockResolvedValue(ppiResMock)
             jest.spyOn(projectRepository, "create").mockResolvedValueOnce(projectMock)
@@ -144,6 +146,7 @@ describe("ProjectService", () => {
                     studentId: "",
                 },
                 requestMock.user.mainCourseId,
+                requestMock.user.mainRole,
             )
 
             expect(result).toEqual(paginationMock<ProjectResDto>([projectResMock]))
@@ -155,6 +158,8 @@ describe("ProjectService", () => {
             class: projectMock.class,
             executionPeriod: projectMock.executionPeriod,
             theme: projectMock.theme,
+            campusDirector: projectMock.campusDirector,
+            academicDirector: projectMock.academicDirector,
         }
         it("should return a project", async () => {
             jest.spyOn(projectService, "getById").mockResolvedValueOnce(projectResMock)

@@ -45,6 +45,8 @@ describe("ProjectRepository", () => {
                 executionPeriod: baseProjectMock.executionPeriod,
                 theme: baseProjectMock.theme,
                 ppiId: baseProjectMock.ppiId,
+                campusDirector: baseProjectMock.campusDirector,
+                academicDirector: baseProjectMock.academicDirector,
             }
             jest.spyOn(prismaService.project, "create").mockResolvedValueOnce(baseProjectMock)
 
@@ -83,7 +85,7 @@ describe("ProjectRepository", () => {
                 limit: 30,
                 page: 1,
                 ppiId: "",
-                status: baseProjectMock.status,
+                status: [baseProjectMock.status],
                 executionPeriod: "",
                 class: "",
                 theme: "",
@@ -110,6 +112,8 @@ describe("ProjectRepository", () => {
                 class: baseProjectMock.class,
                 executionPeriod: baseProjectMock.executionPeriod,
                 theme: baseProjectMock.theme,
+                campusDirector: baseProjectMock.campusDirector,
+                academicDirector: baseProjectMock.academicDirector,
             }
             jest.spyOn(prismaService.project, "update").mockResolvedValueOnce(baseProjectMock)
 

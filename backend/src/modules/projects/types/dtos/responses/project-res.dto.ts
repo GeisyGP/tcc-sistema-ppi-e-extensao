@@ -12,6 +12,12 @@ export class ProjectResDto {
     @ApiProperty()
     executionPeriod: string
 
+    @ApiProperty()
+    campusDirector: string
+
+    @ApiProperty()
+    academicDirector: string
+
     @ApiProperty({ enum: ProjectStatus })
     status: ProjectStatus
 

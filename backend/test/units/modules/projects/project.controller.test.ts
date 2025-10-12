@@ -65,6 +65,8 @@ describe("ProjectController", () => {
                 executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
                 ppiId: projectMock.ppiId,
+                campusDirector: projectMock.campusDirector,
+                academicDirector: projectMock.academicDirector,
             }
             jest.spyOn(projectService, "create").mockResolvedValueOnce(projectResMock)
 
@@ -123,6 +125,8 @@ describe("ProjectController", () => {
                 class: projectMock.class,
                 executionPeriod: projectMock.executionPeriod,
                 theme: projectMock.theme,
+                campusDirector: projectMock.campusDirector,
+                academicDirector: projectMock.academicDirector,
             }
 
             jest.spyOn(projectService, "updateById").mockResolvedValueOnce(projectResMock)

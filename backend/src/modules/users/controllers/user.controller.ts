@@ -322,7 +322,7 @@ export class UserController {
         type: UserResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) => ability.can(Action.Update, UserEntity))
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.ChangePassword, UserEntity))
     async changePassword(
         @Request() request: RequestDto,
         @Param() param: ChangePasswordParamReqDto,

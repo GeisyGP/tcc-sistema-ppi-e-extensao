@@ -9,6 +9,8 @@ export class ProjectResBuilder {
             class: project.class,
             theme: project.theme,
             executionPeriod: project.executionPeriod,
+            campusDirector: project.campusDirector,
+            academicDirector: project.academicDirector,
             status: project.status,
             ppiId: project.ppiId,
             ppiClassPeriod: project.ppi.classPeriod,

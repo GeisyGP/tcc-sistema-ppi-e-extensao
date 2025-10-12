@@ -1989,6 +1989,12 @@
           "theme": {
             "type": "string"
           },
+          "campusDirector": {
+            "type": "string"
+          },
+          "academicDirector": {
+            "type": "string"
+          },
           "ppiId": {
             "type": "string"
           }
@@ -1997,6 +2003,8 @@
           "class",
           "executionPeriod",
           "theme",
+          "campusDirector",
+          "academicDirector",
           "ppiId"
         ]
       },
@@ -2010,6 +2018,12 @@
             "type": "string"
           },
           "executionPeriod": {
+            "type": "string"
+          },
+          "campusDirector": {
+            "type": "string"
+          },
+          "academicDirector": {
             "type": "string"
           },
           "status": {
@@ -2048,6 +2062,8 @@
           "id",
           "class",
           "executionPeriod",
+          "campusDirector",
+          "academicDirector",
           "status",
           "theme",
           "ppiId",
@@ -2105,12 +2121,20 @@
           },
           "theme": {
             "type": "string"
+          },
+          "campusDirector": {
+            "type": "string"
+          },
+          "academicDirector": {
+            "type": "string"
           }
         },
         "required": [
           "class",
           "executionPeriod",
-          "theme"
+          "theme",
+          "campusDirector",
+          "academicDirector"
         ]
       },
       "UpdateProjectContentReqDto": {

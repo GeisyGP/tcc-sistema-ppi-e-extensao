@@ -8,6 +8,8 @@ export function formatProject(res: ProjectRes): Project {
         class: res.class,
         ppiClassPeriod: res.ppiClassPeriod,
         executionPeriod: res.executionPeriod,
+        campusDirector: res.campusDirector,
+        academicDirector: res.academicDirector,
         createdBy: res.createdBy,
         updatedBy: res.updatedBy,
         createdAt: new Date(res.createdAt).toLocaleDateString(),

@@ -39,6 +39,8 @@ export function ProjectModal({ isOpen, project, onClose, onSave }: EditProjectMo
                 executionPeriod: "",
                 status: "",
                 theme: "",
+                campusDirector: "",
+                academicDirector: "",
                 ppiId: "",
                 ppiClassPeriod: "",
             } as unknown as ProjectRes)
@@ -136,6 +138,38 @@ export function ProjectModal({ isOpen, project, onClose, onSave }: EditProjectMo
                             <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
                                 <ExclamationCircleIcon className="h-4 w-4" />
                                 <span>{errors.executionPeriod}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-700">Diretor(a) Geral do Campus</label>
+                        <input
+                            type="text"
+                            value={formData.campusDirector}
+                            onChange={(e) => setFormData({ ...formData, campusDirector: e.target.value })}
+                            className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.campusDirector && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.campusDirector}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-700">Diretor(a) de Ensino</label>
+                        <input
+                            type="text"
+                            value={formData.academicDirector}
+                            onChange={(e) => setFormData({ ...formData, academicDirector: e.target.value })}
+                            className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.academicDirector && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.academicDirector}</span>
                             </div>
                         )}
                     </div>

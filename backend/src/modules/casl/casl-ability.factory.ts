@@ -30,7 +30,7 @@ export class CaslAbilityFactory {
 
         switch (user.mainRole) {
             case UserRole.SYSADMIN: {
-                can(Action.Update, UserEntity, { id: user.sub })
+                can(Action.ChangePassword, UserEntity)
                 can(Action.Manage, CourseEntity)
                 can(Action.Read, UserEntity)
                 can(Action.Create, "COORDINATOR")
@@ -42,7 +42,7 @@ export class CaslAbilityFactory {
             }
             case UserRole.COORDINATOR: {
                 can(Action.Read, "all")
-                can(Action.Update, UserEntity, { id: user.sub })
+                can(Action.ChangePassword, UserEntity)
                 can(Action.Manage, SubjectEntity)
                 can(Action.Create, "TEACHER")
                 can(Action.Create, "VIEWER")
@@ -59,7 +59,7 @@ export class CaslAbilityFactory {
                 break
             }
             case UserRole.TEACHER: {
-                can(Action.Update, UserEntity, { id: user.sub })
+                can(Action.ChangePassword, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, CourseEntity)
@@ -75,7 +75,7 @@ export class CaslAbilityFactory {
                 break
             }
             case UserRole.STUDENT: {
-                can(Action.Update, UserEntity, { id: user.sub })
+                can(Action.ChangePassword, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, CourseEntity)
@@ -83,6 +83,7 @@ export class CaslAbilityFactory {
                 break
             }
             case UserRole.VIEWER: {
+                can(Action.ChangePassword, UserEntity, { id: user.sub })
                 can(Action.Read, UserEntity)
                 can(Action.Read, CourseEntity)
                 can(Action.Read, SubjectEntity)

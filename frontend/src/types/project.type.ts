@@ -4,6 +4,8 @@ export interface ProjectRes {
     executionPeriod: string
     status: ProjectStatus
     theme: string
+    campusDirector: string
+    academicDirector: string
     ppiId: string
     ppiClassPeriod: string
     createdBy: string
@@ -46,6 +48,8 @@ export interface ProjectCreateInput {
     class: string
     executionPeriod: string
     theme: string
+    campusDirector: string
+    academicDirector: string
     ppiId: string
 }
 
@@ -53,6 +57,8 @@ export interface ProjectUpdateInput {
     class: string
     executionPeriod: string
     theme: string
+    campusDirector: string
+    academicDirector: string
 }
 
 export interface ProjectContentUpdateInput {
@@ -76,6 +82,8 @@ export interface Project {
     executionPeriod: string
     status: ProjectStatusMapped | "Desconhecido"
     theme: string
+    campusDirector: string
+    academicDirector: string
     ppiClassPeriod: string
     createdBy: string
     updatedBy: string

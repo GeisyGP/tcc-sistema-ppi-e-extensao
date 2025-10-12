@@ -20,5 +20,15 @@ export class CreateProjectReqDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
+    campusDirector: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    academicDirector: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
     ppiId: string
 }

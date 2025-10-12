@@ -16,6 +16,16 @@ export class UpdateProjectReqDto {
     @IsString()
     @IsNotEmpty()
     theme: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    campusDirector: string
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    academicDirector: string
 }
 
 export class UpdateProjectParamsReqDto {
