@@ -38,6 +38,20 @@ export async function getAllUsers(payload: GetAllUsersReq): Promise<PaginationRe
     return response.data?.data
 }
 
+export async function getUserById(userId: string): Promise<UserWithCoursesRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/users/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
 export async function createUser(userRole: UserRole, body: CreateUserReq): Promise<UserRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {

@@ -11,10 +11,10 @@ import { PlusIcon } from "@heroicons/react/16/solid"
 import { FilterButton } from "@/components/buttons/filter.button"
 import { getAllUsers } from "@/services/users.service"
 import { SubjectDetails } from "@/components/subjects/subject-details"
-import { useSubjects } from "./hooks/use-subjects"
 import { RoleGuard } from "@/components/role-guard"
 import { UserRole } from "@/types/user.type"
 import { useRole } from "@/hooks/use-role"
+import { useSubjects } from "@/hooks/use-subjects"
 
 export default function SubjectsPage() {
     const { rawData, formattedData, loading, metadata, fetchSubjects, handleCreate, handleUpdate, handleDelete } =

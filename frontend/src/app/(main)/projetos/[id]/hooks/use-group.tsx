@@ -80,6 +80,6 @@ export function useGroups() {
         handleDelete,
         handleUpdate,
         formattedData,
-        fetchGroups: fetchGroups,
+        fetchGroups,
     }
 }

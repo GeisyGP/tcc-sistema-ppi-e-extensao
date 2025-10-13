@@ -43,19 +43,39 @@ export class ProjectController {
         }
     }
 
-    @Get(":id")
+    @Get(":id/content")
     @ApiOkResponse({
         type: ProjectFullResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "PROJECT"))
+    async getFullById(
+        @Param() param: GetByIdProjectReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<ProjectFullResDto>> {
+        this.loggerService.info(this.constructor.name, this.getFullById.name, `user: ${request.user.sub}`)
+
+        const response = await this.projectService.getFullById(param.id, request.user.mainCourseId)
+
+        return {
+            message: "Project found successfully",
+            data: response,
+        }
+    }
+
+    @Get(":id")
+    @ApiOkResponse({
+        type: ProjectResDto,
     })
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "PROJECT"))
     async getById(
         @Param() param: GetByIdProjectReqDto,
         @Request() request: RequestDto,
-    ): Promise<BaseResDto<ProjectFullResDto>> {
+    ): Promise<BaseResDto<ProjectResDto>> {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const response = await this.projectService.getFullById(param.id, request.user.mainCourseId)
+        const response = await this.projectService.getById(param.id, request.user.mainCourseId)
 
         return {
             message: "Project found successfully",

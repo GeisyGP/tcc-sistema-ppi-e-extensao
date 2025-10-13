@@ -1,10 +1,10 @@
 import { createSubject, deleteSubjectById, getAllSubjects, updateSubjectById } from "@/services/subjects.service"
 import { Subject, SubjectRes } from "@/types/subject.type"
 import { useCallback, useState } from "react"
-import { formatSubject } from "../utils/format-subject"
 import toast from "react-hot-toast"
 import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
+import { formatSubject } from "@/app/(main)/disciplinas/utils/format-subject"
 
 export function useSubjects() {
     const [rawData, setRawData] = useState<SubjectRes[]>([])

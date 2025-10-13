@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/buttons/default.button"
-import { ChevronLeftIcon, ChevronRightIcon, PencilIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon, ChevronRightIcon, PencilSquareIcon } from "@heroicons/react/24/outline"
 import { DeleteButtonModal } from "./buttons/delete.button"
 
 type Column<T> = {
@@ -94,7 +94,7 @@ export default function List<T extends { id: string }>({
                                                     className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-700 transition"
                                                     title="Editar"
                                                 >
-                                                    <PencilIcon className="h-5 w-5" />
+                                                    <PencilSquareIcon className="h-5 w-5" />
                                                 </button>
                                             )}
                                             {showDeleteAction && <DeleteButtonModal id={row.id} onDelete={onDelete} />}

@@ -119,16 +119,22 @@ export function GroupModal({ isOpen, group, projectId, onClose, onSave }: GroupM
                                             key={id}
                                             className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm"
                                         >
-                                            {student?.label || id}
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    toggleStudent(id)
-                                                }}
-                                                className="ml-1 text-red-500 hover:text-red-700 text-xs"
-                                            >
-                                                x
-                                            </button>
+                                            {student ? (
+                                                <>
+                                                    {student.label}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            toggleStudent(id)
+                                                        }}
+                                                        className="ml-1 text-red-500 hover:text-red-700 text-xs"
+                                                    >
+                                                        x
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <span className="text-gray-500 italic">Carregando...</span>
+                                            )}
                                         </span>
                                     )
                                 })}

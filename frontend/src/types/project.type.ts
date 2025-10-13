@@ -8,6 +8,7 @@ export interface ProjectRes {
     academicDirector: string
     ppiId: string
     ppiClassPeriod: string
+    visibleToAll?: boolean
     createdBy: string
     updatedBy: string
     createdAt: Date
@@ -85,6 +86,7 @@ export interface Project {
     campusDirector: string
     academicDirector: string
     ppiClassPeriod: string
+    visibleToAll?: boolean
     createdBy: string
     updatedBy: string
     createdAt: string

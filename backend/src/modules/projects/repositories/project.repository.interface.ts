@@ -22,6 +22,7 @@ export type ProjectWithPPI = Omit<
 export interface ProjectRepositoryInterface {
     create(dto: CreateProjectReqDto, currentCourseId: string, currentUserId: string): Promise<ProjectWithPPI>
     getFullById(id: string, currentCourseId: string): Promise<ProjectFullResDto | null>
+    getById(id: string, currentCourseId: string): Promise<ProjectWithPPI | null>
     getAll(dto: GetAllProjectsReq, currentCourseId: string): Promise<{ projects: ProjectWithPPI[]; totalItems: number }>
     updateById(
         id: string,

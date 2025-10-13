@@ -39,7 +39,21 @@ export async function getAllProjects(payload: GetAllProjectsReq): Promise<Pagina
     return response.data?.data
 }
 
-export async function getProjectById(id: string): Promise<ProjectFullRes | void> {
+export async function getProjectFullById(id: string): Promise<ProjectFullRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/projects/${id}/content`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
+export async function getProjectById(id: string): Promise<ProjectRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
