@@ -12,6 +12,7 @@ export class ProjectResBuilder {
             campusDirector: project.campusDirector,
             academicDirector: project.academicDirector,
             status: project.status,
+            visibleToAll: project.visibleToAll,
             ppiId: project.ppiId,
             ppiClassPeriod: project.ppi.classPeriod,
             createdBy: project.createdBy,

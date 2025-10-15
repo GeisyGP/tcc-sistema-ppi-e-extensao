@@ -1506,6 +1506,46 @@
         ]
       }
     },
+    "/projects/visibility/{id}": {
+      "patch": {
+        "operationId": "ProjectController_changeVisibility",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeVisibilityReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "projects"
+        ]
+      }
+    },
     "/groups": {
       "post": {
         "operationId": "GroupController_create",
@@ -2233,6 +2273,9 @@
           "theme": {
             "type": "string"
           },
+          "visibleToAll": {
+            "type": "boolean"
+          },
           "ppiId": {
             "$ref": "#/components/schemas/randomUUID"
           },
@@ -2262,6 +2305,7 @@
           "academicDirector",
           "status",
           "theme",
+          "visibleToAll",
           "ppiId",
           "ppiClassPeriod",
           "createdBy",
@@ -2379,6 +2423,17 @@
         },
         "required": [
           "status"
+        ]
+      },
+      "ChangeVisibilityReqDto": {
+        "type": "object",
+        "properties": {
+          "visibleToAll": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "visibleToAll"
         ]
       },
       "CreateGroupReqDto": {

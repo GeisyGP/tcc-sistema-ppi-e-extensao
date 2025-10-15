@@ -5,6 +5,7 @@ import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.d
 import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto"
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
 import { ProjectFullResDto } from "../types/dtos/responses/project-res.dto"
+import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
 
 export type ProjectWithPPI = Omit<
     Project,
@@ -22,7 +23,12 @@ export type ProjectWithPPI = Omit<
 export interface ProjectRepositoryInterface {
     create(dto: CreateProjectReqDto, currentCourseId: string, currentUserId: string): Promise<ProjectWithPPI>
     getFullById(id: string, currentCourseId: string): Promise<ProjectFullResDto | null>
-    getById(id: string, currentCourseId: string): Promise<ProjectWithPPI | null>
+    getById(
+        id: string,
+        currentCourseId: string,
+        visibleToAll?: boolean,
+        studentId?: string,
+    ): Promise<ProjectWithPPI | null>
     getAll(dto: GetAllProjectsReq, currentCourseId: string): Promise<{ projects: ProjectWithPPI[]; totalItems: number }>
     updateById(
         id: string,
@@ -39,6 +45,12 @@ export interface ProjectRepositoryInterface {
     changeStatus(
         id: string,
         dto: ChangeStatusReqDto,
+        currentCourseId: string,
+        currentUserId: string,
+    ): Promise<ProjectWithPPI>
+    changeVisibility(
+        id: string,
+        dto: ChangeVisibilityReqDto,
         currentCourseId: string,
         currentUserId: string,
     ): Promise<ProjectWithPPI>

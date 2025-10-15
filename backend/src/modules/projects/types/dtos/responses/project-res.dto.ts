@@ -24,6 +24,9 @@ export class ProjectResDto {
     @ApiProperty()
     theme: string
 
+    @ApiProperty()
+    visibleToAll: boolean
+
     @ApiProperty({ type: randomUUID })
     ppiId: string
 

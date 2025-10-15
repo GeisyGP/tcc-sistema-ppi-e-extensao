@@ -174,6 +174,25 @@ describe("ProjectRepository", () => {
         })
     })
 
+    describe("changeVisibility", () => {
+        it("should update a project", async () => {
+            const dto = {
+                visibleToAll: baseProjectMock.visibleToAll,
+            }
+            jest.spyOn(prismaService.project, "update").mockResolvedValueOnce(baseProjectMock)
+
+            const result = await projectRepository.changeVisibility(
+                baseProjectMock.id,
+                dto,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+            )
+
+            expect(result).toEqual(baseProjectMock)
+            expect(prismaService.project.update).toHaveBeenCalledTimes(1)
+        })
+    })
+
     describe("deleteById", () => {
         it("should delete a project", async () => {
             jest.spyOn(prismaService.project, "delete").mockResolvedValueOnce(baseProjectMock)

@@ -9,6 +9,7 @@ import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
 import { ProjectStatus } from "src/common/enums/project-status.enum"
 import { ProjectFullResDto } from "../types/dtos/responses/project-res.dto"
+import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
 
 @Injectable()
 export class ProjectRepository implements ProjectRepositoryInterface {
@@ -73,10 +74,21 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         return project
     }
 
-    async getById(id: string, currentCourseId: string): Promise<ProjectWithPPI | null> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        visibleToAll?: boolean,
+        studentId?: string,
+    ): Promise<ProjectWithPPI | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const project = await this.prisma.project.findUnique({
-            where: { id },
+            where: {
+                id,
+                OR: [
+                    { visibleToAll },
+                    { Group: studentId ? { some: { users: { some: { id: studentId } } } } : undefined },
+                ],
+            },
             select: {
                 id: true,
                 class: true,
@@ -109,6 +121,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
 
         const filter = {
+            OR: undefined,
             ppiId: dto?.ppiId,
             status: {
                 in: dto.status,
@@ -128,8 +141,17 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 : undefined,
         }
 
+        const filterVisibility = {
+            ...filter,
+            Group: undefined,
+            OR: [
+                { visibleToAll: dto.visibleToAll },
+                { Group: dto.studentId ? { some: { users: { some: { id: dto.studentId } } } } : undefined },
+            ],
+        }
+
         const projects = await this.prisma.project.findMany({
-            where: filter,
+            where: dto.visibleToAll ? filterVisibility : filter,
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
             orderBy: [{ executionPeriod: "desc" }],
@@ -161,7 +183,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         }
 
         const totalItems = await this.prisma.project.count({
-            where: filter,
+            where: dto.visibleToAll ? filterVisibility : filter,
         })
 
         return { projects, totalItems }
@@ -250,6 +272,40 @@ export class ProjectRepository implements ProjectRepositoryInterface {
             where: { id },
             data: {
                 status: dto.status,
+                updatedBy: currentUserId,
+            },
+            select: {
+                id: true,
+                class: true,
+                executionPeriod: true,
+                status: true,
+                theme: true,
+                campusDirector: true,
+                academicDirector: true,
+                ppiId: true,
+                visibleToAll: true,
+                createdBy: true,
+                updatedBy: true,
+                createdAt: true,
+                updatedAt: true,
+                courseId: true,
+                deletedAt: true,
+                ppi: { select: { classPeriod: true } },
+            },
+        })
+    }
+
+    async changeVisibility(
+        id: string,
+        dto: ChangeVisibilityReqDto,
+        currentCourseId: string,
+        currentUserId: string,
+    ): Promise<ProjectWithPPI> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        return await this.prisma.project.update({
+            where: { id },
+            data: {
+                visibleToAll: dto.visibleToAll,
                 updatedBy: currentUserId,
             },
             select: {

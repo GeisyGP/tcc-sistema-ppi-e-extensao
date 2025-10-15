@@ -146,6 +146,7 @@ describe("ProjectService", () => {
                     studentId: "",
                 },
                 requestMock.user.mainCourseId,
+                requestMock.user.sub,
                 requestMock.user.mainRole,
             )
 
@@ -295,6 +296,41 @@ describe("ProjectService", () => {
             jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectResMock)
             await expect(
                 projectService.changeStatus(
+                    projectMock.id,
+                    dto,
+                    requestMock.user.mainCourseId,
+                    requestMock.user.sub,
+                    UserRole.TEACHER,
+                ),
+            ).rejects.toThrow(ForbiddenException)
+        })
+    })
+
+    describe("changeVisibility", () => {
+        const dto = {
+            visibleToAll: projectResMock.visibleToAll,
+        }
+        it("should return a project", async () => {
+            jest.spyOn(projectService, "getById").mockResolvedValueOnce(projectResMock)
+            jest.spyOn(projectRepository, "changeVisibility").mockResolvedValueOnce(projectMock)
+
+            const result = await projectService.changeVisibility(
+                projectMock.id,
+                dto,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
+
+            expect(result).toEqual(projectResMock)
+        })
+
+        it("should throw ForbiddenException", async () => {
+            jest.spyOn(projectService, "getById").mockResolvedValueOnce(projectResMock)
+            jest.spyOn(ppiService, "getById").mockResolvedValueOnce(ppiResMock)
+            jest.spyOn(subjectService, "getById").mockResolvedValueOnce(subjectResMock)
+            await expect(
+                projectService.changeVisibility(
                     projectMock.id,
                     dto,
                     requestMock.user.mainCourseId,

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
-import { GetAllProjectsReqDto } from "../types/dtos/requests/get-all-projects-req.dto"
+import { GetAllProjectsReq, GetAllProjectsReqDto } from "../types/dtos/requests/get-all-projects-req.dto"
 import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { ProjectFullResDto, ProjectResDto } from "../types/dtos/responses/project-res.dto"
@@ -16,6 +16,7 @@ import { Action } from "src/common/enums/action.enum"
 import { SubjectService } from "src/modules/subjects/services/subject.service"
 import { ProjectStatus } from "src/common/enums/project-status.enum"
 import { ProjectIsFinishedException } from "src/common/exceptions/project-is-finished.exception"
+import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
 
 @Injectable()
 export class ProjectService {
@@ -58,9 +59,19 @@ export class ProjectService {
         }
     }
 
-    async getById(id: string, currentCourseId: string): Promise<ProjectResDto> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        currentUserId?: string,
+        role?: UserRole,
+    ): Promise<ProjectResDto> {
         try {
-            const project = await this.projectRepository.getById(id, currentCourseId)
+            const project = await this.projectRepository.getById(
+                id,
+                currentCourseId,
+                role === UserRole.STUDENT ? true : false,
+                role === UserRole.STUDENT ? currentUserId : undefined,
+            )
             if (!project) {
                 throw new ProjectNotFoundException()
             }
@@ -75,6 +86,7 @@ export class ProjectService {
     async getAll(
         dto: GetAllProjectsReqDto,
         currentCourseId: string,
+        currentUserId: string,
         role: UserRole,
     ): Promise<PaginationResDto<ProjectResDto[]>> {
         try {
@@ -92,9 +104,11 @@ export class ProjectService {
                 statusList = dto?.status ? [dto.status] : undefined
             }
 
-            const formattedDto = {
+            const formattedDto: GetAllProjectsReq = {
                 ...dto,
                 status: statusList,
+                studentId: role === UserRole.STUDENT ? currentUserId : dto.studentId,
+                visibleToAll: role === UserRole.STUDENT && !dto.studentId ? true : undefined,
             }
             const { projects, totalItems } = await this.projectRepository.getAll(formattedDto, currentCourseId)
 
@@ -186,6 +200,36 @@ export class ProjectService {
         }
     }
 
+    async changeVisibility(
+        id: string,
+        dto: ChangeVisibilityReqDto,
+        currentCourseId: string,
+        currentUserId: string,
+        role: UserRole,
+    ): Promise<ProjectResDto> {
+        try {
+            const project = await this.getById(id, currentCourseId)
+            await this.handleAccess(project, currentCourseId, currentUserId, Action.ChangeVisibility, role)
+
+            const updatedProject = await this.projectRepository.changeVisibility(
+                id,
+                dto,
+                currentCourseId,
+                currentUserId,
+            )
+
+            return ProjectResBuilder.build(updatedProject)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.changeVisibility.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
+            throw error
+        }
+    }
+
     async delete(id: string, currentCourseId: string, currentUserId: string, role: UserRole): Promise<void> {
         try {
             const project = await this.getById(id, currentCourseId)
@@ -214,7 +258,7 @@ export class ProjectService {
                 }
             }
 
-            if (action === Action.ChangeStatus || action === Action.Delete) {
+            if (action === Action.ChangeStatus || action === Action.Delete || action === Action.ChangeVisibility) {
                 const hasAccess = await this.validateCoordinatorAccess(project.ppiId, currentCourseId, userId)
                 if (!hasAccess) {
                     throw new ForbiddenException()
@@ -258,6 +302,7 @@ export class ProjectService {
                     ppiId: ppiId,
                 },
                 currentCourseId,
+                userId,
                 UserRole.TEACHER,
             )
 

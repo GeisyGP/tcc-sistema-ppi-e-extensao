@@ -17,6 +17,7 @@ import { ProjectService } from "../services/project.service"
 import { CreateProjectReqDto } from "../types/dtos/requests/create-project-req.dto"
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
 import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto"
+import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
 
 @ApiTags("projects")
 @Controller("projects")
@@ -75,7 +76,12 @@ export class ProjectController {
     ): Promise<BaseResDto<ProjectResDto>> {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const response = await this.projectService.getById(param.id, request.user.mainCourseId)
+        const response = await this.projectService.getById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
             message: "Project found successfully",
@@ -95,7 +101,12 @@ export class ProjectController {
     ): Promise<BaseResDto<PaginationResDto<ProjectResDto[]>>> {
         this.loggerService.info(this.constructor.name, this.getAll.name, `user: ${request.user.sub}`)
 
-        const response = await this.projectService.getAll(queryParams, request.user.mainCourseId, request.user.mainRole)
+        const response = await this.projectService.getAll(
+            queryParams,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
         return {
             message: "Project found successfully",
             data: response,
@@ -170,6 +181,33 @@ export class ProjectController {
         this.loggerService.info(this.constructor.name, this.changeStatus.name, `user: ${request.user.sub}`)
 
         const response = await this.projectService.changeStatus(
+            param.id,
+            dto,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
+
+        return {
+            message: "Project updated successfully",
+            data: response,
+        }
+    }
+
+    @Patch("visibility/:id")
+    @ApiOkResponse({
+        type: ProjectResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.ChangeVisibility, "PROJECT"))
+    async changeVisibility(
+        @Param() param: UpdateProjectParamsReqDto,
+        @Body() dto: ChangeVisibilityReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<ProjectResDto>> {
+        this.loggerService.info(this.constructor.name, this.changeVisibility.name, `user: ${request.user.sub}`)
+
+        const response = await this.projectService.changeVisibility(
             param.id,
             dto,
             request.user.mainCourseId,

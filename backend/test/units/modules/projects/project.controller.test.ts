@@ -79,7 +79,7 @@ describe("ProjectController", () => {
 
     describe("getById", () => {
         it("should return a project", async () => {
-            jest.spyOn(projectService, "getFullById").mockResolvedValueOnce(projectFullResMock)
+            jest.spyOn(projectService, "getById").mockResolvedValueOnce(projectResMock)
 
             const result = await projectController.getById(
                 {
@@ -88,9 +88,7 @@ describe("ProjectController", () => {
                 requestMock,
             )
 
-            expect(result).toEqual(
-                baseResponseMock<ProjectFullResDto>("Project found successfully", projectFullResMock),
-            )
+            expect(result).toEqual(baseResponseMock<ProjectResDto>("Project found successfully", projectResMock))
         })
     })
 
@@ -169,6 +167,20 @@ describe("ProjectController", () => {
             jest.spyOn(projectService, "changeStatus").mockResolvedValueOnce(projectResMock)
 
             const result = await projectController.changeStatus({ id: projectResMock.id }, dto, requestMock)
+
+            expect(result).toEqual(baseResponseMock<ProjectResDto>("Project updated successfully", projectResMock))
+        })
+    })
+
+    describe("changeVisibility", () => {
+        it("should return a project", async () => {
+            const dto = {
+                visibleToAll: projectResMock.visibleToAll,
+            }
+
+            jest.spyOn(projectService, "changeVisibility").mockResolvedValueOnce(projectResMock)
+
+            const result = await projectController.changeVisibility({ id: projectResMock.id }, dto, requestMock)
 
             expect(result).toEqual(baseResponseMock<ProjectResDto>("Project updated successfully", projectResMock))
         })

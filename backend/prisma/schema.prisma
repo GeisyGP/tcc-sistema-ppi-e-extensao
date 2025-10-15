@@ -104,6 +104,7 @@ model Project {
   subjectsContributions String?
   methodology           String?
   timeline              String?
+  visibleToAll          Boolean       @default(false)
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   deletedAt             DateTime?

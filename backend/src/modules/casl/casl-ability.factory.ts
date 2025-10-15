@@ -84,6 +84,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, CourseEntity)
                 can(Action.Read, "PROJECT")
                 can(Action.Read, "GROUP")
+                can(Action.Read, "PPI")
                 break
             }
             case UserRole.VIEWER: {
@@ -93,6 +94,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, SubjectEntity)
                 can(Action.Read, "PROJECT")
                 can(Action.Read, "GROUP")
+                can(Action.Read, "PPI")
                 break
             }
             default: {

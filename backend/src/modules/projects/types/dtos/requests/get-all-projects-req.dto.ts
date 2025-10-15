@@ -46,6 +46,7 @@ export class GetAllProjectsReq extends PaginationReqDto {
     executionPeriod?: string
     class?: string
     theme?: string
-    studentId?: string
     teacherId?: string
+    studentId?: string
+    visibleToAll?: boolean
 }
