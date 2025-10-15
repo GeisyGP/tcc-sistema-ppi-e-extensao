@@ -4,6 +4,7 @@ import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
 import {
     changeProjectStatusById,
+    changeProjectVisibilityById,
     deleteProjectById,
     getProjectById,
     updateProjectById,
@@ -68,13 +69,27 @@ export function useUniqueProject() {
         }
     }, [])
 
+    const changeVisibility = useCallback(async (projectId: string, visibleToAll: boolean) => {
+        try {
+            const updated = await changeProjectVisibilityById(projectId, visibleToAll)
+            if (updated) {
+                setFormattedData(formatProject(updated))
+            }
+            toast.success(`Projeto atualizado com sucesso`)
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        }
+    }, [])
+
     return {
         rawData,
         loading,
         handleDelete,
         handleUpdate,
         changeStatus,
-        formattedData,
         fetchProject,
+        formattedData,
+        changeVisibility,
     }
 }

@@ -39,8 +39,8 @@ export function VisibilityTogglePopover({ project, onUpdate }: VisibilityToggleP
                 <div className="absolute z-50 right-0 mt-2 w-72 bg-white border border-gray-200 shadow-lg rounded p-3 text-sm text-gray-700">
                     <p className="text-sm text-gray-700 mb-3">
                         {project.visibleToAll
-                            ? "Tem certeza que deseja remover a visibilidade deste projeto para todos os alunos?"
-                            : "Tem certeza que deseja tornar este projeto visível para todos os alunos?"}
+                            ? "Ao remover a visibilidade geral, o projeto continuará acessível apenas aos discentes que participam dele. Deseja remover a visibilidade para todos?"
+                            : "Deseja tornar este projeto visível para todos os discentes do curso?"}
                     </p>
 
                     <div className="flex justify-end gap-2">

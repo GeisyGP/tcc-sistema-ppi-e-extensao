@@ -10,6 +10,7 @@ export function formatProject(res: ProjectRes): Project {
         executionPeriod: res.executionPeriod,
         campusDirector: res.campusDirector,
         academicDirector: res.academicDirector,
+        visibleToAll: res.visibleToAll,
         createdBy: res.createdBy,
         updatedBy: res.updatedBy,
         createdAt: new Date(res.createdAt).toLocaleDateString(),

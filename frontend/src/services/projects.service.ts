@@ -109,6 +109,24 @@ export async function changeProjectStatusById(id: string, body: ChangeProjectSta
     return response.data?.data
 }
 
+export async function changeProjectVisibilityById(id: string, visibleToAll: boolean): Promise<ProjectRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.patch(
+        `/projects/visibility/${id}`,
+        { visibleToAll },
+        {
+            headers: {
+                Authorization: `Bearer ${session.accessToken}`,
+            },
+        },
+    )
+    return response.data?.data
+}
+
 export async function deleteProjectById(id: string): Promise<void> {
     const session = await getSession()
     if (!session?.accessToken) {

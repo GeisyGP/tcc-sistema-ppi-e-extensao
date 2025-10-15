@@ -19,6 +19,7 @@ import { VisibilityTogglePopover } from "@/components/projects/visibility-toggle
 import { useRole } from "@/hooks/use-role"
 import { SubjectRes } from "@/types/subject.type"
 import { getAllSubjects } from "@/services/subjects.service"
+import { InfoTooltip } from "@/components/info-tooltip"
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const { userRole, userId } = useRole()
@@ -39,8 +40,16 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
         handleDelete: handleDeleteGroup,
     } = useGroups()
 
-    const { fetchProject, formattedData, loading, rawData, handleDelete, handleUpdate, changeStatus } =
-        useUniqueProject()
+    const {
+        fetchProject,
+        formattedData,
+        loading,
+        rawData,
+        handleDelete,
+        handleUpdate,
+        changeStatus,
+        changeVisibility,
+    } = useUniqueProject()
     const { fetchPPI, ppiFormattedData, ppiLoading } = useUniquePPI()
 
     useEffect(() => {
@@ -156,13 +165,15 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
                             {canEdit(true) && (
                                 <div>
-                                    <dt className="font-medium text-gray-900">Visível para todos</dt>
+                                    <dt className="font-medium text-gray-900 flex items-center gap-2">
+                                        Visível para todos
+                                        <InfoTooltip text="Esse valor define se todos os discentes cadastrados nesse curso podem ver as informações desse projeto." />
+                                    </dt>
                                     <dd className="mt-1 flex items-center gap-2">
                                         <VisibilityTogglePopover
                                             project={formattedData}
                                             onUpdate={async (newValue) => {
-                                                //TODO: handleVisibility
-                                                formattedData.visibleToAll = newValue
+                                                changeVisibility(projectId, newValue)
                                             }}
                                         />
                                     </dd>
@@ -269,22 +280,26 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-col items-center gap-1">
-                                                <button
-                                                    onClick={() => {
-                                                        const original =
-                                                            groupRawData.find((r) => r.id === group.id) || null
-                                                        setGroupSelectedForEdit(original)
-                                                        setIsEditingGroup(true)
-                                                    }}
-                                                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-700 transition"
-                                                    title="Editar"
-                                                >
-                                                    <PencilSquareIcon className="h-5 w-5" />
-                                                </button>
+                                            {canEdit(true) && (
+                                                <>
+                                                    <div className="flex flex-col items-center gap-1">
+                                                        <button
+                                                            onClick={() => {
+                                                                const original =
+                                                                    groupRawData.find((r) => r.id === group.id) || null
+                                                                setGroupSelectedForEdit(original)
+                                                                setIsEditingGroup(true)
+                                                            }}
+                                                            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-700 transition"
+                                                            title="Editar"
+                                                        >
+                                                            <PencilSquareIcon className="h-5 w-5" />
+                                                        </button>
 
-                                                <DeleteButtonModal id={group.id} onDelete={handleDeleteGroup} />
-                                            </div>
+                                                        <DeleteButtonModal id={group.id} onDelete={handleDeleteGroup} />
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </li>
                                 ))}
