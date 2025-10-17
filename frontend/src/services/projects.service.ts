@@ -3,6 +3,7 @@ import { PaginationResDto } from "@/types/pagination.type"
 import {
     ChangeProjectStatusInput,
     GetAllProjectsReq,
+    ProjectContentUpdateInput,
     ProjectCreateInput,
     ProjectFullRes,
     ProjectRes,
@@ -81,13 +82,16 @@ export async function updateProjectById(id: string, body: ProjectUpdateInput): P
     return response.data?.data
 }
 
-export async function updateProjectContentById(id: string, body: ProjectUpdateInput): Promise<ProjectFullRes | void> {
+export async function updateProjectContentById(
+    id: string,
+    body: ProjectContentUpdateInput,
+): Promise<ProjectFullRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.put(`/projects/content/${id}`, body, {
+    const response = await backendApi.patch(`/projects/content/${id}`, body, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },

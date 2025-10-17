@@ -20,8 +20,10 @@ import { useRole } from "@/hooks/use-role"
 import { SubjectRes } from "@/types/subject.type"
 import { getAllSubjects } from "@/services/subjects.service"
 import { InfoTooltip } from "@/components/info-tooltip"
+import { useRouter } from "next/navigation"
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+    const router = useRouter()
     const { userRole, userId } = useRole()
     const { id: projectId } = use(params)
     const [isCreatingGroup, setIsCreatingGroup] = useState(false)
@@ -194,8 +196,12 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                         </div>
 
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2">
-                            <Button variant="primary" className="px-2 py-1 text-sm" onClick={() => {}}>
-                                Ver conteúdo
+                            <Button
+                                variant="secondary"
+                                className="px-2 py-1 text-sm"
+                                onClick={() => router.push(`/projetos/${projectId}/content`)}
+                            >
+                                Ver projeto
                             </Button>
 
                             {canEdit() && (

@@ -63,14 +63,14 @@ export interface ProjectUpdateInput {
 }
 
 export interface ProjectContentUpdateInput {
-    theme: string
-    scope: string
-    justification: string
-    generalObjective: string
-    specificObjectives: string
-    subjectsContributions: string
-    methodology: string
-    timeline: string
+    theme?: string
+    scope?: string
+    justification?: string
+    generalObjective?: string
+    specificObjectives?: string
+    subjectsContributions?: string
+    methodology?: string
+    timeline?: string
 }
 
 export interface ChangeProjectStatusInput {

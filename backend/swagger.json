@@ -2404,10 +2404,7 @@
           "timeline": {
             "type": "string"
           }
-        },
-        "required": [
-          "theme"
-        ]
+        }
       },
       "ChangeStatusReqDto": {
         "type": "object",
