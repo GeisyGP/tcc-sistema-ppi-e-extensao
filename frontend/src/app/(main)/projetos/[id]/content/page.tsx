@@ -8,6 +8,7 @@ import { Editor } from "@/components/editor/editor"
 import { ProjectFullRes } from "@/types/project.type"
 import BackButton from "@/components/buttons/back.button"
 import { PencilSquareIcon } from "@heroicons/react/24/outline"
+import { UserRole } from "@/types/user.type"
 
 export default function ProjectContentPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: projectId } = use(params)
@@ -25,7 +26,15 @@ export default function ProjectContentPage({ params }: { params: Promise<{ id: s
     const [methodology, setMethodology] = useState<string>("")
     const [timeline, setTimeline] = useState<string>("")
 
-    const canEdit = userRole === "TEACHER" || userRole === "COORDINATOR"
+    const canEdit = () => {
+        if (userRole === UserRole.COORDINATOR) return true
+
+        if (userRole === UserRole.TEACHER) {
+            return localData?.userHasDefaultAccess
+        }
+
+        return false
+    }
 
     useEffect(() => {
         fetchProject(projectId)
@@ -132,7 +141,7 @@ export default function ProjectContentPage({ params }: { params: Promise<{ id: s
         <div>
             <div className="flex justify-between items-center">
                 <h1 className="text-lg font-semibold mb-1">{title}</h1>
-                {canEdit &&
+                {canEdit() &&
                     (editingField === field ? (
                         <div className="flex gap-2">
                             <Button onClick={() => handleSave(field)}>Salvar</Button>

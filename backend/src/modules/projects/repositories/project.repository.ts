@@ -66,6 +66,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 subjectsContributions: true,
                 methodology: true,
                 timeline: true,
+                ppiId: true,
             },
         })
 
@@ -257,6 +258,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 subjectsContributions: true,
                 methodology: true,
                 timeline: true,
+                ppiId: true,
             },
         })
     }

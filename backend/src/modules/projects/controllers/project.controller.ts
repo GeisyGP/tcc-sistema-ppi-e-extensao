@@ -56,7 +56,12 @@ export class ProjectController {
     ): Promise<BaseResDto<ProjectFullResDto>> {
         this.loggerService.info(this.constructor.name, this.getFullById.name, `user: ${request.user.sub}`)
 
-        const response = await this.projectService.getFullById(param.id, request.user.mainCourseId)
+        const response = await this.projectService.getFullById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
             message: "Project found successfully",
@@ -108,7 +113,7 @@ export class ProjectController {
             request.user.mainRole,
         )
         return {
-            message: "Project found successfully",
+            message: "Projects found successfully",
             data: response,
         }
     }

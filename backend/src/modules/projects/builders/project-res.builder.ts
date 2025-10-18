@@ -22,7 +22,11 @@ export class ProjectResBuilder {
         }
     }
 
-    static buildFull(project: ProjectFullResDto): ProjectFullResDto {
+    static buildFull(
+        project: ProjectFullResDto,
+        userHasCoordinatorAccess?: boolean,
+        userHasDefaultAccess?: boolean,
+    ): ProjectFullResDto {
         return {
             id: project.id,
             theme: project.theme,
@@ -33,6 +37,9 @@ export class ProjectResBuilder {
             subjectsContributions: project.subjectsContributions,
             methodology: project.methodology,
             timeline: project.timeline,
+            userHasCoordinatorAccess,
+            userHasDefaultAccess,
+            ppiId: project.ppiId,
         }
     }
 

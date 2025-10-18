@@ -2343,11 +2343,23 @@
           },
           "timeline": {
             "type": "object"
+          },
+          "userHasDefaultAccess": {
+            "type": "boolean"
+          },
+          "userHasCoordinatorAccess": {
+            "type": "boolean"
+          },
+          "ppiId": {
+            "$ref": "#/components/schemas/randomUUID"
           }
         },
         "required": [
           "id",
-          "theme"
+          "theme",
+          "userHasDefaultAccess",
+          "userHasCoordinatorAccess",
+          "ppiId"
         ]
       },
       "UpdateProjectReqDto": {

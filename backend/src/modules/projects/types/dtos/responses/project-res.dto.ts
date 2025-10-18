@@ -73,4 +73,13 @@ export class ProjectFullResDto {
 
     @ApiPropertyOptional()
     timeline: string | null
+
+    @ApiProperty()
+    userHasDefaultAccess?: boolean
+
+    @ApiProperty()
+    userHasCoordinatorAccess?: boolean
+
+    @ApiProperty({ type: randomUUID })
+    ppiId: string
 }

@@ -31,6 +31,8 @@ export interface ProjectFullRes {
     subjectsContributions: string | null
     methodology: string | null
     timeline: string | null
+    userHasDefaultAccess: string
+    userHasCoordinatorAccess: string
 }
 
 export interface GetAllProjectsReq {

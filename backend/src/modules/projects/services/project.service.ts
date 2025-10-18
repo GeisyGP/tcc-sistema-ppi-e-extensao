@@ -40,14 +40,28 @@ export class ProjectService {
         }
     }
 
-    async getFullById(id: string, currentCourseId: string): Promise<ProjectFullResDto> {
+    async getFullById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        role: UserRole,
+    ): Promise<ProjectFullResDto> {
         try {
             const project = await this.projectRepository.getFullById(id, currentCourseId)
             if (!project) {
                 throw new ProjectNotFoundException()
             }
+            const userHasDefaultAccess =
+                role === UserRole.COORDINATOR
+                    ? true
+                    : await this.validateDefaultAccess(project.ppiId, currentCourseId, currentUserId)
 
-            return ProjectResBuilder.buildFull(project)
+            const userHasCoordinatorAccess =
+                role === UserRole.COORDINATOR
+                    ? true
+                    : await this.validateCoordinatorAccess(project.ppiId, currentCourseId, currentUserId)
+
+            return ProjectResBuilder.buildFull(project, userHasCoordinatorAccess, userHasDefaultAccess)
         } catch (error) {
             this.loggerService.error(
                 this.constructor.name,
