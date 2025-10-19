@@ -9,6 +9,7 @@ import { ProjectFullRes } from "@/types/project.type"
 import BackButton from "@/components/buttons/back.button"
 import { PencilSquareIcon } from "@heroicons/react/24/outline"
 import { UserRole } from "@/types/user.type"
+import { ExportDocxButton } from "@/components/buttons/export-docx.button"
 
 export default function ProjectContentPage({ params }: { params: Promise<{ id: string }> }) {
     const { id: projectId } = use(params)
@@ -185,7 +186,22 @@ export default function ProjectContentPage({ params }: { params: Promise<{ id: s
 
     return (
         <div className="p-6 space-y-8 max-w-3xl mx-auto">
-            <BackButton />
+            <div className="flex justify-between items-center mb-4">
+                <BackButton />
+                <ExportDocxButton
+                    projectData={{
+                        "1. Tema": `<p>${theme}</p>`,
+                        "2. Delimitação do Tema": scope,
+                        "3. Justificativa": justification,
+                        "4. Objetivo Geral": generalObjective,
+                        "5. Objetivos Específicos": specificObjectives,
+                        "6. Contribuições das Disciplinas": subjectsContributions,
+                        "7. Metodologia": methodology,
+                        "8. Cronograma": timeline,
+                    }}
+                />
+            </div>
+
             <h1 className="text-xl font-semibold text-gray-800 mb-2 text-center">
                 PROJETO DE PRÁTICA PROFISSIONAL INTEGRADA - PPI
             </h1>
