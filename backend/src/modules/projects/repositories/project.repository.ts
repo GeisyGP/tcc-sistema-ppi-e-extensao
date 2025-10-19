@@ -82,14 +82,12 @@ export class ProjectRepository implements ProjectRepositoryInterface {
         studentId?: string,
     ): Promise<ProjectWithPPI | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        const filter = {
+            id,
+            OR: [{ visibleToAll }, { Group: studentId ? { some: { users: { some: { id: studentId } } } } : undefined }],
+        }
         const project = await this.prisma.project.findUnique({
-            where: {
-                id,
-                OR: [
-                    { visibleToAll },
-                    { Group: studentId ? { some: { users: { some: { id: studentId } } } } : undefined },
-                ],
-            },
+            where: visibleToAll ? filter : { id },
             select: {
                 id: true,
                 class: true,

@@ -80,4 +80,5 @@ export const projectFullResMock = {
     methodology: baseProjectMock.methodology,
     subjectsContributions: baseProjectMock.subjectsContributions,
     timeline: baseProjectMock.timeline,
+    ppiId: baseProjectMock.ppiId,
 }

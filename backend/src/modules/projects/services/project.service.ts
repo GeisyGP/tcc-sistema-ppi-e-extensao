@@ -83,7 +83,7 @@ export class ProjectService {
             const project = await this.projectRepository.getById(
                 id,
                 currentCourseId,
-                role === UserRole.STUDENT ? true : false,
+                role === UserRole.STUDENT ? true : undefined,
                 role === UserRole.STUDENT ? currentUserId : undefined,
             )
             if (!project) {
