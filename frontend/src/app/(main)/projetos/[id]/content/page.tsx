@@ -5,7 +5,7 @@ import { useRole } from "@/hooks/use-role"
 import { Button } from "@/components/buttons/default.button"
 import { useContentProject } from "./hooks/use-content-project"
 import { Editor } from "@/components/editor/editor"
-import { ProjectFullRes } from "@/types/project.type"
+import { ProjectFullRes, ProjectStatus } from "@/types/project.type"
 import BackButton from "@/components/buttons/back.button"
 import { PencilSquareIcon } from "@heroicons/react/24/outline"
 import { UserRole } from "@/types/user.type"
@@ -28,6 +28,8 @@ export default function ProjectContentPage({ params }: { params: Promise<{ id: s
     const [timeline, setTimeline] = useState<string>("")
 
     const canEdit = () => {
+        if (rawData?.status === ProjectStatus.FINISHED) return false
+
         if (userRole === UserRole.COORDINATOR) return true
 
         if (userRole === UserRole.TEACHER) {

@@ -14,7 +14,7 @@ export function useProjects() {
         page: 1,
         itemsPerPage: 1,
         totalPages: 1,
-        totalItems: 1,
+        totalItems: 0,
     })
 
     const fetchProjects = useCallback(async (params: GetAllProjectsReq) => {

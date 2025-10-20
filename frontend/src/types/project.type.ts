@@ -35,6 +35,7 @@ export interface ProjectFullRes {
     timeline: string | null
     userHasDefaultAccess: string
     userHasCoordinatorAccess: string
+    status: ProjectStatus
 }
 
 export interface GetAllProjectsReq {
