@@ -14,7 +14,13 @@ import { UserService } from "src/modules/users/services/user.service"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { CourseService } from "src/modules/courses/services/course.service"
 import { CourseRepository } from "src/modules/courses/repositories/course-repository"
-import { projectFullResMock, projectMock, projectResMock } from "./mocks/project.mock"
+import {
+    baseProjectOverviewResMock,
+    projectFullResMock,
+    projectMock,
+    projectOverviewResMock,
+    projectResMock,
+} from "./mocks/project.mock"
 import { ppiResMock } from "../ppis/mocks/ppi.mock"
 import { ProjectNotFoundException } from "src/common/exceptions/project-not-found.exception"
 import { ProjectResDto } from "src/modules/projects/types/dtos/responses/project-res.dto"
@@ -109,20 +115,51 @@ describe("ProjectService", () => {
         })
     })
 
+    describe("getOverview", () => {
+        it("should return a project", async () => {
+            jest.spyOn(projectRepository, "getOverview").mockResolvedValueOnce(baseProjectOverviewResMock)
+
+            const result = await projectService.getOverview(projectMock.id, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(projectOverviewResMock)
+        })
+
+        it("should throw ProjectNotFoundException", async () => {
+            jest.spyOn(projectRepository, "getOverview").mockResolvedValueOnce(null)
+            await expect(projectService.getOverview(projectMock.id, requestMock.user.mainCourseId)).rejects.toThrow(
+                ProjectNotFoundException,
+            )
+        })
+    })
+
     describe("getFullById", () => {
         it("should return a project", async () => {
             jest.spyOn(projectRepository, "getFullById").mockResolvedValueOnce(projectFullResMock)
 
-            const result = await projectService.getFullById(projectMock.id, requestMock.user.mainCourseId)
+            const result = await projectService.getFullById(
+                projectMock.id,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
 
-            expect(result).toEqual(projectFullResMock)
+            expect(result).toEqual({
+                ...projectFullResMock,
+                userHasCoordinatorAccess: true,
+                userHasDefaultAccess: true,
+            })
         })
 
         it("should throw ProjectNotFoundException", async () => {
             jest.spyOn(projectRepository, "getFullById").mockResolvedValueOnce(null)
-            await expect(projectService.getFullById(projectMock.id, requestMock.user.mainCourseId)).rejects.toThrow(
-                ProjectNotFoundException,
-            )
+            await expect(
+                projectService.getFullById(
+                    projectMock.id,
+                    requestMock.user.mainCourseId,
+                    requestMock.user.sub,
+                    requestMock.user.mainRole,
+                ),
+            ).rejects.toThrow(ProjectNotFoundException)
         })
     })
 

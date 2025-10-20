@@ -11,12 +11,13 @@ import { SubjectRepository } from "src/modules/subjects/repositories/subject.rep
 import { ProjectService } from "src/modules/projects/services/project.service"
 import { ProjectRepository } from "src/modules/projects/repositories/project.repository"
 import { ProjectController } from "src/modules/projects/controllers/project.controller"
-import { projectFullResMock, projectMock, projectResMock } from "./mocks/project.mock"
+import { projectFullResMock, projectMock, projectOverviewResMock, projectResMock } from "./mocks/project.mock"
 import { ProjectFullResDto, ProjectResDto } from "src/modules/projects/types/dtos/responses/project-res.dto"
 import { UserService } from "src/modules/users/services/user.service"
 import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { CourseService } from "src/modules/courses/services/course.service"
 import { CourseRepository } from "src/modules/courses/repositories/course-repository"
+import { ProjectOverviewResDto } from "src/modules/projects/types/dtos/responses/project-overview.dto"
 
 describe("ProjectController", () => {
     let projectService: ProjectService
@@ -92,6 +93,23 @@ describe("ProjectController", () => {
         })
     })
 
+    describe("getOverview", () => {
+        it("should return a project overview", async () => {
+            jest.spyOn(projectService, "getOverview").mockResolvedValueOnce(projectOverviewResMock)
+
+            const result = await projectController.getOverview(
+                {
+                    id: projectResMock.id,
+                },
+                requestMock,
+            )
+
+            expect(result).toEqual(
+                baseResponseMock<ProjectOverviewResDto>("Project overview found successfully", projectOverviewResMock),
+            )
+        })
+    })
+
     describe("getAll", () => {
         it("should return an array of projects with pagination", async () => {
             jest.spyOn(projectService, "getAll").mockResolvedValueOnce(paginationMock<ProjectResDto>([projectResMock]))
@@ -112,7 +130,7 @@ describe("ProjectController", () => {
             )
 
             expect(result).toEqual(
-                baseResponseMock("Project found successfully", paginationMock<ProjectResDto>([projectResMock])),
+                baseResponseMock("Projects found successfully", paginationMock<ProjectResDto>([projectResMock])),
             )
         })
     })

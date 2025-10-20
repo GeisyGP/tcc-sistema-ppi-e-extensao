@@ -4,7 +4,7 @@ import { CaslAbilityFactory } from "src/modules/casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { requestMock } from "../authentication/mocks/authentication.mock"
 import { ProjectRepository } from "src/modules/projects/repositories/project.repository"
-import { baseProjectMock } from "./mocks/project.mock"
+import { baseProjectMock, baseProjectOverviewResMock } from "./mocks/project.mock"
 
 describe("ProjectRepository", () => {
     let prismaService: PrismaService
@@ -203,6 +203,17 @@ describe("ProjectRepository", () => {
             expect(prismaService.project.delete).toHaveBeenCalledWith({
                 where: { id: baseProjectMock.id },
             })
+        })
+    })
+
+    describe("getOverview", () => {
+        it("should return a project with ppi and course data", async () => {
+            jest.spyOn(prismaService.project, "findUnique").mockResolvedValueOnce(baseProjectOverviewResMock as any)
+
+            const result = await projectRepository.getOverview(baseProjectMock.id, requestMock.user.mainCourseId)
+
+            expect(result).toEqual(baseProjectOverviewResMock)
+            expect(prismaService.project.findUnique).toHaveBeenCalledTimes(1)
         })
     })
 })

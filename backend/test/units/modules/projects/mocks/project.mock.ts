@@ -1,6 +1,9 @@
 import { faker } from "@faker-js/faker/."
 import { ProjectStatus } from "src/common/enums/project-status.enum"
-import { ProjectWithPPI } from "src/modules/projects/repositories/project.repository.interface"
+import {
+    ProjectWithPPI,
+    ProjectWithPPIWithCourse,
+} from "src/modules/projects/repositories/project.repository.interface"
 
 export const baseProjectMock = {
     id: faker.string.uuid(),
@@ -81,4 +84,57 @@ export const projectFullResMock = {
     subjectsContributions: baseProjectMock.subjectsContributions,
     timeline: baseProjectMock.timeline,
     ppiId: baseProjectMock.ppiId,
+    status: baseProjectMock.status,
+}
+
+export const baseProjectOverviewResMock: ProjectWithPPIWithCourse = {
+    id: baseProjectMock.id,
+    academicDirector: baseProjectMock.academicDirector,
+    campusDirector: baseProjectMock.campusDirector,
+    class: baseProjectMock.class,
+    executionPeriod: baseProjectMock.executionPeriod,
+    ppi: {
+        classPeriod: baseProjectMock.ppi.classPeriod,
+        workload: 12,
+        course: {
+            name: faker.company.name(),
+            technologicalAxis: "Tecnologia",
+            educationLevel: "Superior",
+            degree: "Bacharelado",
+            modality: "Presencial",
+            shift: "Noturno",
+        },
+        SubjectPPI: [
+            {
+                subjectId: faker.string.uuid(),
+                workload: 2,
+                isCoordinator: true,
+                subject: {
+                    name: faker.word.sample(),
+                },
+            },
+        ],
+    },
+}
+
+export const projectOverviewResMock = {
+    id: baseProjectMock.id,
+    academicDirector: baseProjectMock.academicDirector,
+    campusDirector: baseProjectMock.campusDirector,
+    class: baseProjectMock.class,
+    ppiClassPeriod: baseProjectMock.ppi.classPeriod,
+    executionPeriod: baseProjectMock.executionPeriod,
+    courseName: baseProjectOverviewResMock.ppi.course.name,
+    technologicalAxis: baseProjectOverviewResMock.ppi.course.technologicalAxis,
+    educationLevel: baseProjectOverviewResMock.ppi.course.educationLevel,
+    degree: baseProjectOverviewResMock.ppi.course.degree,
+    modality: baseProjectOverviewResMock.ppi.course.modality,
+    shift: baseProjectOverviewResMock.ppi.course.shift,
+    workload: baseProjectOverviewResMock.ppi.workload,
+    subjects: baseProjectOverviewResMock.ppi.SubjectPPI.map((subject) => ({
+        id: subject.subjectId,
+        name: subject.subject?.name,
+        workload: subject.workload,
+        isCoordinator: subject.isCoordinator,
+    })),
 }
