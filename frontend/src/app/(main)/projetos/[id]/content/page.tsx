@@ -199,6 +199,8 @@ export default function ProjectContentPage({ params }: { params: Promise<{ id: s
                         "7. Metodologia": methodology,
                         "8. Cronograma": timeline,
                     }}
+                    projectId={projectId}
+                    theme={theme}
                 />
             </div>
 

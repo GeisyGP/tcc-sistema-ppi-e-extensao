@@ -6,6 +6,7 @@ import {
     ProjectContentUpdateInput,
     ProjectCreateInput,
     ProjectFullRes,
+    ProjectOverview,
     ProjectRes,
     ProjectUpdateInput,
 } from "@/types/project.type"
@@ -54,6 +55,20 @@ export async function getProjectFullById(id: string): Promise<ProjectFullRes | v
     return response.data?.data
 }
 
+export async function getProjectOverviewById(id: string): Promise<ProjectOverview | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/projects/${id}/overview`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
 export async function getProjectById(id: string): Promise<ProjectRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
@@ -91,7 +106,7 @@ export async function updateProjectContentById(
         return
     }
 
-    const response = await backendApi.patch(`/projects/content/${id}`, body, {
+    const response = await backendApi.patch(`/projects/${id}/content`, body, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },
@@ -105,7 +120,7 @@ export async function changeProjectStatusById(id: string, body: ChangeProjectSta
         return
     }
 
-    const response = await backendApi.patch(`/projects/status/${id}`, body, {
+    const response = await backendApi.patch(`/projects/${id}/status`, body, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },
@@ -120,7 +135,7 @@ export async function changeProjectVisibilityById(id: string, visibleToAll: bool
     }
 
     const response = await backendApi.patch(
-        `/projects/visibility/${id}`,
+        `/projects/${id}/visibility`,
         { visibleToAll },
         {
             headers: {

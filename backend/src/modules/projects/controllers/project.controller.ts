@@ -18,6 +18,7 @@ import { CreateProjectReqDto } from "../types/dtos/requests/create-project-req.d
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
 import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto"
 import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
+import { ProjectOverviewResDto } from "../types/dtos/responses/project-overview.dto"
 
 @ApiTags("projects")
 @Controller("projects")
@@ -94,6 +95,26 @@ export class ProjectController {
         }
     }
 
+    @Get(":id/overview")
+    @ApiOkResponse({
+        type: ProjectOverviewResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "PROJECT"))
+    async getOverview(
+        @Param() param: GetByIdProjectReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<ProjectOverviewResDto>> {
+        this.loggerService.info(this.constructor.name, this.getOverview.name, `user: ${request.user.sub}`)
+
+        const response = await this.projectService.getOverview(param.id, request.user.mainCourseId)
+
+        return {
+            message: "Project overview found successfully",
+            data: response,
+        }
+    }
+
     @Get()
     @ApiOkResponse({
         type: PaginationResDto<ProjectResDto[]>,
@@ -145,7 +166,7 @@ export class ProjectController {
         }
     }
 
-    @Patch("content/:id")
+    @Patch(":id/content")
     @ApiOkResponse({
         type: ProjectFullResDto,
     })
@@ -172,7 +193,7 @@ export class ProjectController {
         }
     }
 
-    @Patch("status/:id")
+    @Patch(":id/status")
     @ApiOkResponse({
         type: ProjectResDto,
     })
@@ -199,7 +220,7 @@ export class ProjectController {
         }
     }
 
-    @Patch("visibility/:id")
+    @Patch(":id/visibility")
     @ApiOkResponse({
         type: ProjectResDto,
     })

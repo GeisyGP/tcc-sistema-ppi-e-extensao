@@ -17,6 +17,7 @@ import { SubjectService } from "src/modules/subjects/services/subject.service"
 import { ProjectStatus } from "src/common/enums/project-status.enum"
 import { ProjectIsFinishedException } from "src/common/exceptions/project-is-finished.exception"
 import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
+import { ProjectOverviewResDto } from "../types/dtos/responses/project-overview.dto"
 
 @Injectable()
 export class ProjectService {
@@ -93,6 +94,25 @@ export class ProjectService {
             return ProjectResBuilder.build(project)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)
+            throw error
+        }
+    }
+
+    async getOverview(id: string, currentCourseId: string): Promise<ProjectOverviewResDto> {
+        try {
+            const project = await this.projectRepository.getOverview(id, currentCourseId)
+            if (!project) {
+                throw new ProjectNotFoundException()
+            }
+
+            return ProjectResBuilder.buildOverview(project)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.getOverview.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
             throw error
         }
     }

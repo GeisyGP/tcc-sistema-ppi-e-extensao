@@ -1,5 +1,6 @@
 import { PaginationResDto } from "../../../common/types/dtos/pagination-res.dto"
-import { ProjectWithPPI } from "../repositories/project.repository.interface"
+import { ProjectWithPPI, ProjectWithPPIWithCourse } from "../repositories/project.repository.interface"
+import { ProjectOverviewResDto } from "../types/dtos/responses/project-overview.dto"
 import { ProjectFullResDto, ProjectResDto } from "../types/dtos/responses/project-res.dto"
 
 export class ProjectResBuilder {
@@ -40,6 +41,31 @@ export class ProjectResBuilder {
             userHasCoordinatorAccess,
             userHasDefaultAccess,
             ppiId: project.ppiId,
+            status: project.status,
+        }
+    }
+
+    static buildOverview(project: ProjectWithPPIWithCourse): ProjectOverviewResDto {
+        return {
+            id: project.id,
+            technologicalAxis: project.ppi.course.technologicalAxis,
+            courseName: project.ppi.course.name,
+            educationLevel: project.ppi.course.educationLevel,
+            degree: project.ppi.course.degree,
+            modality: project.ppi.course.modality,
+            executionPeriod: project.executionPeriod,
+            ppiClassPeriod: project.ppi.classPeriod,
+            workload: project.ppi.workload,
+            shift: project.ppi.course.shift,
+            class: project.class,
+            campusDirector: project.campusDirector,
+            academicDirector: project.academicDirector,
+            subjects: project.ppi.SubjectPPI.map((subject) => ({
+                id: subject.subjectId,
+                name: subject.subject?.name,
+                workload: subject.workload,
+                isCoordinator: subject.isCoordinator,
+            })),
         }
     }
 

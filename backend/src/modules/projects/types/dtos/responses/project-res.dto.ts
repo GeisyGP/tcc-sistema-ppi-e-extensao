@@ -82,4 +82,7 @@ export class ProjectFullResDto {
 
     @ApiProperty({ type: randomUUID })
     ppiId: string
+
+    @ApiProperty({ enum: ProjectStatus })
+    status: ProjectStatus
 }

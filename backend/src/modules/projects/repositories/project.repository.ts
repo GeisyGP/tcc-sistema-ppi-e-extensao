@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client"
 import { CreateProjectReqDto } from "../types/dtos/requests/create-project-req.dto"
 import { GetAllProjectsReq } from "../types/dtos/requests/get-all-projects-req.dto"
 import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.dto"
-import { ProjectRepositoryInterface, ProjectWithPPI } from "./project.repository.interface"
+import { ProjectRepositoryInterface, ProjectWithPPI, ProjectWithPPIWithCourse } from "./project.repository.interface"
 import { PrismaService } from "src/config/prisma.service"
 import { ChangeStatusReqDto } from "../types/dtos/requests/change-status-req.dto"
 import { UpdateProjectContentReqDto } from "../types/dtos/requests/update-project-content-req.dto"
@@ -67,6 +67,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 methodology: true,
                 timeline: true,
                 ppiId: true,
+                status: true,
             },
         })
 
@@ -257,6 +258,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                 methodology: true,
                 timeline: true,
                 ppiId: true,
+                status: true,
             },
         })
     }
@@ -334,6 +336,44 @@ export class ProjectRepository implements ProjectRepositoryInterface {
 
         await this.prisma.project.delete({
             where: { id },
+        })
+    }
+
+    async getOverview(id: string, currentCourseId: string): Promise<ProjectWithPPIWithCourse | null> {
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        return await this.prisma.project.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                executionPeriod: true,
+                class: true,
+                campusDirector: true,
+                academicDirector: true,
+                ppi: {
+                    select: {
+                        classPeriod: true,
+                        workload: true,
+                        SubjectPPI: {
+                            select: {
+                                subject: { select: { name: true } },
+                                subjectId: true,
+                                workload: true,
+                                isCoordinator: true,
+                            },
+                        },
+                        course: {
+                            select: {
+                                technologicalAxis: true,
+                                degree: true,
+                                educationLevel: true,
+                                modality: true,
+                                shift: true,
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
         })
     }
 }

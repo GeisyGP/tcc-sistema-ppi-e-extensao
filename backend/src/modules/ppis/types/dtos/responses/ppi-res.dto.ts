@@ -21,7 +21,7 @@ export class PPIResDto {
     updatedAt: Date
 }
 
-class PPISubjectResDto {
+export class PPISubjectResDto {
     @ApiProperty()
     id: string
 

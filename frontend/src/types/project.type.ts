@@ -1,3 +1,5 @@
+import { PPISubjectResDto } from "./ppi.type"
+
 export interface ProjectRes {
     id: string
     class: string
@@ -99,4 +101,21 @@ export enum ProjectStatusMapped {
     NOT_STARTED = "Não iniciado",
     STARTED = "Em andamento",
     FINISHED = "Concluído",
+}
+
+export interface ProjectOverview {
+    id: string
+    technologicalAxis: string
+    courseName: string
+    educationLevel: string
+    degree: string
+    modality: string
+    executionPeriod: string
+    ppiClassPeriod: string
+    workload: number
+    shift: string
+    class: string
+    campusDirector: string
+    academicDirector: string
+    subjects: Array<PPISubjectResDto>
 }
