@@ -10,6 +10,7 @@ import { CourseModule } from "./modules/courses/course.module"
 import { PPIModule } from "./modules/ppis/ppi.module"
 import { ProjectModule } from "./modules/projects/project.module"
 import { GroupModule } from "./modules/groups/group.module"
+import { ArtifactModule } from "./modules/artifacts/artifact.module"
 import { DeliverableModule } from "./modules/deliverable/deliverable.module"
 
 @Module({
@@ -29,6 +30,7 @@ import { DeliverableModule } from "./modules/deliverable/deliverable.module"
         PPIModule,
         ProjectModule,
         GroupModule,
+        ArtifactModule,
         DeliverableModule,
     ],
 })

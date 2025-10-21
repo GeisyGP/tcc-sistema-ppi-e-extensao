@@ -1740,6 +1740,130 @@
         ]
       }
     },
+    "/artifacts/project/{projectId}": {
+      "post": {
+        "operationId": "ArtifactController_createArtifactProject",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtifactProjectReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtifactResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "artifacts"
+        ]
+      },
+      "get": {
+        "operationId": "ArtifactController_getAllByProjectId",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "artifacts"
+        ]
+      }
+    },
+    "/artifacts/deliverable/{deliverableId}": {
+      "post": {
+        "operationId": "ArtifactController_createArtifactDeliverable",
+        "parameters": [
+          {
+            "name": "deliverableId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtifactDeliverableReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtifactResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "artifacts"
+        ]
+      }
+    },
     "/artifacts/{id}": {
       "get": {
         "operationId": "ArtifactController_getById",
@@ -1755,14 +1879,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtifactResDto"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -1791,53 +1908,22 @@
         ]
       }
     },
-    "/artifacts/project/{projectId}": {
+    "/artifacts/{id}/download": {
       "get": {
-        "operationId": "ArtifactController_getAllByProjectId",
+        "operationId": "ArtifactController_downloadById",
         "parameters": [
           {
-            "name": "projectId",
+            "name": "id",
             "required": true,
             "in": "path",
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "isDeliverable",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationResDto"
-                }
-              }
-            }
+            "description": ""
           }
         },
         "tags": [
@@ -1872,14 +1958,6 @@
             "schema": {
               "type": "number"
             }
-          },
-          {
-            "name": "isDeliverable",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
           }
         ],
         "responses": {
@@ -1889,6 +1967,44 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "artifacts"
+        ]
+      }
+    },
+    "/artifacts/{id}/deliverable/{deliverableId}": {
+      "put": {
+        "operationId": "ArtifactController_updateFile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deliverableId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtifactResDto"
                 }
               }
             }
@@ -2949,6 +3065,17 @@
           "userIds"
         ]
       },
+      "CreateArtifactProjectReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
       "ArtifactResDto": {
         "type": "object",
         "properties": {
@@ -2966,9 +3093,6 @@
           },
           "size": {
             "type": "number"
-          },
-          "path": {
-            "type": "string"
           },
           "createdBy": {
             "type": "string"
@@ -3003,6 +3127,21 @@
           "updatedAt",
           "projectId",
           "deliverableId"
+        ]
+      },
+      "CreateArtifactDeliverableReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "groupId"
         ]
       },
       "CreateDeliverableReqDto": {

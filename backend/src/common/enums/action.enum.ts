@@ -8,4 +8,5 @@ export enum Action {
     ChangeStatus = "change-status",
     ChangeVisibility = "change-visibility",
     ChangePassword = "change-password",
+    UploadFile = "upload-file",
 }

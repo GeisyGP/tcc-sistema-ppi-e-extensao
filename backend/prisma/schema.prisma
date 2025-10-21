@@ -125,33 +125,45 @@ enum ProjectStatus {
 }
 
 model Group {
-  id        String     @id @default(uuid())
-  name      String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deletedAt DateTime?
-  project   Project    @relation(fields: [projectId], references: [id])
-  projectId String
-  users     User[]
-  courseId  String
-  Artifacts Artifact[]
+  id                 String               @id @default(uuid())
+  name               String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  project            Project              @relation(fields: [projectId], references: [id])
+  projectId          String
+  users              User[]
+  courseId           String
+  Artifacts          Artifact[]
+  DeliverableContent DeliverableContent[]
 }
 
 model Deliverable {
-  id          String     @id @default(uuid())
-  name        String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  createdBy   String
-  updatedBy   String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  deletedAt   DateTime?
-  project     Project    @relation(fields: [projectId], references: [id])
-  projectId   String
-  courseId    String
-  Artifact    Artifact[]
+  id                 String               @id @default(uuid())
+  name               String
+  description        String?
+  startDate          DateTime
+  endDate            DateTime
+  createdBy          String
+  updatedBy          String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  project            Project              @relation(fields: [projectId], references: [id])
+  projectId          String
+  courseId           String
+  Artifact           Artifact[]
+  DeliverableContent DeliverableContent[]
+}
+
+model DeliverableContent {
+  id            String      @id @default(uuid())
+  content       String
+  group         Group       @relation(fields: [groupId], references: [id])
+  groupId       String
+  deliverable   Deliverable @relation(fields: [deliverableId], references: [id])
+  deliverableId String
+  courseId      String
 }
 
 model Artifact {

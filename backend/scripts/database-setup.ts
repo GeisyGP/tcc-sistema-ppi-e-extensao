@@ -13,8 +13,8 @@ export async function databaseSetup() {
     if (databaseUser == 0) {
         console.log("Creating database user")
         await prisma.$executeRawUnsafe(`CREATE ROLE "${dbUser}" LOGIN PASSWORD '${dbPassword}'`)
-        await prisma.$executeRawUnsafe(`GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO "${dbUser}"`)
     }
+    await prisma.$executeRawUnsafe(`GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA public TO "${dbUser}"`)
 
     const createRlsFunction = await readFile("function-rls-policy.sql")
     await prisma.$executeRawUnsafe(createRlsFunction)
