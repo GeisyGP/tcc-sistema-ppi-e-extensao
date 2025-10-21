@@ -19,6 +19,8 @@ type Subjects =
           | "PPI"
           | "PROJECT"
           | "GROUP"
+          | "ARTIFACT"
+          | "DELIVERABLE"
       >
     | "all"
 
@@ -58,6 +60,13 @@ export class CaslAbilityFactory {
                 can(Action.Manage, "PPI")
                 can(Action.Manage, "PROJECT")
                 can(Action.Manage, "GROUP")
+                can(Action.Create, "DELIVERABLE")
+                can(Action.Update, "DELIVERABLE")
+                can(Action.Delete, "DELIVERABLE")
+                can(Action.Create, "ARTIFACT")
+                can(Action.UploadFile, "ARTIFACT")
+                can(Action.Update, "ARTIFACT")
+                can(Action.Delete, "ARTIFACT")
                 break
             }
             case UserRole.TEACHER: {
@@ -75,6 +84,14 @@ export class CaslAbilityFactory {
                 can(Action.ChangeStatus, "PROJECT")
                 can(Action.Delete, "PROJECT")
                 can(Action.Manage, "GROUP")
+                can(Action.Create, "DELIVERABLE")
+                can(Action.Update, "DELIVERABLE")
+                can(Action.Delete, "DELIVERABLE")
+                can(Action.Create, "ARTIFACT")
+                can(Action.Read, "ARTIFACT")
+                can(Action.UploadFile, "ARTIFACT")
+                can(Action.Update, "ARTIFACT")
+                can(Action.Delete, "ARTIFACT")
                 break
             }
             case UserRole.STUDENT: {
@@ -85,6 +102,9 @@ export class CaslAbilityFactory {
                 can(Action.Read, "PROJECT")
                 can(Action.Read, "GROUP")
                 can(Action.Read, "PPI")
+                can(Action.Read, "ARTIFACT")
+                can(Action.Read, "DELIVERABLE")
+                can(Action.UploadFile, "ARTIFACT")
                 break
             }
             case UserRole.VIEWER: {
@@ -95,6 +115,8 @@ export class CaslAbilityFactory {
                 can(Action.Read, "PROJECT")
                 can(Action.Read, "GROUP")
                 can(Action.Read, "PPI")
+                can(Action.Read, "ARTIFACT")
+                can(Action.Read, "DELIVERABLE")
                 break
             }
             default: {

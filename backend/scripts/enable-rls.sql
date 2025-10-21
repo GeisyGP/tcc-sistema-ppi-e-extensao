@@ -8,7 +8,9 @@ BEGIN
       ('Subject', 'subject_rls_policy'),
       ('PPI', 'ppi_rls_policy'),
       ('Project', 'project_rls_policy'),
-      ('Group', 'group_rls_policy')
+      ('Group', 'group_rls_policy'),
+      ('Artifact', 'artifact_rls_policy'),
+      ('Deliverable', 'deliverable_rls_policy')
     ) AS t(table_name, policy_name)
   LOOP
     PERFORM enable_rls_with_policy(

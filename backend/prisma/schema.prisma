@@ -114,7 +114,8 @@ model Project {
   ppiId                 String
   courseId              String
   Group                 Group[]
-  Artifacts             Artifacts[]
+  Artifacts             Artifact[]
+  Deliverable           Deliverable[]
 }
 
 enum ProjectStatus {
@@ -124,32 +125,52 @@ enum ProjectStatus {
 }
 
 model Group {
-  id        String      @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   deletedAt DateTime?
-  project   Project     @relation(fields: [projectId], references: [id])
+  project   Project    @relation(fields: [projectId], references: [id])
   projectId String
   users     User[]
   courseId  String
-  Artifacts Artifacts[]
+  Artifacts Artifact[]
 }
 
-model Artifacts {
-  id        String    @id @default(uuid())
-  name      String
-  local     String
-  startDate DateTime
-  endDate   DateTime
-  createdBy String
-  updatedBy String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  group     Group?    @relation(fields: [groupId], references: [id])
-  groupId   String?
-  project   Project?  @relation(fields: [projectId], references: [id])
-  projectId String?
-  courseId  String
+model Deliverable {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+  project     Project    @relation(fields: [projectId], references: [id])
+  projectId   String
+  courseId    String
+  Artifact    Artifact[]
+}
+
+model Artifact {
+  id            String       @id @default(uuid())
+  name          String
+  fileName      String
+  mimeType      String
+  size          Int
+  path          String
+  createdBy     String
+  updatedBy     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  deletedAt     DateTime?
+  group         Group?       @relation(fields: [groupId], references: [id])
+  groupId       String?
+  project       Project?     @relation(fields: [projectId], references: [id])
+  projectId     String?
+  deliverable   Deliverable? @relation(fields: [deliverableId], references: [id])
+  deliverableId String?
+  courseId      String
 }

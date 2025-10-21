@@ -10,6 +10,7 @@ import { CourseModule } from "./modules/courses/course.module"
 import { PPIModule } from "./modules/ppis/ppi.module"
 import { ProjectModule } from "./modules/projects/project.module"
 import { GroupModule } from "./modules/groups/group.module"
+import { DeliverableModule } from "./modules/deliverable/deliverable.module"
 
 @Module({
     providers: [
@@ -28,6 +29,7 @@ import { GroupModule } from "./modules/groups/group.module"
         PPIModule,
         ProjectModule,
         GroupModule,
+        DeliverableModule,
     ],
 })
 export class AppModule {}

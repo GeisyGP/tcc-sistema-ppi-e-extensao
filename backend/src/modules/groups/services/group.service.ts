@@ -77,9 +77,9 @@ export class GroupService {
                 ...dto.userIds.map((userId) => this.userService.getById(userId, currentCourseId)),
             ])
 
-            const course = await this.groupRepository.updateById(id, dto, currentCourseId)
+            const group = await this.groupRepository.updateById(id, dto, currentCourseId)
 
-            return GroupResBuilder.build(course)
+            return GroupResBuilder.build(group)
         } catch (error) {
             this.loggerService.error(
                 this.constructor.name,
