@@ -28,7 +28,7 @@ export function VisibilityTogglePopover({ project, onUpdate }: VisibilityToggleP
         <div className="relative inline-block">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full font-medium shadow-sm transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200"
+                className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full font-medium shadow-sm transition-all duration-200 bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
                 title="Alterar visibilidade"
             >
                 <PencilSquareIcon className="w-4 h-4 opacity-70" />

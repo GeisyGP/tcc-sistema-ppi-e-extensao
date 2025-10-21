@@ -151,7 +151,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                         <button
                                             title="Alterar status"
                                             onClick={() => setIsStatusModalOpen(true)}
-                                            className={`mt-1 inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm transition-all duration-200 ${getStatusClass(formattedData.status)}`}
+                                            className={`mt-1 inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm transition-all duration-200 cursor-pointer ${getStatusClass(formattedData.status)}`}
                                         >
                                             <PencilSquareIcon className="w-4 h-4 opacity-70" /> {formattedData.status}
                                         </button>

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { generateDocx } from "@/app/(main)/projetos/[id]/utils/docx-generator"
-import { ArrowDownTrayIcon } from "@heroicons/react/24/outline"
+import { ArrowDownTrayIcon } from "@heroicons/react/20/solid"
 import toast from "react-hot-toast"
 import { getProjectOverviewById } from "@/services/projects.service"
 
@@ -42,21 +42,10 @@ export const ExportDocxButton = ({ projectData, projectId, theme }: Props) => {
         <button
             onClick={handleExport}
             disabled={loading}
-            className="
-        flex items-center gap-2
-        text-gray-800 font-semibold text-sm
-        px-4 py-2
-        border border-transparent
-        rounded-lg
-        transition-all duration-300
-        hover:border-gray-300
-        hover:shadow-md
-        hover:text-gray-900
-        focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1
-      "
+            className="flex items-center gap-2 text-gray-600 font-medium text-sm hover:text-gray-900 transition-colors cursor-pointer"
         >
             <ArrowDownTrayIcon className="w-5 h-5" />
-            {loading ? "Gerando..." : "Exportar DOCX"}
+            {loading ? "Gerando..." : "Exportar"}
         </button>
     )
 }
