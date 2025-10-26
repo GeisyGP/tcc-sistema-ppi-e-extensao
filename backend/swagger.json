@@ -2135,6 +2135,44 @@
         ]
       }
     },
+    "/deliverables/{id}/group/{groupId}": {
+      "get": {
+        "operationId": "DeliverableController_getByIdAndGroupId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      }
+    },
     "/deliverables/project/{projectId}": {
       "get": {
         "operationId": "DeliverableController_getAllByProjectId",
@@ -2162,6 +2200,14 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "groupId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2178,6 +2224,126 @@
         },
         "tags": [
           "deliverables"
+        ]
+      }
+    },
+    "/deliverable-contents": {
+      "post": {
+        "operationId": "DeliverableContentController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContentReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableContentResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverable-contents"
+        ]
+      }
+    },
+    "/deliverable-contents/{id}": {
+      "get": {
+        "operationId": "DeliverableContentController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableContentResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverable-contents"
+        ]
+      },
+      "put": {
+        "operationId": "DeliverableContentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateContentReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableContentResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverable-contents"
+        ]
+      },
+      "delete": {
+        "operationId": "DeliverableContentController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "deliverable-contents"
         ]
       }
     }
@@ -3246,6 +3412,76 @@
           "description",
           "startDate",
           "endDate"
+        ]
+      },
+      "CreateContentReqDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "deliverableId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "groupId",
+          "deliverableId"
+        ]
+      },
+      "DeliverableContentResDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "content": {
+            "type": "string"
+          },
+          "deliverableId": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "groupId": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "deliverableId",
+          "groupId",
+          "createdBy",
+          "updatedBy",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateContentReqDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
         ]
       }
     }

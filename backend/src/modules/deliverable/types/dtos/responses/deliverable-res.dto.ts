@@ -32,3 +32,33 @@ export class DeliverableResDto {
     @ApiProperty()
     updatedAt: Date
 }
+
+export class DeliverableWithContentAndArtifactResDto extends DeliverableResDto {
+    @ApiProperty()
+    artifact: DeliverableArtifact[]
+
+    @ApiProperty()
+    content: DeliverableContent[]
+}
+
+class DeliverableContent {
+    @ApiProperty()
+    id: string
+
+    @ApiProperty()
+    content: string
+
+    @ApiProperty()
+    groupId: string
+}
+
+class DeliverableArtifact {
+    @ApiProperty()
+    id: string
+
+    @ApiProperty()
+    name: string
+
+    @ApiProperty()
+    groupId: string | null
+}

@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common"
-import { DeliverableRepository } from "../repositories/deliverable-repository"
+import { ForbiddenException, Injectable } from "@nestjs/common"
+import { DeliverableRepository } from "../repositories/deliverable.repository"
 import { CreateDeliverableReqDto } from "../types/dtos/requests/create-deliverable-req.dto"
-import { DeliverableResDto } from "../types/dtos/responses/deliverable-res.dto"
+import { DeliverableResDto, DeliverableWithContentAndArtifactResDto } from "../types/dtos/responses/deliverable-res.dto"
 import { GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
@@ -9,6 +9,7 @@ import { DeliverableResBuilder } from "../builders/deliverable-res.builder"
 import { UpdateDeliverableReqDto } from "../types/dtos/requests/update-deliverable-req.dto"
 import { ProjectService } from "src/modules/projects/services/project.service"
 import { DeliverableNotFoundException } from "src/common/exceptions/deliverable-not-found.exception"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @Injectable()
 export class DeliverableService {
@@ -45,14 +46,32 @@ export class DeliverableService {
         }
     }
 
-    async getById(id: string, currentCourseId: string): Promise<DeliverableResDto> {
+    async getById(id: string, currentCourseId: string): Promise<DeliverableWithContentAndArtifactResDto> {
         try {
             const deliverable = await this.deliverableRepository.getById(id, currentCourseId)
             if (!deliverable) {
                 throw new DeliverableNotFoundException()
             }
 
-            return DeliverableResBuilder.build(deliverable)
+            return DeliverableResBuilder.buildWithContentAndArtifact(deliverable)
+        } catch (error) {
+            this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)
+            throw error
+        }
+    }
+
+    async getByIdAndGroupId(
+        id: string,
+        currentCourseId: string,
+        groupId: string,
+    ): Promise<DeliverableWithContentAndArtifactResDto> {
+        try {
+            const deliverable = await this.deliverableRepository.getById(id, currentCourseId, groupId)
+            if (!deliverable) {
+                throw new DeliverableNotFoundException()
+            }
+
+            return DeliverableResBuilder.buildWithContentAndArtifact(deliverable)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)
             throw error
@@ -63,8 +82,12 @@ export class DeliverableService {
         projectId: string,
         dto: GetAllDeliverableReqDto,
         currentCourseId: string,
+        userRole: UserRole,
     ): Promise<PaginationResDto<DeliverableResDto[]>> {
         try {
+            if (userRole === UserRole.STUDENT && !dto.groupId) {
+                throw new ForbiddenException()
+            }
             const { deliverables, totalItems } = await this.deliverableRepository.getAllByProjectId(
                 dto,
                 currentCourseId,

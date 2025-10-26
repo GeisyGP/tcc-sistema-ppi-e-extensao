@@ -1,6 +1,7 @@
 import { Deliverable } from "@prisma/client"
 import { PaginationResDto } from "../../../common/types/dtos/pagination-res.dto"
-import { DeliverableResDto } from "../types/dtos/responses/deliverable-res.dto"
+import { DeliverableResDto, DeliverableWithContentAndArtifactResDto } from "../types/dtos/responses/deliverable-res.dto"
+import { DeliverableWithContentAndArtifact } from "../repositories/deliverable.repository.interface"
 
 export class DeliverableResBuilder {
     static build(data: Deliverable): DeliverableResDto {
@@ -18,14 +19,33 @@ export class DeliverableResBuilder {
         }
     }
 
+    static buildWithContentAndArtifact(
+        data: DeliverableWithContentAndArtifact,
+    ): DeliverableWithContentAndArtifactResDto {
+        return {
+            id: data.id,
+            name: data.name,
+            description: data.description,
+            projectId: data.projectId,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            artifact: data.Artifact,
+            content: data.DeliverableContent,
+            createdBy: data.createdBy,
+            updatedBy: data.updatedBy,
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+        }
+    }
+
     static buildMany(
-        deliverables: Deliverable[],
+        deliverables: DeliverableWithContentAndArtifact[],
         page: number,
         limit: number,
         totalItems: number,
     ): PaginationResDto<DeliverableResDto[]> {
         return {
-            items: deliverables.map((deliverable) => this.build(deliverable)),
+            items: deliverables.map((deliverable) => this.buildWithContentAndArtifact(deliverable)),
             metadata: {
                 page,
                 itemsPerPage: limit,

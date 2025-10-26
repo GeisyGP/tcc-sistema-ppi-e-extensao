@@ -1,5 +1,5 @@
 import { GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
-import { DeliverableRepositoryInterface } from "./deliverable.repository.interface"
+import { DeliverableRepositoryInterface, DeliverableWithContentAndArtifact } from "./deliverable.repository.interface"
 import { PrismaService } from "src/config/prisma.service"
 import { Injectable } from "@nestjs/common"
 import { Deliverable } from "@prisma/client"
@@ -26,10 +26,24 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
         })
     }
 
-    async getById(id: string, currentCourseId: string): Promise<Deliverable | null> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        groupId?: string,
+    ): Promise<DeliverableWithContentAndArtifact | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const deliverable = await this.prisma.deliverable.findUnique({
             where: { id },
+            include: {
+                Artifact: {
+                    select: { id: true, name: true, groupId: true },
+                    where: { groupId },
+                },
+                DeliverableContent: {
+                    select: { id: true, content: true, groupId: true },
+                    where: { groupId },
+                },
+            },
         })
 
         if (!deliverable) return null
@@ -41,14 +55,24 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
         dto: GetAllDeliverableReqDto,
         currentCourseId: string,
         projectId: string,
-    ): Promise<{ deliverables: Deliverable[]; totalItems: number }> {
+    ): Promise<{ deliverables: DeliverableWithContentAndArtifact[]; totalItems: number }> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const filter = {
             projectId,
         }
-        console.log(filter)
+
         const deliverables = await this.prisma.deliverable.findMany({
             where: filter,
+            include: {
+                Artifact: {
+                    select: { id: true, name: true, groupId: true },
+                    where: { groupId: dto.groupId },
+                },
+                DeliverableContent: {
+                    select: { id: true, content: true, groupId: true },
+                    where: { groupId: dto.groupId },
+                },
+            },
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
             orderBy: [{ name: "asc" }],

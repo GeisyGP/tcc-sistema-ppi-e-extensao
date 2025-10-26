@@ -21,6 +21,7 @@ type Subjects =
           | "GROUP"
           | "ARTIFACT"
           | "DELIVERABLE"
+          | "DELIVERABLE-CONTENT"
       >
     | "all"
 
@@ -63,10 +64,12 @@ export class CaslAbilityFactory {
                 can(Action.Create, "DELIVERABLE")
                 can(Action.Update, "DELIVERABLE")
                 can(Action.Delete, "DELIVERABLE")
+                can(Action.ReadFull, "DELIVERABLE")
                 can(Action.Create, "ARTIFACT")
                 can(Action.UploadFile, "ARTIFACT")
                 can(Action.Update, "ARTIFACT")
                 can(Action.Delete, "ARTIFACT")
+                can(Action.Read, "DELIVERABLE-CONTENT")
                 break
             }
             case UserRole.TEACHER: {
@@ -87,11 +90,14 @@ export class CaslAbilityFactory {
                 can(Action.Create, "DELIVERABLE")
                 can(Action.Update, "DELIVERABLE")
                 can(Action.Delete, "DELIVERABLE")
+                can(Action.ReadFull, "DELIVERABLE")
+                can(Action.Read, "DELIVERABLE")
                 can(Action.Create, "ARTIFACT")
                 can(Action.Read, "ARTIFACT")
                 can(Action.UploadFile, "ARTIFACT")
                 can(Action.Update, "ARTIFACT")
                 can(Action.Delete, "ARTIFACT")
+                can(Action.Read, "DELIVERABLE-CONTENT")
                 break
             }
             case UserRole.STUDENT: {
@@ -105,6 +111,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, "ARTIFACT")
                 can(Action.Read, "DELIVERABLE")
                 can(Action.UploadFile, "ARTIFACT")
+                can(Action.Manage, "DELIVERABLE-CONTENT")
                 break
             }
             case UserRole.VIEWER: {
@@ -117,6 +124,7 @@ export class CaslAbilityFactory {
                 can(Action.Read, "PPI")
                 can(Action.Read, "ARTIFACT")
                 can(Action.Read, "DELIVERABLE")
+                can(Action.Read, "DELIVERABLE-CONTENT")
                 break
             }
             default: {

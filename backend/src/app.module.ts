@@ -12,6 +12,7 @@ import { ProjectModule } from "./modules/projects/project.module"
 import { GroupModule } from "./modules/groups/group.module"
 import { ArtifactModule } from "./modules/artifacts/artifact.module"
 import { DeliverableModule } from "./modules/deliverable/deliverable.module"
+import { DeliverableContentModule } from "./modules/deliverable-content/deliverable-content.module"
 
 @Module({
     providers: [
@@ -32,6 +33,7 @@ import { DeliverableModule } from "./modules/deliverable/deliverable.module"
         GroupModule,
         ArtifactModule,
         DeliverableModule,
+        DeliverableContentModule,
     ],
 })
 export class AppModule {}

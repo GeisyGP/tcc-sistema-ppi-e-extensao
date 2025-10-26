@@ -49,7 +49,7 @@ export class DeliverableController {
         type: DeliverableResDto,
     })
     @UseGuards(PoliciesGuard)
-    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "DELIVERABLE"))
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.ReadFull, "DELIVERABLE"))
     async getById(
         @Param() param: GetByIdDeliverableReqDto,
         @Request() request: RequestDto,
@@ -57,6 +57,27 @@ export class DeliverableController {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
         const response = await this.deliverableService.getById(param.id, request.user.mainCourseId)
+
+        return {
+            message: "Deliverable found successfully",
+            data: response,
+        }
+    }
+
+    @Get(":id/group/:groupId")
+    @ApiOkResponse({
+        type: DeliverableResDto,
+    })
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "DELIVERABLE"))
+    async getByIdAndGroupId(
+        @Param() param: GetByIdDeliverableReqDto,
+        @Param("groupId") groupId: string,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<DeliverableResDto>> {
+        this.loggerService.info(this.constructor.name, this.getByIdAndGroupId.name, `user: ${request.user.sub}`)
+
+        const response = await this.deliverableService.getByIdAndGroupId(param.id, request.user.mainCourseId, groupId)
 
         return {
             message: "Deliverable found successfully",
@@ -81,6 +102,7 @@ export class DeliverableController {
             param.projectId,
             queryParams,
             request.user.mainCourseId,
+            request.user.mainRole,
         )
         return {
             message: "Deliverables found successfully",

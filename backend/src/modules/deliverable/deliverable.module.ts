@@ -4,7 +4,7 @@ import { CaslAbilityFactory } from "../casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
 import { DeliverableController } from "./controllers/deliverable.controller"
 import { DeliverableService } from "./services/deliverable.service"
-import { DeliverableRepository } from "./repositories/deliverable-repository"
+import { DeliverableRepository } from "./repositories/deliverable.repository"
 import { ProjectModule } from "../projects/project.module"
 
 @Module({
