@@ -108,6 +108,7 @@ export class ArtifactController {
             fileInfo,
             request.user.mainCourseId,
             request.user.sub,
+            request.user.mainRole,
         )
         return {
             message: "Artifact saved successfully",
@@ -121,7 +122,7 @@ export class ArtifactController {
     })
     @UseGuards(PoliciesGuard)
     @UseFilters(FileCleanupFilter)
-    @CheckPolicies((ability: AppAbility) => ability.can(Action.Create, "ARTIFACT"))
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.UploadFile, "ARTIFACT"))
     @UseInterceptors(
         FileInterceptor("file", {
             storage: diskStorage({
@@ -183,7 +184,12 @@ export class ArtifactController {
     ) {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const response = await this.artifactService.getById(param.id, request.user.mainCourseId)
+        const response = await this.artifactService.getById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         if (!fs.existsSync(response.filePath)) {
             throw new ArtifactNotFoundException()
@@ -210,7 +216,12 @@ export class ArtifactController {
     ) {
         this.loggerService.info(this.constructor.name, this.downloadById.name, `user: ${request.user.sub}`)
 
-        const response = await this.artifactService.getById(param.id, request.user.mainCourseId)
+        const response = await this.artifactService.getById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         if (!fs.existsSync(response.filePath)) {
             throw new ArtifactNotFoundException()
@@ -319,6 +330,7 @@ export class ArtifactController {
             fileInfo,
             request.user.mainCourseId,
             request.user.sub,
+            request.user.mainRole,
         )
 
         return {
@@ -334,6 +346,11 @@ export class ArtifactController {
     async delete(@Param() param: DeleteArtifactReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.artifactService.deleteById(param.id, request.user.mainCourseId)
+        await this.artifactService.deleteById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
     }
 }

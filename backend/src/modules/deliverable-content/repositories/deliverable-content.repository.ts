@@ -27,10 +27,29 @@ export class DeliverableContentRepository implements DeliverableContentRepositor
         })
     }
 
-    async getById(id: string, currentCourseId: string): Promise<DeliverableContent | null> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        studentId?: string,
+        visibleToAll?: boolean,
+    ): Promise<DeliverableContent | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const deliverable = await this.prisma.deliverableContent.findUnique({
-            where: { id },
+            where: {
+                id,
+                OR: [
+                    {
+                        group: {
+                            users: {
+                                some: { id: studentId },
+                            },
+                        },
+                        deliverable: {
+                            project: { visibleToAll },
+                        },
+                    },
+                ],
+            },
         })
 
         if (!deliverable) return null

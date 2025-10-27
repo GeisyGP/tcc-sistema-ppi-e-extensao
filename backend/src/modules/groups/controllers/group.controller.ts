@@ -33,7 +33,12 @@ export class GroupController {
     async create(@Body() dto: CreateGroupReqDto, @Request() request: RequestDto): Promise<BaseResDto<GroupResDto>> {
         this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
 
-        const group = await this.groupService.create(dto, request.user.mainCourseId)
+        const group = await this.groupService.create(
+            dto,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
             message: "Group created successfully",
@@ -98,7 +103,13 @@ export class GroupController {
     ): Promise<BaseResDto<GroupResDto>> {
         this.loggerService.info(this.constructor.name, this.update.name, `user: ${request.user.sub}`)
 
-        const group = await this.groupService.updateById(param.id, dto, request.user.mainCourseId)
+        const group = await this.groupService.updateById(
+            param.id,
+            dto,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
             message: "Group updated successfully",
@@ -113,6 +124,6 @@ export class GroupController {
     async delete(@Param() param: DeleteGroupReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.groupService.deleteById(param.id, request.user.mainCourseId)
+        await this.groupService.deleteById(param.id, request.user.mainCourseId, request.user.sub, request.user.mainRole)
     }
 }

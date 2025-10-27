@@ -31,10 +31,29 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
         })
     }
 
-    async getById(id: string, currentCourseId: string): Promise<Artifact | null> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        studentId?: string,
+        visibleToAll?: boolean,
+    ): Promise<Artifact | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const artifact = await this.prisma.artifact.findUnique({
-            where: { id },
+            where: {
+                id,
+                OR: [
+                    {
+                        group: {
+                            users: {
+                                some: { id: studentId },
+                            },
+                        },
+                        deliverable: {
+                            project: { visibleToAll },
+                        },
+                    },
+                ],
+            },
         })
 
         if (!artifact) return null

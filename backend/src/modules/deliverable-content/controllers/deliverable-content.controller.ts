@@ -53,7 +53,12 @@ export class DeliverableContentController {
     ): Promise<BaseResDto<DeliverableContentResDto>> {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
-        const response = await this.deliverableContent.getById(param.id, request.user.mainCourseId)
+        const response = await this.deliverableContent.getById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
             message: "Deliverable content found successfully",
@@ -79,6 +84,7 @@ export class DeliverableContentController {
             dto,
             request.user.mainCourseId,
             request.user.sub,
+            request.user.mainRole,
         )
 
         return {
@@ -94,6 +100,11 @@ export class DeliverableContentController {
     async delete(@Param() param: GetByIdContentReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.deliverableContent.deleteById(param.id, request.user.mainCourseId, request.user.sub)
+        await this.deliverableContent.deleteById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
     }
 }

@@ -1,5 +1,5 @@
 import * as fs from "fs"
-import { Injectable } from "@nestjs/common"
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { ArtifactRepository } from "../repositories/artifact-repository"
 import {
     CreateArtifactDeliverableReqDto,
@@ -17,6 +17,7 @@ import { UpdateArtifactFileInput } from "../repositories/artifact.repository.int
 import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
 import { CannotUpdateDeliverableAfterEndDateException } from "src/common/exceptions/cannot-update-deliverable-after-end-date.exception"
 import { CannotUpdateDeliverableBeforeStartDateException } from "src/common/exceptions/cannot-update-deliverable-before-start-date.exception"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @Injectable()
 export class ArtifactService {
@@ -34,9 +35,10 @@ export class ArtifactService {
         fileInfo: UpdateArtifactFileInput,
         currentCourseId: string,
         currentUserId: string,
+        currentUserRole: UserRole,
     ): Promise<ArtifactResDto> {
         try {
-            await this.projectService.getById(projectId, currentCourseId)
+            await this.handleAccess(projectId, currentCourseId, currentUserId, currentUserRole)
             const response = await this.artifactRepository.create(
                 {
                     name: dto.name,
@@ -70,11 +72,14 @@ export class ArtifactService {
         currentUserId: string,
     ): Promise<ArtifactResDto> {
         try {
+            const group = await this.groupService.getById(dto.groupId, currentCourseId)
+            if (!group.users.find((user) => user.id === currentUserId)) {
+                throw new ForbiddenException()
+            }
             const deliverable = await this.deliverableService.getById(deliverableId, currentCourseId)
             if (deliverable.startDate > new Date()) throw new CannotUpdateDeliverableBeforeStartDateException()
             if (deliverable.endDate < new Date()) throw new CannotUpdateDeliverableAfterEndDateException()
 
-            await this.groupService.getById(dto.groupId, currentCourseId)
             const response = await this.artifactRepository.create(
                 {
                     name: dto.name,
@@ -101,9 +106,19 @@ export class ArtifactService {
         }
     }
 
-    async getById(id: string, currentCourseId: string): Promise<{ data: ArtifactResDto; filePath: string }> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        currentUserRole: UserRole,
+    ): Promise<{ data: ArtifactResDto; filePath: string }> {
         try {
-            const artifact = await this.artifactRepository.getById(id, currentCourseId)
+            const artifact = await this.artifactRepository.getById(
+                id,
+                currentCourseId,
+                currentUserRole === UserRole.STUDENT ? currentUserId : undefined,
+                currentUserRole === UserRole.STUDENT ? true : undefined,
+            )
             if (!artifact) {
                 throw new ArtifactNotFoundException()
             }
@@ -169,16 +184,26 @@ export class ArtifactService {
         fileInfo: UpdateArtifactFileInput,
         currentCourseId: string,
         currentUserId: string,
+        currentUserRole: UserRole,
     ): Promise<ArtifactResDto> {
         try {
             const deliverable = await this.deliverableService.getById(deliverableId, currentCourseId)
             if (deliverable.startDate > new Date()) throw new CannotUpdateDeliverableBeforeStartDateException()
             if (deliverable.endDate < new Date()) throw new CannotUpdateDeliverableAfterEndDateException()
 
-            const artifactToBeRemoved = await this.getById(id, currentCourseId)
+            const artifactToBeRemoved = await this.getById(id, currentCourseId, currentUserId, currentUserRole)
+            if (artifactToBeRemoved.data?.groupId) {
+                const group = await this.groupService.getById(artifactToBeRemoved.data.groupId, currentCourseId)
+                if (!group.users.find((user) => user.id === currentUserId)) {
+                    throw new ForbiddenException()
+                }
+            } else {
+                throw new ForbiddenException()
+            }
             if (artifactToBeRemoved.data.deliverableId !== deliverableId) {
                 throw new ArtifactNotFoundException()
             }
+
             const artifact = await this.artifactRepository.updateFileById(id, fileInfo, currentCourseId, currentUserId)
 
             if (artifactToBeRemoved.filePath && fs.existsSync(artifactToBeRemoved.filePath)) {
@@ -197,9 +222,16 @@ export class ArtifactService {
         }
     }
 
-    async deleteById(id: string, currentCourseId: string): Promise<void> {
+    async deleteById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        currentUserRole: UserRole,
+    ): Promise<void> {
         try {
-            const artifact = await this.getById(id, currentCourseId)
+            const artifact = await this.getById(id, currentCourseId, currentUserId, currentUserRole)
+            await this.handleAccess(artifact.data?.projectId, currentCourseId, currentUserId, currentUserRole)
+
             await this.artifactRepository.deleteById(id, currentCourseId)
             if (artifact.filePath && fs.existsSync(artifact.filePath)) {
                 fs.unlinkSync(artifact.filePath)
@@ -211,6 +243,58 @@ export class ArtifactService {
                 `error: ${error.message}`,
                 error.stack,
             )
+            throw error
+        }
+    }
+
+    private async handleAccess(
+        projectId: string | null,
+        currentCourseId: string,
+        userId: string,
+        role: UserRole,
+    ): Promise<void> {
+        if (role === UserRole.COORDINATOR) return
+
+        try {
+            const hasAccess = await this.validateDefaultAccess(projectId, currentCourseId, userId)
+            if (!hasAccess) {
+                throw new ForbiddenException()
+            }
+            return
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new ForbiddenException()
+            }
+            throw error
+        }
+    }
+
+    private async validateDefaultAccess(
+        projectId: string | null,
+        currentCourseId: string,
+        userId: string,
+    ): Promise<boolean> {
+        try {
+            const projectsByTeacher = await this.projectService.getAll(
+                {
+                    teacherId: userId,
+                    status: "STARTED",
+                    page: 1,
+                    limit: 1,
+                },
+                currentCourseId,
+                userId,
+                UserRole.TEACHER,
+            )
+
+            const project = projectsByTeacher.items.find((i) => i.id === projectId)
+            if (!project) return false
+
+            return true
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return false
+            }
             throw error
         }
     }

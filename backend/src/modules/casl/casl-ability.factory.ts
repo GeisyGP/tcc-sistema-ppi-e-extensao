@@ -66,8 +66,6 @@ export class CaslAbilityFactory {
                 can(Action.Delete, "DELIVERABLE")
                 can(Action.ReadFull, "DELIVERABLE")
                 can(Action.Create, "ARTIFACT")
-                can(Action.UploadFile, "ARTIFACT")
-                can(Action.Update, "ARTIFACT")
                 can(Action.Delete, "ARTIFACT")
                 can(Action.Read, "DELIVERABLE-CONTENT")
                 break
@@ -94,8 +92,6 @@ export class CaslAbilityFactory {
                 can(Action.Read, "DELIVERABLE")
                 can(Action.Create, "ARTIFACT")
                 can(Action.Read, "ARTIFACT")
-                can(Action.UploadFile, "ARTIFACT")
-                can(Action.Update, "ARTIFACT")
                 can(Action.Delete, "ARTIFACT")
                 can(Action.Read, "DELIVERABLE-CONTENT")
                 break
@@ -108,9 +104,10 @@ export class CaslAbilityFactory {
                 can(Action.Read, "PROJECT")
                 can(Action.Read, "GROUP")
                 can(Action.Read, "PPI")
-                can(Action.Read, "ARTIFACT")
                 can(Action.Read, "DELIVERABLE")
+                can(Action.Read, "ARTIFACT")
                 can(Action.UploadFile, "ARTIFACT")
+                can(Action.Update, "ARTIFACT")
                 can(Action.Manage, "DELIVERABLE-CONTENT")
                 break
             }

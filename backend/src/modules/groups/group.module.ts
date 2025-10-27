@@ -7,9 +7,11 @@ import { GroupService } from "./services/group.service"
 import { GroupRepository } from "./repositories/group-repository"
 import { ProjectModule } from "../projects/project.module"
 import { UserModule } from "../users/user.module"
+import { PPIModule } from "../ppis/ppi.module"
+import { SubjectModule } from "../subjects/subject.module"
 
 @Module({
-    imports: [PrismaModule, ProjectModule, UserModule],
+    imports: [PrismaModule, ProjectModule, UserModule, PPIModule, SubjectModule],
     controllers: [GroupController],
     exports: [GroupService],
     providers: [GroupService, GroupRepository, CaslAbilityFactory, CustomLoggerService],

@@ -10,6 +10,7 @@ import { UpdateContentReqDto } from "../types/dtos/requests/update-content-req.d
 import { DeliverableContentExistsException } from "src/common/exceptions/deliverable-content-exists.exception"
 import { DeliverableContentNotFoundException } from "src/common/exceptions/deliverable-content-not-found.exception"
 import { DeliverableNotFoundException } from "src/common/exceptions/deliverable-not-found.exception"
+import { UserRole } from "src/common/enums/user-role.enum"
 
 @Injectable()
 export class DeliverableContentService {
@@ -51,9 +52,19 @@ export class DeliverableContentService {
         }
     }
 
-    async getById(id: string, currentCourseId: string): Promise<DeliverableContentResDto> {
+    async getById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        currentUserRole: UserRole,
+    ): Promise<DeliverableContentResDto> {
         try {
-            const deliverable = await this.deliverableContentRepository.getById(id, currentCourseId)
+            const deliverable = await this.deliverableContentRepository.getById(
+                id,
+                currentCourseId,
+                currentUserRole === UserRole.STUDENT ? currentUserId : undefined,
+                currentUserRole === UserRole.STUDENT ? true : undefined,
+            )
             if (!deliverable) {
                 throw new DeliverableContentNotFoundException()
             }
@@ -70,9 +81,10 @@ export class DeliverableContentService {
         dto: UpdateContentReqDto,
         currentCourseId: string,
         currentUserId: string,
+        currentUserRole: UserRole,
     ): Promise<DeliverableContentResDto> {
         try {
-            const content = await this.getById(id, currentCourseId)
+            const content = await this.getById(id, currentCourseId, currentUserId, currentUserRole)
             const group = await this.groupService.getById(content.groupId, currentCourseId)
             if (!group.users.find((user) => user.id === currentUserId)) {
                 throw new ForbiddenException()
@@ -97,9 +109,14 @@ export class DeliverableContentService {
         }
     }
 
-    async deleteById(id: string, currentCourseId: string, currentUserId: string): Promise<void> {
+    async deleteById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        currentUserRole: UserRole,
+    ): Promise<void> {
         try {
-            const content = await this.getById(id, currentCourseId)
+            const content = await this.getById(id, currentCourseId, currentUserId, currentUserRole)
             const group = await this.groupService.getById(content.groupId, currentCourseId)
             if (!group.users.find((user) => user.id === currentUserId)) {
                 throw new ForbiddenException()
