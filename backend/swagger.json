@@ -3329,6 +3329,9 @@
           "endDate": {
             "format": "date-time",
             "type": "string"
+          },
+          "subjectId": {
+            "type": "string"
           }
         },
         "required": [
@@ -3362,6 +3365,9 @@
           "projectId": {
             "$ref": "#/components/schemas/randomUUID"
           },
+          "subjectId": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
           "createdBy": {
             "type": "string"
           },
@@ -3383,6 +3389,7 @@
           "startDate",
           "endDate",
           "projectId",
+          "subjectId",
           "createdBy",
           "updatedBy",
           "createdAt",

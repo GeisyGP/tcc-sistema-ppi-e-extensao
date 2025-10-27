@@ -6,9 +6,11 @@ import { DeliverableController } from "./controllers/deliverable.controller"
 import { DeliverableService } from "./services/deliverable.service"
 import { DeliverableRepository } from "./repositories/deliverable.repository"
 import { ProjectModule } from "../projects/project.module"
+import { PPIModule } from "../ppis/ppi.module"
+import { SubjectModule } from "../subjects/subject.module"
 
 @Module({
-    imports: [PrismaModule, ProjectModule],
+    imports: [PrismaModule, ProjectModule, PPIModule, SubjectModule],
     controllers: [DeliverableController],
     exports: [DeliverableService],
     providers: [DeliverableService, DeliverableRepository, CaslAbilityFactory, CustomLoggerService],

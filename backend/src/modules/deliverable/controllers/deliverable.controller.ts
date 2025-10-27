@@ -36,10 +36,15 @@ export class DeliverableController {
     ): Promise<BaseResDto<DeliverableResDto>> {
         this.loggerService.info(this.constructor.name, this.create.name, `user: ${request.user.sub}`)
 
-        const response = await this.deliverableService.create(dto, request.user.mainCourseId, request.user.sub)
+        const response = await this.deliverableService.create(
+            dto,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
 
         return {
-            message: "Deliverable found successfully",
+            message: "Deliverable created successfully",
             data: response,
         }
     }
@@ -128,6 +133,7 @@ export class DeliverableController {
             dto,
             request.user.mainCourseId,
             request.user.sub,
+            request.user.mainRole,
         )
 
         return {
@@ -143,6 +149,11 @@ export class DeliverableController {
     async delete(@Param() param: DeleteDeliverableReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.delete.name, `user: ${request.user.sub}`)
 
-        await this.deliverableService.deleteById(param.id, request.user.mainCourseId)
+        await this.deliverableService.deleteById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
     }
 }

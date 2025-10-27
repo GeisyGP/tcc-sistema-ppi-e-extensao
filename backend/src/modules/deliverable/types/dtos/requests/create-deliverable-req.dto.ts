@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { Transform, Type } from "class-transformer"
-import { IsDate, IsNotEmpty, IsString, MinDate } from "class-validator"
+import { IsDate, IsNotEmpty, IsOptional, IsString, MinDate } from "class-validator"
 import { IsAfterStartDate } from "src/common/utils/date-validator.util"
 
 export class CreateDeliverableReqDto {
@@ -33,4 +33,9 @@ export class CreateDeliverableReqDto {
     @Type(() => Date)
     @IsAfterStartDate()
     endDate: Date
+
+    @ApiPropertyOptional()
+    @IsString()
+    @IsOptional()
+    subjectId?: string
 }

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common"
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { DeliverableRepository } from "../repositories/deliverable.repository"
 import { CreateDeliverableReqDto } from "../types/dtos/requests/create-deliverable-req.dto"
 import { DeliverableResDto, DeliverableWithContentAndArtifactResDto } from "../types/dtos/responses/deliverable-res.dto"
@@ -10,12 +10,17 @@ import { UpdateDeliverableReqDto } from "../types/dtos/requests/update-deliverab
 import { ProjectService } from "src/modules/projects/services/project.service"
 import { DeliverableNotFoundException } from "src/common/exceptions/deliverable-not-found.exception"
 import { UserRole } from "src/common/enums/user-role.enum"
+import { SubjectService } from "src/modules/subjects/services/subject.service"
+import { ProjectResDto } from "src/modules/projects/types/dtos/responses/project-res.dto"
+import { PPIService } from "src/modules/ppis/services/ppi.service"
 
 @Injectable()
 export class DeliverableService {
     constructor(
         private readonly deliverableRepository: DeliverableRepository,
         private readonly projectService: ProjectService,
+        private readonly subjectService: SubjectService,
+        private readonly ppiService: PPIService,
         private readonly loggerService: CustomLoggerService,
     ) {}
 
@@ -23,9 +28,10 @@ export class DeliverableService {
         dto: CreateDeliverableReqDto,
         currentCourseId: string,
         currentUserId: string,
+        currentUserRole: UserRole,
     ): Promise<DeliverableResDto> {
         try {
-            await this.projectService.getById(dto.projectId, currentCourseId)
+            await this.handleCreateAccess(currentCourseId, currentUserId, currentUserRole, dto.projectId, dto.subjectId)
 
             const response = await this.deliverableRepository.create(
                 {
@@ -34,6 +40,7 @@ export class DeliverableService {
                     startDate: dto.startDate,
                     endDate: dto.endDate,
                     projectId: dto.projectId,
+                    subjectId: dto.subjectId,
                 },
                 currentCourseId,
                 currentUserId,
@@ -111,9 +118,10 @@ export class DeliverableService {
         dto: UpdateDeliverableReqDto,
         currentCourseId: string,
         currentUserId: string,
+        currentUserRole: UserRole,
     ): Promise<DeliverableResDto> {
         try {
-            await this.getById(id, currentCourseId)
+            await this.handleUpdateOrDeleteAccess(currentCourseId, currentUserId, currentUserRole, id)
 
             const deliverable = await this.deliverableRepository.updateById(id, dto, currentCourseId, currentUserId)
 
@@ -129,9 +137,14 @@ export class DeliverableService {
         }
     }
 
-    async deleteById(id: string, currentCourseId: string): Promise<void> {
+    async deleteById(
+        id: string,
+        currentCourseId: string,
+        currentUserId: string,
+        currentUserRole: UserRole,
+    ): Promise<void> {
         try {
-            await this.getById(id, currentCourseId)
+            await this.handleUpdateOrDeleteAccess(currentCourseId, currentUserId, currentUserRole, id)
 
             await this.deliverableRepository.deleteById(id, currentCourseId)
         } catch (error) {
@@ -141,6 +154,125 @@ export class DeliverableService {
                 `error: ${error.message}`,
                 error.stack,
             )
+            throw error
+        }
+    }
+
+    private async handleUpdateOrDeleteAccess(
+        currentCourseId: string,
+        userId: string,
+        role: UserRole,
+        deliverableId: string,
+    ): Promise<void> {
+        try {
+            const deliverable = await this.getById(deliverableId, currentCourseId)
+
+            if (role === UserRole.COORDINATOR) {
+                const project = await this.projectService.getById(deliverable.projectId, currentCourseId)
+                if (project.status != "STARTED") throw new ForbiddenException()
+                return
+            }
+
+            const hasDefaultAccess = await this.validateDefaultAccess(deliverable.projectId, currentCourseId, userId)
+            if (!hasDefaultAccess) throw new ForbiddenException()
+
+            const hasAccess = await this.validateSubjectAccess(deliverable, currentCourseId, userId)
+            if (!hasAccess) throw new ForbiddenException()
+
+            return
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new ForbiddenException()
+            }
+            throw error
+        }
+    }
+
+    private async handleCreateAccess(
+        currentCourseId: string,
+        userId: string,
+        role: UserRole,
+        projectId: string,
+        subjectId?: string,
+    ): Promise<void> {
+        try {
+            if (role === UserRole.COORDINATOR) {
+                const project = await this.projectService.getById(projectId, currentCourseId)
+                if (project.status != "STARTED") throw new ForbiddenException()
+
+                if (subjectId) {
+                    const ppi = await this.ppiService.getById(project.ppiId, currentCourseId)
+                    if (!ppi.subjects.find((subject) => subject.id === subjectId)) {
+                        throw new ForbiddenException()
+                    }
+                }
+                return
+            }
+
+            const project = await this.validateDefaultAccess(projectId, currentCourseId, userId)
+            if (!project) throw new ForbiddenException()
+
+            if (subjectId) {
+                const ppi = await this.ppiService.getById(project.ppiId, currentCourseId)
+                if (!ppi.subjects.find((subject) => subject.id === subjectId)) {
+                    throw new ForbiddenException()
+                }
+            }
+
+            return
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new ForbiddenException()
+            }
+            throw error
+        }
+    }
+
+    private async validateSubjectAccess(
+        deliverable: DeliverableWithContentAndArtifactResDto,
+        currentCourseId: string,
+        userId: string,
+    ): Promise<boolean> {
+        try {
+            if (deliverable.subjectId) {
+                const subject = await this.subjectService.getById(deliverable.subjectId, currentCourseId)
+                if (!subject.teachers.find((t) => t.id === userId)) return false
+            }
+            return true
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return false
+            }
+            throw error
+        }
+    }
+
+    private async validateDefaultAccess(
+        projectId: string,
+        currentCourseId: string,
+        userId: string,
+    ): Promise<ProjectResDto | void> {
+        try {
+            const projectsByPPIAndTeacher = await this.projectService.getAll(
+                {
+                    teacherId: userId,
+                    status: "STARTED",
+                    page: 1,
+                    limit: 1,
+                },
+                currentCourseId,
+                userId,
+                UserRole.TEACHER,
+            )
+
+            const project = projectsByPPIAndTeacher.items.find((i) => i.id === projectId)
+            if (!project) return
+
+            return project
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                return
+            }
             throw error
         }
     }

@@ -19,6 +19,7 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
                 startDate: dto.startDate,
                 endDate: dto.endDate,
                 projectId: dto.projectId,
+                subjectId: dto.subjectId,
                 createdBy: currentUserId,
                 updatedBy: currentUserId,
                 courseId: currentCourseId,

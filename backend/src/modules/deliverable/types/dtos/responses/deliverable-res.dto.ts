@@ -20,6 +20,9 @@ export class DeliverableResDto {
     @ApiProperty({ type: randomUUID })
     projectId: string
 
+    @ApiProperty({ type: randomUUID })
+    subjectId: string | null
+
     @ApiProperty()
     createdBy: string
 
