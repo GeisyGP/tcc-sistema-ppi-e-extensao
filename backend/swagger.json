@@ -1574,6 +1574,234 @@
         ]
       }
     },
+    "/deliverables": {
+      "post": {
+        "operationId": "DeliverableController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDeliverableReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      }
+    },
+    "/deliverables/{id}": {
+      "get": {
+        "operationId": "DeliverableController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      },
+      "put": {
+        "operationId": "DeliverableController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDeliverableReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      },
+      "delete": {
+        "operationId": "DeliverableController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      }
+    },
+    "/deliverables/{id}/group/{groupId}": {
+      "get": {
+        "operationId": "DeliverableController_getByIdAndGroupId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliverableResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      }
+    },
+    "/deliverables/project/{projectId}": {
+      "get": {
+        "operationId": "DeliverableController_getAllByProjectId",
+        "parameters": [
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "groupId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ACTIVE",
+                  "EXPIRED",
+                  "UPCOMING"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationResDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliverables"
+        ]
+      }
+    },
     "/groups": {
       "post": {
         "operationId": "GroupController_create",
@@ -2012,218 +2240,6 @@
         },
         "tags": [
           "artifacts"
-        ]
-      }
-    },
-    "/deliverables": {
-      "post": {
-        "operationId": "DeliverableController_create",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDeliverableReqDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeliverableResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "deliverables"
-        ]
-      }
-    },
-    "/deliverables/{id}": {
-      "get": {
-        "operationId": "DeliverableController_getById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeliverableResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "deliverables"
-        ]
-      },
-      "put": {
-        "operationId": "DeliverableController_update",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDeliverableReqDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeliverableResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "deliverables"
-        ]
-      },
-      "delete": {
-        "operationId": "DeliverableController_delete",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "deliverables"
-        ]
-      }
-    },
-    "/deliverables/{id}/group/{groupId}": {
-      "get": {
-        "operationId": "DeliverableController_getByIdAndGroupId",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "groupId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeliverableResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "deliverables"
-        ]
-      }
-    },
-    "/deliverables/project/{projectId}": {
-      "get": {
-        "operationId": "DeliverableController_getAllByProjectId",
-        "parameters": [
-          {
-            "name": "projectId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "groupId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationResDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "deliverables"
         ]
       }
     },
@@ -3155,6 +3171,117 @@
           "visibleToAll"
         ]
       },
+      "CreateDeliverableReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "projectId": {
+            "type": "string"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "subjectId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "projectId",
+          "startDate",
+          "endDate"
+        ]
+      },
+      "DeliverableResDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "object"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "projectId": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "subjectId": {
+            "$ref": "#/components/schemas/randomUUID"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "startDate",
+          "endDate",
+          "projectId",
+          "subjectId",
+          "createdBy",
+          "updatedBy",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateDeliverableReqDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "startDate",
+          "endDate"
+        ]
+      },
       "CreateGroupReqDto": {
         "type": "object",
         "properties": {
@@ -3308,117 +3435,6 @@
         "required": [
           "name",
           "groupId"
-        ]
-      },
-      "CreateDeliverableReqDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "projectId": {
-            "type": "string"
-          },
-          "startDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "endDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "subjectId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "description",
-          "projectId",
-          "startDate",
-          "endDate"
-        ]
-      },
-      "DeliverableResDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "$ref": "#/components/schemas/randomUUID"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "object"
-          },
-          "startDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "endDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "projectId": {
-            "$ref": "#/components/schemas/randomUUID"
-          },
-          "subjectId": {
-            "$ref": "#/components/schemas/randomUUID"
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "updatedBy": {
-            "type": "string"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "startDate",
-          "endDate",
-          "projectId",
-          "subjectId",
-          "createdBy",
-          "updatedBy",
-          "createdAt",
-          "updatedAt"
-        ]
-      },
-      "UpdateDeliverableReqDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "startDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "endDate": {
-            "format": "date-time",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "description",
-          "startDate",
-          "endDate"
         ]
       },
       "CreateContentReqDto": {

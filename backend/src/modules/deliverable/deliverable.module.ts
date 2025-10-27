@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common"
+import { forwardRef, Module } from "@nestjs/common"
 import { PrismaModule } from "src/config/prisma.module"
 import { CaslAbilityFactory } from "../casl/casl-ability.factory"
 import { CustomLoggerService } from "src/common/logger"
@@ -10,7 +10,7 @@ import { PPIModule } from "../ppis/ppi.module"
 import { SubjectModule } from "../subjects/subject.module"
 
 @Module({
-    imports: [PrismaModule, ProjectModule, PPIModule, SubjectModule],
+    imports: [PrismaModule, forwardRef(() => ProjectModule), PPIModule, SubjectModule],
     controllers: [DeliverableController],
     exports: [DeliverableService],
     providers: [DeliverableService, DeliverableRepository, CaslAbilityFactory, CustomLoggerService],

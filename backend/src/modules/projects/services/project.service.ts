@@ -18,6 +18,9 @@ import { ProjectStatus } from "src/common/enums/project-status.enum"
 import { ProjectIsFinishedException } from "src/common/exceptions/project-is-finished.exception"
 import { ChangeVisibilityReqDto } from "../types/dtos/requests/change-visibility-req.dto"
 import { ProjectOverviewResDto } from "../types/dtos/responses/project-overview.dto"
+import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
+import { DeliverableStatus } from "src/modules/deliverable/types/dtos/requests/get-all-req.dto"
+import { CannotUpdateProjectStatusException } from "src/common/exceptions/cannot-update-project-status.exception"
 
 @Injectable()
 export class ProjectService {
@@ -25,6 +28,7 @@ export class ProjectService {
         private readonly projectRepository: ProjectRepository,
         private readonly ppiService: PPIService,
         private readonly subjectService: SubjectService,
+        private readonly deliverableService: DeliverableService,
         private readonly loggerService: CustomLoggerService,
     ) {}
 
@@ -219,6 +223,19 @@ export class ProjectService {
         try {
             const project = await this.getById(id, currentCourseId)
             await this.handleAccess(project, currentCourseId, currentUserId, Action.ChangeStatus, role)
+            if (dto.status === ProjectStatus.FINISHED) {
+                const deliverables = await this.deliverableService.getAllByProjectId(
+                    id,
+                    {
+                        limit: 1,
+                        page: 1,
+                        status: [DeliverableStatus.ACTIVE, DeliverableStatus.UPCOMING],
+                    },
+                    currentCourseId,
+                    role,
+                )
+                if (deliverables.metadata.totalItems > 0) throw new CannotUpdateProjectStatusException()
+            }
 
             const updatedProject = await this.projectRepository.changeStatus(id, dto, currentCourseId, currentUserId)
 

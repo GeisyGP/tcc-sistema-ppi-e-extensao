@@ -1,4 +1,4 @@
-import { GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
+import { DeliverableStatus, GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
 import { DeliverableRepositoryInterface, DeliverableWithContentAndArtifact } from "./deliverable.repository.interface"
 import { PrismaService } from "src/config/prisma.service"
 import { Injectable } from "@nestjs/common"
@@ -58,8 +58,30 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
         projectId: string,
     ): Promise<{ deliverables: DeliverableWithContentAndArtifact[]; totalItems: number }> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        const now = new Date()
+        const orConditions: any[] = []
+        dto.status?.forEach((status) => {
+            switch (status) {
+                case DeliverableStatus.EXPIRED:
+                    orConditions.push({ endDate: { lt: now } })
+                    break
+
+                case DeliverableStatus.UPCOMING:
+                    orConditions.push({ startDate: { gt: now } })
+                    break
+
+                case DeliverableStatus.ACTIVE:
+                    orConditions.push({
+                        startDate: { lte: now },
+                        endDate: { gte: now },
+                    })
+                    break
+            }
+        })
+
         const filter = {
             projectId,
+            ...(orConditions.length > 0 ? { OR: orConditions } : {}),
         }
 
         const deliverables = await this.prisma.deliverable.findMany({
@@ -76,7 +98,7 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
             },
             take: dto.limit,
             skip: dto.limit * (dto.page - 1),
-            orderBy: [{ name: "asc" }],
+            orderBy: [{ endDate: "asc" }],
         })
 
         if (!deliverables) {

@@ -1,8 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
+import { ForbiddenException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common"
 import { DeliverableRepository } from "../repositories/deliverable.repository"
 import { CreateDeliverableReqDto } from "../types/dtos/requests/create-deliverable-req.dto"
 import { DeliverableResDto, DeliverableWithContentAndArtifactResDto } from "../types/dtos/responses/deliverable-res.dto"
-import { GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
+import { DeliverableStatus, GetAllDeliverableReqDto } from "../types/dtos/requests/get-all-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
 import { DeliverableResBuilder } from "../builders/deliverable-res.builder"
@@ -18,6 +18,7 @@ import { PPIService } from "src/modules/ppis/services/ppi.service"
 export class DeliverableService {
     constructor(
         private readonly deliverableRepository: DeliverableRepository,
+        @Inject(forwardRef(() => ProjectService))
         private readonly projectService: ProjectService,
         private readonly subjectService: SubjectService,
         private readonly ppiService: PPIService,
@@ -96,7 +97,15 @@ export class DeliverableService {
                 throw new ForbiddenException()
             }
             const { deliverables, totalItems } = await this.deliverableRepository.getAllByProjectId(
-                dto,
+                {
+                    ...dto,
+                    status:
+                        userRole === UserRole.STUDENT
+                            ? dto.status
+                                ? dto.status.filter((s) => s !== DeliverableStatus.UPCOMING)
+                                : [DeliverableStatus.ACTIVE, DeliverableStatus.EXPIRED]
+                            : dto.status,
+                },
                 currentCourseId,
                 projectId,
             )
