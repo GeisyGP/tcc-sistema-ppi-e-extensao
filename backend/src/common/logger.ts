@@ -2,7 +2,7 @@ import { LoggerService, Injectable } from "@nestjs/common"
 
 @Injectable()
 export class CustomLoggerService implements LoggerService {
-    error(context: string, method: string, message: string, stack: string) {
+    error(context: string, method: string, message: string, stack?: string) {
         console.error(this.formatLog(context, method, message), stack)
     }
 

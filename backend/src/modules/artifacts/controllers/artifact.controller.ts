@@ -9,11 +9,13 @@ import {
     Controller,
     Delete,
     Get,
+    InternalServerErrorException,
     Param,
     Post,
     Put,
     Query,
     Request,
+    Res,
     Response,
     UploadedFile,
     UseFilters,
@@ -48,6 +50,7 @@ import { FileCleanupFilter } from "src/common/filters/file-cleanup.filter"
 import { ArtifactNotFoundException } from "src/common/exceptions/artifact-not-found.exception"
 import { BLOCKED_FILE_EXTENSION, MAX_ARTIFACT_SIZE } from "src/common/constants"
 import { UpdateByIdArtifactReqDto } from "../types/dtos/requests/update.req.dto"
+import { FileCannotBeViewedException } from "src/common/exceptions/file-cannot-be-viewed.exception"
 
 @ApiTags("artifacts")
 @Controller("artifacts")
@@ -177,11 +180,7 @@ export class ArtifactController {
     @Get(":id")
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "ARTIFACT"))
-    async getById(
-        @Param() param: GetByIdArtifactReqDto,
-        @Response({ passthrough: true }) res: express.Response,
-        @Request() request: RequestDto,
-    ) {
+    async getById(@Param() param: GetByIdArtifactReqDto, @Res() res: express.Response, @Request() request: RequestDto) {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
         const response = await this.artifactService.getById(
@@ -197,13 +196,19 @@ export class ArtifactController {
 
         const viewable = ["image/", "video/", "application/pdf"]
         if (!viewable.some((prefix) => response.data.mimeType.startsWith(prefix))) {
-            throw new BadRequestException("File cannot be viewed")
+            throw new FileCannotBeViewedException()
         }
 
         res.setHeader("Content-Type", response.data.mimeType)
-        res.setHeader("Content-Disposition", `inline; filename="${response.data.fileName}"`)
+        res.setHeader("Content-Disposition", `inline; filename="${response.data.name}"`)
 
-        fs.createReadStream(response.filePath).pipe(res)
+        const stream = fs.createReadStream(response.filePath)
+        stream.on("error", (err) => {
+            this.loggerService.error(this.constructor.name, this.getById.name, err.message)
+            throw new InternalServerErrorException()
+        })
+
+        stream.pipe(res)
     }
 
     @Get(":id/download")
@@ -211,7 +216,7 @@ export class ArtifactController {
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "ARTIFACT"))
     async downloadById(
         @Param() param: GetByIdArtifactReqDto,
-        @Response({ passthrough: true }) res: express.Response,
+        @Res() res: express.Response,
         @Request() request: RequestDto,
     ) {
         this.loggerService.info(this.constructor.name, this.downloadById.name, `user: ${request.user.sub}`)
@@ -228,8 +233,15 @@ export class ArtifactController {
         }
 
         res.setHeader("Content-Type", response.data.mimeType || "application/octet-stream")
-        res.setHeader("Content-Disposition", `attachment; filename="${response.data.fileName}"`)
-        fs.createReadStream(response.filePath).pipe(res)
+        res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${response.data.fileName}`)
+
+        const stream = fs.createReadStream(response.filePath)
+        stream.on("error", (err) => {
+            this.loggerService.error(this.constructor.name, this.downloadById.name, err.message)
+            throw new InternalServerErrorException()
+        })
+
+        stream.pipe(res)
     }
 
     @Get("/project/:projectId")

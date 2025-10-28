@@ -34,22 +34,19 @@ export class DeliverableContentRepository implements DeliverableContentRepositor
         visibleToAll?: boolean,
     ): Promise<DeliverableContent | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
-        const deliverable = await this.prisma.deliverableContent.findUnique({
-            where: {
-                id,
-                OR: [
-                    {
-                        group: {
-                            users: {
-                                some: { id: studentId },
-                            },
-                        },
-                        deliverable: {
-                            project: { visibleToAll },
-                        },
+        const filter = {
+            id,
+            OR: [
+                {
+                    group: {
+                        users: { some: { id: studentId } },
                     },
-                ],
-            },
+                    deliverable: { project: { visibleToAll } },
+                },
+            ],
+        }
+        const deliverable = await this.prisma.deliverableContent.findUnique({
+            where: visibleToAll ? filter : { id },
         })
 
         if (!deliverable) return null
