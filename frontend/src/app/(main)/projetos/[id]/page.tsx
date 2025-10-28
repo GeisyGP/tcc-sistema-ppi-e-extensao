@@ -5,7 +5,7 @@ import { Button } from "@/components/buttons/default.button"
 import { GroupModal } from "@/components/groups/group-modal"
 import { useGroups } from "./hooks/use-group"
 import { useUniqueProject } from "./hooks/use-unique-project"
-import { PencilSquareIcon } from "@heroicons/react/24/outline"
+import { ArrowDownTrayIcon, PencilSquareIcon } from "@heroicons/react/24/outline"
 import { GroupRes } from "@/types/group.type"
 import { abbreviateName } from "./utils/format-group"
 import { useUniquePPI } from "./hooks/use-unique-ppi"
@@ -21,6 +21,9 @@ import { SubjectRes } from "@/types/subject.type"
 import { getAllSubjects } from "@/services/subjects.service"
 import { InfoTooltip } from "@/components/info-tooltip"
 import { useRouter } from "next/navigation"
+import { useArtifacts } from "@/hooks/use-artifacts"
+import toast from "react-hot-toast"
+import { FileIcon } from "@/components/file-icon"
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter()
@@ -32,6 +35,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
     const [groupSelectedForEdit, setGroupSelectedForEdit] = useState<GroupRes | null>(null)
     const [teacherSubjects, setTeacherSubjects] = useState<SubjectRes[]>([])
+    const [fileInput, setFileInput] = useState<File | null>(null)
 
     const {
         fetchGroups,
@@ -54,6 +58,15 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     } = useUniqueProject()
     const { fetchPPI, ppiFormattedData, ppiLoading } = useUniquePPI()
 
+    const {
+        fetchArtifactsProjects,
+        formattedDataProject,
+        handleCreateProjectArtifact,
+        handleViewArtifact,
+        handleDownloadArtifact,
+        handleDeleteArtifact,
+    } = useArtifacts()
+
     useEffect(() => {
         fetchProject(projectId)
         fetchGroups(projectId, {})
@@ -67,6 +80,16 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     useEffect(() => {
         if (rawData?.ppiId) fetchPPI(rawData.ppiId)
     }, [fetchPPI, rawData])
+
+    useEffect(() => {
+        fetchArtifactsProjects(projectId, { page: 1 })
+    }, [projectId, fetchArtifactsProjects])
+
+    const handleAddArtifact = async () => {
+        if (!fileInput) return
+        await handleCreateProjectArtifact(projectId, { name: fileInput.name }, fileInput)
+        setFileInput(null)
+    }
 
     const getStatusClass = (status: string) => {
         switch (status) {
@@ -332,6 +355,82 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                             }}
                         />
                     </div>
+
+                    {(formattedDataProject.length > 0 || canEdit()) && (
+                        <div className="bg-white shadow-sm rounded-xl p-4 border border-gray-200 lg:col-span-2">
+                            <div className="flex items-center justify-between mb-3">
+                                <h2 className="text-lg font-semibold text-gray-800">Destaques</h2>
+                                {canEdit() && (
+                                    <label className="cursor-pointer">
+                                        <input
+                                            type="file"
+                                            className="hidden"
+                                            onChange={(e) => setFileInput(e.target.files?.[0] || null)}
+                                        />
+                                        <div className="px-3 py-1 bg-gray-200 text-black rounded-lg text-sm hover:bg-gray-300">
+                                            Adicionar destaque
+                                        </div>
+                                    </label>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                                {formattedDataProject.map((artifact) => (
+                                    <div
+                                        key={artifact.id}
+                                        onClick={async () => {
+                                            const result = await handleViewArtifact(artifact.id)
+                                            if (!result.canView) {
+                                                toast("Este arquivo não possui pré-visualização e deve ser baixado")
+                                            }
+                                        }}
+                                        title={`Tamanho: ${(Number(artifact.size) / 1024).toFixed(2)} KB\nTipo: ${artifact.mimeType}\nCriado em: ${artifact.createdAt}\nAtualizado em: ${artifact.updatedAt}`}
+                                        className="relative cursor-pointer w-24 h-24 flex flex-col items-center justify-center border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-200"
+                                    >
+                                        <FileIcon mimeType={artifact.mimeType} className="w-10 h-10 mb-1" />
+
+                                        <div className="text-center text-xs text-gray-700 truncate w-full px-1">
+                                            {artifact.name}
+                                        </div>
+
+                                        <div className="absolute top-1 right-1 flex gap-1">
+                                            {canEdit() && (
+                                                <DeleteButtonModal
+                                                    id={artifact.id}
+                                                    onDelete={handleDeleteArtifact}
+                                                    buttonClassName="bg-white bg-opacity-80 rounded-full p-1 hover:bg-opacity-100"
+                                                    iconClassName="w-4 h-4"
+                                                />
+                                            )}
+
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    handleDownloadArtifact(artifact.id)
+                                                }}
+                                                className="bg-white bg-opacity-80 rounded-full p-1 hover:bg-opacity-100"
+                                                title="Download"
+                                            >
+                                                <ArrowDownTrayIcon className="w-4 h-4 text-gray-700" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {canEdit() && fileInput && (
+                                    <div className="w-24 h-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl cursor-pointer p-1">
+                                        <p className="text-xs truncate w-full text-center">{fileInput.name}</p>
+                                        <button
+                                            onClick={handleAddArtifact}
+                                            className="mt-1 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                                        >
+                                            Enviar
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

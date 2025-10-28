@@ -7,9 +7,11 @@ import { Button } from "./default.button"
 interface DeleteButtonModalProps {
     id: string
     onDelete?: (id: string) => Promise<void>
+    buttonClassName?: string
+    iconClassName?: string
 }
 
-export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
+export function DeleteButtonModal({ id, onDelete, buttonClassName, iconClassName }: DeleteButtonModalProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     if (!onDelete) return
@@ -30,8 +32,12 @@ export function DeleteButtonModal({ id, onDelete }: DeleteButtonModalProps) {
 
     return (
         <>
-            <button onClick={handleOpen} className="text-red-400 hover:text-red-700" title="Excluir">
-                <TrashIcon className="h-5 w-5" />
+            <button
+                onClick={handleOpen}
+                className={buttonClassName || "text-red-400 hover:text-red-700"}
+                title="Excluir"
+            >
+                <TrashIcon className={iconClassName || "h-5 w-5"} />
             </button>
 
             {isOpen && (
