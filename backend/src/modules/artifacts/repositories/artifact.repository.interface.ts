@@ -19,9 +19,13 @@ export interface UpdateArtifactFileInput {
     size: number
 }
 
+export type ArtifactWithVisibleToAll = Artifact & {
+    Project?: { visibleToAll: boolean }
+}
+
 export interface ArtifactRepositoryInterface {
     create(dto: CreateArtifactInput, currentCourseId: string, currentUserId: string): Promise<Artifact>
-    getById(id: string, currentCourseId: string): Promise<Artifact | null>
+    getById(id: string, currentCourseId: string): Promise<ArtifactWithVisibleToAll | null>
     getAllByProjectIdOrGroupId(
         dto: GetAllArtifactReqDto,
         currentCourseId: string,

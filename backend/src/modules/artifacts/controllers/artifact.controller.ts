@@ -208,7 +208,7 @@ export class ArtifactController {
         }
 
         res.setHeader("Content-Type", response.data.mimeType)
-        res.setHeader("Content-Disposition", `inline; filename="${response.data.name}"`)
+        res.setHeader("Content-Disposition", `inline; filename="${response.data.fileName}"`)
 
         const stream = fs.createReadStream(response.filePath)
         stream.on("error", (err) => {

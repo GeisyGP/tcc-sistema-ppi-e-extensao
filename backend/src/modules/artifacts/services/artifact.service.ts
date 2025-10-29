@@ -123,6 +123,23 @@ export class ArtifactService {
                 throw new ArtifactNotFoundException()
             }
 
+            if (UserRole.STUDENT && artifact.projectId && !artifact.Project?.visibleToAll) {
+                const groups = await this.groupService.getAllByProjectId(
+                    artifact.projectId,
+                    {
+                        limit: 30,
+                        page: 1,
+                    },
+                    currentCourseId,
+                )
+                const isUserInGroup = groups.items.find((group) =>
+                    group.users.find((user) => user.id === currentUserId),
+                )
+                if (!isUserInGroup) {
+                    throw new ArtifactNotFoundException()
+                }
+            }
+
             return { data: ArtifactResBuilder.build(artifact), filePath: artifact.path }
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.getById.name, `error: ${error.message}`, error.stack)

@@ -1,6 +1,7 @@
 import { GetAllArtifactReqDto } from "../types/dtos/requests/get-all-req.dto"
 import {
     ArtifactRepositoryInterface,
+    ArtifactWithVisibleToAll,
     CreateArtifactInput,
     UpdateArtifactFileInput,
 } from "./artifact.repository.interface"
@@ -36,11 +37,12 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
         currentCourseId: string,
         studentId?: string,
         visibleToAll?: boolean,
-    ): Promise<Artifact | null> {
+    ): Promise<ArtifactWithVisibleToAll | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const filter = {
             id,
             OR: [
+                { groupId: null },
                 {
                     group: {
                         users: { some: { id: studentId } },
@@ -51,6 +53,11 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
         }
         const artifact = await this.prisma.artifact.findUnique({
             where: visibleToAll ? filter : { id },
+            include: {
+                project: {
+                    select: { visibleToAll: true },
+                },
+            },
         })
 
         if (!artifact) return null
