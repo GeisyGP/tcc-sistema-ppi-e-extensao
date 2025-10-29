@@ -140,14 +140,14 @@ export function useArtifacts() {
             const artifact = await getArtifactById(id)
             if (!artifact?.url) throw new Error("FILE_CANNOT_BE_VIEWED")
             window.open(artifact.url, "_blank")
-            return { canView: true, artifact }
+            return { artifact }
         } catch (error: any) {
-            if (error?.response?.data?.error === "FILE_CANNOT_BE_VIEWED") {
-                return { canView: false }
+            if (error.message === "FILE_CANNOT_BE_VIEWED") {
+                return toast("Este arquivo não possui pré-visualização e deve ser baixado")
             }
+
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
-            toast.error(errorMessage)
-            return { canView: false }
+            return toast.error(errorMessage)
         } finally {
             setLoadingProject(false)
         }

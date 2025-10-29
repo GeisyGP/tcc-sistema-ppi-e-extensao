@@ -21,14 +21,18 @@ export function DeleteButtonModal({ id, onDelete, buttonClassName, iconClassName
         setIsOpen(true)
     }
 
-    const handleConfirm = async () => {
+    const handleConfirm = async (e: React.MouseEvent) => {
+        e.stopPropagation()
         setLoading(true)
         await onDelete(id)
         setLoading(false)
         setIsOpen(false)
     }
 
-    const handleClose = () => setIsOpen(false)
+    const handleClose = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setIsOpen(false)
+    }
 
     return (
         <>

@@ -22,7 +22,6 @@ import { getAllSubjects } from "@/services/subjects.service"
 import { InfoTooltip } from "@/components/info-tooltip"
 import { useRouter } from "next/navigation"
 import { useArtifacts } from "@/hooks/use-artifacts"
-import toast from "react-hot-toast"
 import { FileIcon } from "@/components/file-icon"
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
@@ -359,7 +358,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                     {(formattedDataProject.length > 0 || canEdit()) && (
                         <div className="bg-white shadow-sm rounded-xl p-4 border border-gray-200 lg:col-span-2">
                             <div className="flex items-center justify-between mb-3">
-                                <h2 className="text-lg font-semibold text-gray-800">Destaques</h2>
+                                <h2 className="text-lg font-semibold text-gray-800">Artefatos Gerais do Projeto</h2>
                                 {canEdit() && (
                                     <label className="cursor-pointer">
                                         <input
@@ -368,7 +367,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                             onChange={(e) => setFileInput(e.target.files?.[0] || null)}
                                         />
                                         <div className="px-3 py-1 bg-gray-200 text-black rounded-lg text-sm hover:bg-gray-300">
-                                            Adicionar destaque
+                                            Adicionar Artefato
                                         </div>
                                     </label>
                                 )}
@@ -379,12 +378,9 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                     <div
                                         key={artifact.id}
                                         onClick={async () => {
-                                            const result = await handleViewArtifact(artifact.id)
-                                            if (!result.canView) {
-                                                toast("Este arquivo não possui pré-visualização e deve ser baixado")
-                                            }
+                                            await handleViewArtifact(artifact.id)
                                         }}
-                                        title={`Tamanho: ${(Number(artifact.size) / 1024).toFixed(2)} KB\nTipo: ${artifact.mimeType}\nCriado em: ${artifact.createdAt}\nAtualizado em: ${artifact.updatedAt}`}
+                                        title={`Nome: ${artifact.name}\nTamanho: ${(Number(artifact.size) / 1024).toFixed(2)} KB\nTipo: ${artifact.mimeType}\nCriado em: ${artifact.createdAt}\nAtualizado em: ${artifact.updatedAt}`}
                                         className="relative cursor-pointer w-24 h-24 flex flex-col items-center justify-center border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-200"
                                     >
                                         <FileIcon mimeType={artifact.mimeType} className="w-10 h-10 mb-1" />

@@ -28,7 +28,9 @@ export async function createArtifactProject(
     const response = await backendApi.post(`/artifacts/project/${projectId}`, formData, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
+            "Content-Type": "multipart/form-data",
         },
+        transformRequest: (data) => data,
     })
 
     return response.data?.data
@@ -105,6 +107,7 @@ export async function getArtifactById(id: string) {
         },
         responseType: "blob",
     })
+
     const fileUrl = URL.createObjectURL(response.data)
 
     const contentDisposition = response.headers["content-disposition"]

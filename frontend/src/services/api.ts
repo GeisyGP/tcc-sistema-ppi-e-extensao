@@ -23,6 +23,19 @@ backendApi.interceptors.response.use(
             return Promise.reject(new ApiError("Sem permissão para acessar"))
         }
 
+        if (error.response?.data instanceof Blob) {
+            const text = await error.response.data.text()
+            try {
+                const json = JSON.parse(text)
+                if (json?.error === "FILE_CANNOT_BE_VIEWED") {
+                    return Promise.reject(new ApiError("FILE_CANNOT_BE_VIEWED"))
+                }
+                return Promise.reject(new ApiError(GENERIC_ERROR_MESSAGE))
+            } catch {
+                return Promise.reject(new ApiError(GENERIC_ERROR_MESSAGE))
+            }
+        }
+
         const errorMessage = error?.response?.data?.message || error.message
         if (errorMessage.includes("File does not contain required columns")) {
             const column = errorMessage.split(": ")[1]
