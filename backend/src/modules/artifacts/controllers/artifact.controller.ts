@@ -51,6 +51,7 @@ import { ArtifactNotFoundException } from "src/common/exceptions/artifact-not-fo
 import { BLOCKED_FILE_EXTENSION, MAX_ARTIFACT_SIZE } from "src/common/constants"
 import { UpdateByIdArtifactReqDto } from "../types/dtos/requests/update.req.dto"
 import { FileCannotBeViewedException } from "src/common/exceptions/file-cannot-be-viewed.exception"
+import { InvalidInputException } from "src/common/exceptions/invalid-input.exception"
 
 @ApiTags("artifacts")
 @Controller("artifacts")
@@ -99,12 +100,16 @@ export class ArtifactController {
         @Request() request: RequestDto,
     ): Promise<BaseResDto<ArtifactResDto>> {
         this.loggerService.info(this.constructor.name, this.createArtifactProject.name, `user: ${request.user.sub}`)
+        if (!file) {
+            throw new InvalidInputException(["File is required"])
+        }
         const fileInfo = {
             fileName: file.filename,
             mimeType: file.mimetype,
             path: file.path,
             size: file.size,
         }
+
         const response = await this.artifactService.createArtifactProject(
             param.projectId,
             dto,
@@ -158,6 +163,9 @@ export class ArtifactController {
         @Request() request: RequestDto,
     ): Promise<BaseResDto<ArtifactResDto>> {
         this.loggerService.info(this.constructor.name, this.createArtifactDeliverable.name, `user: ${request.user.sub}`)
+        if (!file) {
+            throw new InvalidInputException(["File is required"])
+        }
         const fileInfo = {
             fileName: file.filename,
             mimeType: file.mimetype,
@@ -232,16 +240,14 @@ export class ArtifactController {
             throw new ArtifactNotFoundException()
         }
 
-        res.setHeader("Content-Type", response.data.mimeType || "application/octet-stream")
-        res.setHeader("Content-Disposition", `attachment; filename*=UTF-8''${response.data.fileName}`)
+        const encodedFileName = encodeURIComponent(response.data.fileName)
 
-        const stream = fs.createReadStream(response.filePath)
-        stream.on("error", (err) => {
-            this.loggerService.error(this.constructor.name, this.downloadById.name, err.message)
-            throw new InternalServerErrorException()
+        res.set({
+            "Content-Type": response.data.mimeType || "application/octet-stream",
+            "Content-Disposition": `attachment; filename="${response.data.fileName}"; filename*=UTF-8''${encodedFileName}`,
         })
 
-        stream.pipe(res)
+        fs.createReadStream(response.filePath).pipe(res)
     }
 
     @Get("/project/:projectId")

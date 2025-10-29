@@ -19,7 +19,7 @@ async function bootstrap() {
             },
         }),
     )
-    app.enableCors()
+    app.enableCors({ exposedHeaders: ["Content-Disposition"] })
 
     const options = new DocumentBuilder().setTitle("SIPPIE").setVersion("1.0").build()
     const document = SwaggerModule.createDocument(app, options)
