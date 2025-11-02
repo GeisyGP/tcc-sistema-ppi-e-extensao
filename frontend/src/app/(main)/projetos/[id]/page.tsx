@@ -6,7 +6,7 @@ import { GroupModal } from "@/components/groups/group-modal"
 import { useGroups } from "./hooks/use-group"
 import { useUniqueProject } from "./hooks/use-unique-project"
 import { ArrowDownTrayIcon, PencilSquareIcon } from "@heroicons/react/24/outline"
-import { GroupRes } from "@/types/group.type"
+import { Group, GroupRes } from "@/types/group.type"
 import { abbreviateName } from "./utils/format-group"
 import { useUniquePPI } from "./hooks/use-unique-ppi"
 import { DeleteButtonModal } from "@/components/buttons/delete.button"
@@ -116,6 +116,14 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
         }
 
         return false
+    }
+
+    const canAccessGroup = (group: Group) => {
+        if (formattedData?.visibleToAll) return true
+
+        if (userRole !== UserRole.STUDENT) return true
+
+        return group.users.some((u) => u.id === userId)
     }
 
     return (
@@ -285,34 +293,52 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
                         {groupFormattedData && groupFormattedData.length > 0 ? (
                             <ul className="space-y-2 overflow-y-auto pr-1 pb-2">
-                                {groupFormattedData.map((group) => (
-                                    <li
-                                        key={group.id}
-                                        className="border border-gray-200 rounded-xl p-3 bg-white shadow-sm hover:shadow-md transition-all duration-200"
-                                    >
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1 pr-2">
-                                                <h3 className="font-semibold text-gray-800 text-sm">{group.name}</h3>
-                                                <p className="text-xs text-gray-500 mb-1">
-                                                    {group.users.length} integrante{group.users.length !== 1 ? "s" : ""}
-                                                </p>
-                                                <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1">
-                                                    {group.users.map((us, i) => (
-                                                        <span
-                                                            key={i}
-                                                            className="bg-gray-100 px-1.5 py-0.5 rounded text-xs"
-                                                        >
-                                                            {abbreviateName(us.name)}
-                                                        </span>
-                                                    ))}
-                                                </p>
-                                            </div>
+                                {groupFormattedData.map((group) => {
+                                    const isAccessible = canAccessGroup(group)
 
-                                            {canEdit(true) && (
-                                                <>
+                                    return (
+                                        <li
+                                            key={group.id}
+                                            onClick={() => {
+                                                if (!isAccessible) return
+                                                router.push(`/projetos/${projectId}/grupos/${group.id}`)
+                                            }}
+                                            title={
+                                                isAccessible
+                                                    ? `Acessar grupo ${group.name}`
+                                                    : "Você não participa deste grupo"
+                                            }
+                                            className={`
+                        border border-gray-200 rounded-xl p-3 bg-white shadow-sm transition-all duration-200
+                        ${isAccessible ? "cursor-pointer hover:shadow-md" : "opacity-50 cursor-not-allowed"}
+                    `}
+                                        >
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex-1 pr-2">
+                                                    <h3 className="font-semibold text-gray-800 text-sm">
+                                                        {group.name}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-500 mb-1">
+                                                        {group.users.length} integrante
+                                                        {group.users.length !== 1 ? "s" : ""}
+                                                    </p>
+                                                    <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1">
+                                                        {group.users.map((us, i) => (
+                                                            <span
+                                                                key={i}
+                                                                className="bg-gray-100 px-1.5 py-0.5 rounded text-xs"
+                                                            >
+                                                                {abbreviateName(us.name)}
+                                                            </span>
+                                                        ))}
+                                                    </p>
+                                                </div>
+
+                                                {canEdit(true) && (
                                                     <div className="flex flex-col items-center gap-1">
                                                         <button
-                                                            onClick={() => {
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
                                                                 const original =
                                                                     groupRawData.find((r) => r.id === group.id) || null
                                                                 setGroupSelectedForEdit(original)
@@ -326,11 +352,11 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
                                                         <DeleteButtonModal id={group.id} onDelete={handleDeleteGroup} />
                                                     </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    </li>
-                                ))}
+                                                )}
+                                            </div>
+                                        </li>
+                                    )
+                                })}
                             </ul>
                         ) : (
                             <p className="text-gray-500 italic text-sm">Nenhum grupo cadastrado.</p>
@@ -380,7 +406,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                         onClick={async () => {
                                             await handleViewArtifact(artifact.id)
                                         }}
-                                        title={`Nome: ${artifact.name}\nTamanho: ${(Number(artifact.size) / 1024).toFixed(2)} KB\nTipo: ${artifact.mimeType}\nCriado em: ${artifact.createdAt}\nAtualizado em: ${artifact.updatedAt}`}
+                                        title={`Nome: ${artifact.name}\nTamanho: ${(Number(artifact.size) / 1024).toFixed(2)} KB\nTipo: ${artifact.mimeType}\nCriado em: ${artifact.createdAt}`}
                                         className="relative cursor-pointer w-24 h-24 flex flex-col items-center justify-center border border-gray-200 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all duration-200"
                                     >
                                         <FileIcon mimeType={artifact.mimeType} className="w-10 h-10 mb-1" />
@@ -418,7 +444,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                         <p className="text-xs truncate w-full text-center">{fileInput.name}</p>
                                         <button
                                             onClick={handleAddArtifact}
-                                            className="mt-1 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
+                                            className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
                                         >
                                             Enviar
                                         </button>

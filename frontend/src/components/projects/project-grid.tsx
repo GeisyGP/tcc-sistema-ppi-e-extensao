@@ -44,22 +44,21 @@ export default function ProjectListHorizontal({ data, page, totalPages, totalIte
                                     <span className="font-medium">Período de execução:</span> {project.executionPeriod}
                                 </div>
                             </div>
-
-                            <div className="mt-auto pt-2 self-end">
-                                <span
-                                    className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                                        project.status === ProjectStatusMapped.NOT_STARTED
-                                            ? "bg-gray-100 text-gray-700"
-                                            : project.status === ProjectStatusMapped.STARTED
-                                              ? "bg-blue-100 text-blue-700"
-                                              : project.status === ProjectStatusMapped.FINISHED
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-gray-100 text-gray-700"
-                                    }`}
-                                >
-                                    {project.status}
-                                </span>
-                            </div>
+                        </div>
+                        <div className="mt-auto pt-2 self-end">
+                            <span
+                                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                                    project.status === ProjectStatusMapped.NOT_STARTED
+                                        ? "bg-gray-100 text-gray-700"
+                                        : project.status === ProjectStatusMapped.STARTED
+                                          ? "bg-blue-100 text-blue-700"
+                                          : project.status === ProjectStatusMapped.FINISHED
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-gray-100 text-gray-700"
+                                }`}
+                            >
+                                {project.status}
+                            </span>
                         </div>
                     </Card>
                 ))}
