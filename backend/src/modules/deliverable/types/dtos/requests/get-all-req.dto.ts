@@ -22,6 +22,11 @@ export class GetAllDeliverableReqDto extends PaginationReqDto {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
     status?: DeliverableStatus[]
+
+    @ApiPropertyOptional()
+    @IsString()
+    @IsOptional()
+    name?: string
 }
 
 export class GetAllByProjectParamsReqDto {

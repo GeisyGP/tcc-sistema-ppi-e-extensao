@@ -29,6 +29,7 @@ export class DeliverableResBuilder {
             description: data.description,
             projectId: data.projectId,
             subjectId: data.subjectId,
+            subjectName: data.subject?.name,
             startDate: data.startDate,
             endDate: data.endDate,
             artifact: data.Artifact,

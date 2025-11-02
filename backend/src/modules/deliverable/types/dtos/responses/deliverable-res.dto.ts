@@ -42,6 +42,9 @@ export class DeliverableWithContentAndArtifactResDto extends DeliverableResDto {
 
     @ApiProperty()
     content: DeliverableContent[]
+
+    @ApiPropertyOptional()
+    subjectName?: string
 }
 
 class DeliverableContent {

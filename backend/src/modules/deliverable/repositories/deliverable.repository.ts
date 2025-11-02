@@ -2,7 +2,7 @@ import { DeliverableStatus, GetAllDeliverableReqDto } from "../types/dtos/reques
 import { DeliverableRepositoryInterface, DeliverableWithContentAndArtifact } from "./deliverable.repository.interface"
 import { PrismaService } from "src/config/prisma.service"
 import { Injectable } from "@nestjs/common"
-import { Deliverable } from "@prisma/client"
+import { Deliverable, Prisma } from "@prisma/client"
 import { CreateDeliverableReqDto } from "../types/dtos/requests/create-deliverable-req.dto"
 import { UpdateDeliverableReqDto } from "../types/dtos/requests/update-deliverable-req.dto"
 
@@ -44,6 +44,9 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
                     select: { id: true, content: true, groupId: true },
                     where: { groupId },
                 },
+                subject: {
+                    select: { name: true },
+                },
             },
         })
 
@@ -80,6 +83,10 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
         })
 
         const filter = {
+            name: {
+                contains: dto.name,
+                mode: Prisma.QueryMode.insensitive,
+            },
             projectId,
             ...(orConditions.length > 0 ? { OR: orConditions } : {}),
         }
@@ -94,6 +101,9 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
                 DeliverableContent: {
                     select: { id: true, content: true, groupId: true },
                     where: { groupId: dto.groupId },
+                },
+                subject: {
+                    select: { name: true },
                 },
             },
             take: dto.limit,

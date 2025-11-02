@@ -6,6 +6,7 @@ import { Deliverable } from "@prisma/client"
 export type DeliverableWithContentAndArtifact = Deliverable & {
     DeliverableContent: { content: string; id: string; groupId: string }[]
     Artifact: { id: string; name: string; groupId: string | null }[]
+    subject: { name: string } | null
 }
 
 export interface DeliverableRepositoryInterface {
