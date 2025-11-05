@@ -3,14 +3,17 @@
 import { Button } from "@/components/buttons/default.button"
 import { Card } from "../card"
 import { Deliverable } from "@/types/deliverable.type"
+import { DeleteButtonModal } from "../buttons/delete.button"
 
 type Props = {
     data: Deliverable[]
     page: number
     totalPages: number
     totalItems: number
+    generalVision: boolean
     onPageChange: (page: number) => void
     onClick: (item: Deliverable) => void
+    onDelete?: (id: string) => Promise<void>
 }
 
 const getEndDateClass = (endDateStr: string) => {
@@ -24,7 +27,7 @@ const getEndDateClass = (endDateStr: string) => {
         endDate.getFullYear() === today.getFullYear()
 
     const isPast = endDate < today && !isToday
-    if (isToday) return "bg-red-600 text-white"
+    if (isToday) return "bg-red-500 text-white"
     if (isPast) return "bg-gray-100 text-gray-500"
     return "bg-gray-100 text-gray-800"
 }
@@ -34,8 +37,10 @@ export default function DeliverableListHorizontal({
     page,
     totalPages,
     totalItems,
+    generalVision,
     onPageChange,
     onClick,
+    onDelete,
 }: Props) {
     return (
         <div className="space-y-6">
@@ -60,7 +65,7 @@ export default function DeliverableListHorizontal({
                                 <span className="font-medium">Data Final:</span>
                                 <span
                                     className={`ml-1 px-2 py-0.5 rounded-full font-semibold ${getEndDateClass(
-                                        deliverable.endDateISO,
+                                        deliverable.endDate,
                                     )}`}
                                 >
                                     {deliverable.endDate}
@@ -74,15 +79,37 @@ export default function DeliverableListHorizontal({
                             )}
                         </div>
 
-                        <div className="mt-1 self-end">
-                            <span
-                                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
-                                    deliverable.isSubmitted ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                                }`}
-                            >
-                                {deliverable.isSubmitted ? "Enviado" : "Pendente"}
-                            </span>
-                        </div>
+                        {!generalVision && (
+                            <div className="mt-1 self-end">
+                                <span
+                                    className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                                        deliverable.isSubmitted
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-red-100 text-red-700"
+                                    }`}
+                                >
+                                    {deliverable.isSubmitted ? "Enviado" : "Pendente"}
+                                </span>
+                            </div>
+                        )}
+
+                        {generalVision && (
+                            <div className="mt-1 self-end flex items-center gap-2">
+                                <span className="inline-block px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                                    {deliverable.artifact.length == 0 && deliverable.content.length == 0
+                                        ? "Ainda sem entregas"
+                                        : (() => {
+                                              const count = new Set([
+                                                  ...deliverable.artifact.map((a) => a.groupId),
+                                                  ...deliverable.content.map((c) => c.groupId),
+                                              ]).size
+                                              return `${count} entrega${count > 1 ? "s" : ""}`
+                                          })()}
+                                </span>
+
+                                <DeleteButtonModal id={deliverable.id} onDelete={onDelete} />
+                            </div>
+                        )}
                     </Card>
                 ))}
             </div>

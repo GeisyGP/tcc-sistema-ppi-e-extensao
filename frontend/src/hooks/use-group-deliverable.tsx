@@ -3,12 +3,24 @@
 import { formatDeliverable } from "@/app/(main)/projetos/[id]/grupos/[groupId]/utils/format-deliverable"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
 import { ApiError } from "@/exceptions/api-error.exception"
-import { getAllDeliverables } from "@/services/deliverable.service"
+import {
+    createDeliverable,
+    deleteDeliverableById,
+    getAllDeliverables,
+    getDeliverableById,
+    updateDeliverableById,
+} from "@/services/deliverable.service"
 import { getGroupById } from "@/services/group.service"
-import { Deliverable, DeliverableWithContentAndArtifactRes, GetAllDeliverablesReq } from "@/types/deliverable.type"
+import {
+    Deliverable,
+    DeliverableCreateInput,
+    DeliverableUpdateInput,
+    DeliverableWithContentAndArtifactRes,
+    GetAllDeliverablesReq,
+} from "@/types/deliverable.type"
 import { useState, useCallback } from "react"
 import toast from "react-hot-toast"
-import { formatGroup } from "../../../utils/format-group"
+import { formatGroup } from "../app/(main)/projetos/[id]/utils/format-group"
 import { Group, GroupRes } from "@/types/group.type"
 
 export function useGroupDeliverables() {
@@ -35,11 +47,51 @@ export function useGroupDeliverables() {
                 setMetadata(response.metadata)
             }
         } catch (error: any) {
-            console.log(error)
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
             toast.error(errorMessage)
         } finally {
             setLoading(false)
+        }
+    }, [])
+
+    const handleCreate = useCallback(async (newDeliverable: DeliverableCreateInput) => {
+        try {
+            const created = await createDeliverable(newDeliverable)
+            if (created) {
+                const fetchNew = await getDeliverableById(created.id)
+                if (fetchNew) setFormattedData((prev) => [...prev, formatDeliverable(fetchNew)])
+            }
+            toast.success("Entregável criado com sucesso")
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        }
+    }, [])
+
+    const handleUpdate = useCallback(async (id: string, updated: DeliverableUpdateInput) => {
+        try {
+            await updateDeliverableById(id, updated)
+            const fetchUpdated = await getDeliverableById(id)
+            if (fetchUpdated) {
+                setFormattedData((prev) =>
+                    prev.map((d) => (d.id === fetchUpdated.id ? formatDeliverable(fetchUpdated) : d)),
+                )
+            }
+            toast.success("Entregável atualizado com sucesso")
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        }
+    }, [])
+
+    const handleDelete = useCallback(async (id: string) => {
+        try {
+            await deleteDeliverableById(id)
+            setFormattedData((prev) => prev.filter((d) => d.id !== id))
+            toast.success("Entregável deletado com sucesso")
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
         }
     }, [])
 
@@ -69,5 +121,8 @@ export function useGroupDeliverables() {
         rawDataGroup,
         formattedDataGroup,
         fetchUniqueGroup,
+        handleCreate,
+        handleUpdate,
+        handleDelete,
     }
 }

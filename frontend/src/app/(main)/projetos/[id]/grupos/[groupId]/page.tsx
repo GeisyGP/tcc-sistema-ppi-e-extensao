@@ -1,7 +1,7 @@
 "use client"
 
 import { use, useEffect, useState } from "react"
-import { useGroupDeliverables } from "./hooks/use-group-deliverable"
+import { useGroupDeliverables } from "../../../../../../hooks/use-group-deliverable"
 import {
     DeliverableStatus,
     DeliverableStatusMapped,
@@ -10,6 +10,7 @@ import {
 import SearchBar from "@/components/search-bar"
 import DeliverableListHorizontal from "@/components/deliverables/deliverable-group-list"
 import { Button } from "@/components/buttons/default.button"
+import BackButton from "@/components/buttons/back.button"
 
 export default function GroupDeliverablesPage({ params }: { params: Promise<{ id: string; groupId: string }> }) {
     const { id: projectId, groupId } = use(params)
@@ -49,7 +50,8 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
 
     return (
         <div className="w-full mx-auto p-6">
-            <h1 className="text-2xl font-semibold mb-6">
+            <BackButton />
+            <h1 className="text-2xl font-semibold mt-4 mb-6">
                 {loadingGroup ? "Carregando grupo..." : `Entregáveis - ${formattedDataGroup?.name || "Sem nome"}`}
             </h1>
 
@@ -88,6 +90,7 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
                     page={page}
                     totalPages={metadata.totalPages}
                     totalItems={metadata.totalItems}
+                    generalVision={false}
                     onPageChange={setPage}
                     onClick={(row) => {
                         const original = rawData.find((r) => r.id === row.id) || null

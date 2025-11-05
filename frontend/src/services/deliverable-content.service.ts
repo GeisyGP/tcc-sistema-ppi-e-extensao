@@ -6,7 +6,9 @@ import {
 import backendApi from "./api"
 import { getSession } from "next-auth/react"
 
-export async function createDeliverable(body: DeliverableContentCreateInput): Promise<DeliverableContentRes | void> {
+export async function createDeliverableContent(
+    body: DeliverableContentCreateInput,
+): Promise<DeliverableContentRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -19,7 +21,7 @@ export async function createDeliverable(body: DeliverableContentCreateInput): Pr
     return response.data?.data
 }
 
-export async function getDeliverableById(id: string): Promise<DeliverableContentRes | void> {
+export async function getDeliverableContentById(id: string): Promise<DeliverableContentRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return
@@ -33,7 +35,7 @@ export async function getDeliverableById(id: string): Promise<DeliverableContent
     return response.data?.data
 }
 
-export async function updateDeliverableById(
+export async function updateDeliverableContentById(
     id: string,
     body: DeliverableContentUpdateInput,
 ): Promise<DeliverableContentRes | void> {
@@ -50,7 +52,7 @@ export async function updateDeliverableById(
     return response.data?.data
 }
 
-export async function deleteDeliverableById(id: string): Promise<void> {
+export async function deleteDeliverableContentById(id: string): Promise<void> {
     const session = await getSession()
     if (!session?.accessToken) {
         return

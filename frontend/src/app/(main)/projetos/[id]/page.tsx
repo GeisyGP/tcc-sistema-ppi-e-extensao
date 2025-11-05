@@ -235,6 +235,15 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                             </Button>
 
                             {canEdit() && (
+                                <Button
+                                    variant="secondary"
+                                    className="px-2 py-1 text-sm"
+                                    onClick={() => router.push(`/projetos/${projectId}/entregaveis`)}
+                                >
+                                    Gerenciar entregáveis
+                                </Button>
+                            )}
+                            {canEdit() && (
                                 <>
                                     <ProjectMetadataPopover project={formattedData} />
 
