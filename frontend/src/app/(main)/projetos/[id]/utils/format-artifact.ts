@@ -7,6 +7,7 @@ export function formatArtifact(res: ArtifactRes): Artifact {
         fileName: res.fileName,
         mimeType: res.mimeType,
         size: res.size,
+        groupId: res.groupId,
         createdBy: res.createdBy,
         updatedBy: res.updatedBy,
         createdAt: new Date(res.createdAt).toLocaleDateString(),

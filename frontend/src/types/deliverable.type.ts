@@ -14,17 +14,17 @@ export interface DeliverableRes {
 
 export interface DeliverableWithContentAndArtifactRes extends DeliverableRes {
     artifact: DeliverableArtifact[]
-    content: DeliverableContent[]
+    content: DeliverableContentSimple[]
     subjectName?: string
 }
 
-interface DeliverableContent {
+export interface DeliverableContentSimple {
     id: string
     content: string
     groupId: string
 }
 
-interface DeliverableArtifact {
+export interface DeliverableArtifact {
     id: string
     name: string
     groupId: string | null
@@ -76,7 +76,7 @@ export interface Deliverable {
     subjectId?: string
     subjectName?: string
     artifact: DeliverableArtifact[]
-    content: DeliverableContent[]
+    content: DeliverableContentSimple[]
     createdAt: string
     updatedAt: string
     isSubmitted: boolean

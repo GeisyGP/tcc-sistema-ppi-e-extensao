@@ -33,6 +33,7 @@ export interface Artifact {
     fileName: string
     mimeType: string
     size: string
+    groupId: string
     createdBy: string
     updatedBy: string
     createdAt: string

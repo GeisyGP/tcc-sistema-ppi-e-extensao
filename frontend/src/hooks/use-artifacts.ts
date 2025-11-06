@@ -2,7 +2,7 @@ import {
     createArtifactDeliverable,
     createArtifactProject,
     updateArtifactById,
-    getArtifactById,
+    getArtifactByIdView,
     downloadArtifactById,
     getAllArtifactsByProjectId,
     getAllArtifactsByGroupId,
@@ -137,7 +137,7 @@ export function useArtifacts() {
     const handleViewArtifact = useCallback(async (id: string) => {
         setLoadingProject(true)
         try {
-            const artifact = await getArtifactById(id)
+            const artifact = await getArtifactByIdView(id)
             if (!artifact?.url) throw new Error("FILE_CANNOT_BE_VIEWED")
             window.open(artifact.url, "_blank")
             return { artifact }

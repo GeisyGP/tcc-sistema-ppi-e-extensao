@@ -2,7 +2,7 @@ export interface DeliverableContentRes {
     id: string
     content: string
     deliverableId: string
-    groupId: Date
+    groupId: string
     createdBy: string
     updatedBy: string
     createdAt: Date
@@ -23,7 +23,7 @@ export interface DeliverableContent {
     id: string
     content: string
     deliverableId: string
-    groupId: Date
+    groupId: string
     createdBy: string
     updatedBy: string
     createdAt: string

@@ -65,6 +65,23 @@ export async function getDeliverableById(id: string): Promise<DeliverableWithCon
     return response.data?.data
 }
 
+export async function getDeliverableByIdAndGroupId(
+    id: string,
+    groupId: string,
+): Promise<DeliverableWithContentAndArtifactRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/deliverables/${id}/group/${groupId}`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
 export async function updateDeliverableById(id: string, body: DeliverableUpdateInput): Promise<DeliverableRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {

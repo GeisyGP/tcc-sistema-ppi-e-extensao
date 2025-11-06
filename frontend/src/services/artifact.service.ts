@@ -53,7 +53,9 @@ export async function createArtifactDeliverable(
     const response = await backendApi.post(`/artifacts/deliverable/${deliverableId}`, formData, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
+            "Content-Type": "multipart/form-data",
         },
+        transformRequest: (data) => data,
     })
 
     return response.data?.data
@@ -95,13 +97,13 @@ export async function getAllArtifactsByGroupId(
     return response.data?.data
 }
 
-export async function getArtifactById(id: string) {
+export async function getArtifactByIdView(id: string) {
     const session = await getSession()
     if (!session?.accessToken) {
         return
     }
 
-    const response = await backendApi.get(`/artifacts/${id}`, {
+    const response = await backendApi.get(`/artifacts/${id}/view`, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
         },
@@ -119,6 +121,21 @@ export async function getArtifactById(id: string) {
         fileName,
         mimeType: response.data.type,
     }
+}
+
+export async function getArtifactById(id: string): Promise<ArtifactRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/artifacts/${id}`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+
+    return response.data?.data
 }
 
 export async function downloadArtifactById(id: string) {
@@ -156,7 +173,9 @@ export async function updateArtifactById(id: string, deliverableId: string, file
     const response = await backendApi.put(`/artifacts/${id}/deliverable/${deliverableId}`, formData, {
         headers: {
             Authorization: `Bearer ${session.accessToken}`,
+            "Content-Type": "multipart/form-data",
         },
+        transformRequest: (data) => data,
     })
 
     return response.data?.data
