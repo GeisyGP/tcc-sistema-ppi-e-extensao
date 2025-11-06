@@ -44,7 +44,6 @@ import {
     CreateArtifactDeliverableParamsReqDto,
     CreateArtifactDeliverableReqDto,
     CreateArtifactProjectParamsReqDto,
-    CreateArtifactProjectReqDto,
 } from "../types/dtos/requests/create-artifact-req.dto"
 import { FileCleanupFilter } from "src/common/filters/file-cleanup.filter"
 import { ArtifactNotFoundException } from "src/common/exceptions/artifact-not-found.exception"
@@ -96,7 +95,6 @@ export class ArtifactController {
     async createArtifactProject(
         @UploadedFile() file: Express.Multer.File,
         @Param() param: CreateArtifactProjectParamsReqDto,
-        @Body() dto: CreateArtifactProjectReqDto,
         @Request() request: RequestDto,
     ): Promise<BaseResDto<ArtifactResDto>> {
         this.loggerService.info(this.constructor.name, this.createArtifactProject.name, `user: ${request.user.sub}`)
@@ -104,6 +102,7 @@ export class ArtifactController {
             throw new InvalidInputException(["File is required"])
         }
         const fileInfo = {
+            name: file.originalname,
             fileName: file.filename,
             mimeType: file.mimetype,
             path: file.path,
@@ -112,7 +111,6 @@ export class ArtifactController {
 
         const response = await this.artifactService.createArtifactProject(
             param.projectId,
-            dto,
             fileInfo,
             request.user.mainCourseId,
             request.user.sub,
@@ -167,6 +165,7 @@ export class ArtifactController {
             throw new InvalidInputException(["File is required"])
         }
         const fileInfo = {
+            name: file.originalname,
             fileName: file.filename,
             mimeType: file.mimetype,
             path: file.path,
@@ -362,6 +361,7 @@ export class ArtifactController {
     ): Promise<BaseResDto<ArtifactResDto>> {
         this.loggerService.info(this.constructor.name, this.updateFile.name, `user: ${request.user.sub}`)
         const fileInfo = {
+            name: file.originalname,
             fileName: file.filename,
             mimeType: file.mimetype,
             path: file.path,

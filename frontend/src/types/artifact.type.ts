@@ -18,12 +18,7 @@ export interface GetAllArtifactsReq {
     limit?: number
 }
 
-export interface ArtifactProjectCreateInput {
-    name: string
-}
-
 export interface ArtifactDeliverableCreateInput {
-    name: string
     groupId: string
 }
 

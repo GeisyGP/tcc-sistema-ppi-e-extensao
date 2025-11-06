@@ -13,6 +13,7 @@ export interface CreateArtifactInput {
 }
 
 export interface UpdateArtifactFileInput {
+    name: string
     fileName: string
     mimeType: string
     path: string

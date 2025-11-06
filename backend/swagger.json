@@ -1989,16 +1989,6 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateArtifactProjectReqDto"
-              }
-            }
-          }
-        },
         "responses": {
           "201": {
             "description": "",
@@ -3389,17 +3379,6 @@
           "userIds"
         ]
       },
-      "CreateArtifactProjectReqDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ]
-      },
       "ArtifactResDto": {
         "type": "object",
         "properties": {
@@ -3456,15 +3435,11 @@
       "CreateArtifactDeliverableReqDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string"
-          },
           "groupId": {
             "type": "string"
           }
         },
         "required": [
-          "name",
           "groupId"
         ]
       },

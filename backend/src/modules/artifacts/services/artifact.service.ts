@@ -1,10 +1,7 @@
 import * as fs from "fs"
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { ArtifactRepository } from "../repositories/artifact-repository"
-import {
-    CreateArtifactDeliverableReqDto,
-    CreateArtifactProjectReqDto,
-} from "../types/dtos/requests/create-artifact-req.dto"
+import { CreateArtifactDeliverableReqDto } from "../types/dtos/requests/create-artifact-req.dto"
 import { ArtifactResDto } from "../types/dtos/responses/artifact-res.dto"
 import { GetAllArtifactReqDto } from "../types/dtos/requests/get-all-req.dto"
 import { CustomLoggerService } from "src/common/logger"
@@ -31,7 +28,6 @@ export class ArtifactService {
 
     async createArtifactProject(
         projectId: string,
-        dto: CreateArtifactProjectReqDto,
         fileInfo: UpdateArtifactFileInput,
         currentCourseId: string,
         currentUserId: string,
@@ -41,7 +37,7 @@ export class ArtifactService {
             await this.handleAccess(projectId, currentCourseId, currentUserId, currentUserRole)
             const response = await this.artifactRepository.create(
                 {
-                    name: dto.name,
+                    name: fileInfo.name,
                     fileName: fileInfo.fileName,
                     mimeType: fileInfo.mimeType,
                     path: fileInfo.path,
@@ -82,7 +78,7 @@ export class ArtifactService {
 
             const response = await this.artifactRepository.create(
                 {
-                    name: dto.name,
+                    name: fileInfo.name,
                     fileName: fileInfo.fileName,
                     mimeType: fileInfo.mimeType,
                     path: fileInfo.path,

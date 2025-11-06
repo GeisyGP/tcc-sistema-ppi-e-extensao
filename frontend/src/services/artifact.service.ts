@@ -1,28 +1,13 @@
-import {
-    ArtifactDeliverableCreateInput,
-    ArtifactProjectCreateInput,
-    ArtifactRes,
-    GetAllArtifactsReq,
-} from "@/types/artifact.type"
+import { ArtifactDeliverableCreateInput, ArtifactRes, GetAllArtifactsReq } from "@/types/artifact.type"
 import backendApi from "./api"
 import { PaginationResDto } from "@/types/pagination.type"
 import { getSession } from "next-auth/react"
 
-export async function createArtifactProject(
-    projectId: string,
-    body: ArtifactProjectCreateInput,
-    file: File,
-): Promise<ArtifactRes | void> {
+export async function createArtifactProject(projectId: string, file: File): Promise<ArtifactRes | void> {
     const session = await getSession()
     if (!session?.accessToken) return
 
     const formData = new FormData()
-
-    Object.entries(body).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-            formData.append(key, value as any)
-        }
-    })
 
     formData.append("file", file)
     const response = await backendApi.post(`/artifacts/project/${projectId}`, formData, {

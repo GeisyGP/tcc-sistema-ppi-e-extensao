@@ -113,6 +113,7 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
         return await this.prisma.artifact.update({
             where: { id },
             data: {
+                name: dto.name,
                 fileName: dto.fileName,
                 mimeType: dto.mimeType,
                 path: dto.path,
