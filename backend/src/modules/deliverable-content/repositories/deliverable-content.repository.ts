@@ -41,6 +41,8 @@ export class DeliverableContentRepository implements DeliverableContentRepositor
                     group: {
                         users: { some: { id: studentId } },
                     },
+                },
+                {
                     deliverable: { project: { visibleToAll } },
                 },
             ],

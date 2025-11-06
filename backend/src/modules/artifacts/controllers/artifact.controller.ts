@@ -185,10 +185,14 @@ export class ArtifactController {
         }
     }
 
-    @Get(":id")
+    @Get(":id/view")
     @UseGuards(PoliciesGuard)
     @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "ARTIFACT"))
-    async getById(@Param() param: GetByIdArtifactReqDto, @Res() res: express.Response, @Request() request: RequestDto) {
+    async getByIdView(
+        @Param() param: GetByIdArtifactReqDto,
+        @Res() res: express.Response,
+        @Request() request: RequestDto,
+    ) {
         this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
 
         const response = await this.artifactService.getById(
@@ -217,6 +221,27 @@ export class ArtifactController {
         })
 
         stream.pipe(res)
+    }
+
+    @Get(":id")
+    @UseGuards(PoliciesGuard)
+    @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, "ARTIFACT"))
+    async getById(
+        @Param() param: GetByIdArtifactReqDto,
+        @Request() request: RequestDto,
+    ): Promise<BaseResDto<ArtifactResDto>> {
+        this.loggerService.info(this.constructor.name, this.getById.name, `user: ${request.user.sub}`)
+
+        const response = await this.artifactService.getById(
+            param.id,
+            request.user.mainCourseId,
+            request.user.sub,
+            request.user.mainRole,
+        )
+        return {
+            message: "Artifact found successfully",
+            data: response.data,
+        }
     }
 
     @Get(":id/download")

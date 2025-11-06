@@ -42,16 +42,20 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
         const filter = {
             id,
             OR: [
-                { groupId: null },
+                {
+                    groupId: null,
+                },
                 {
                     group: {
                         users: { some: { id: studentId } },
                     },
+                },
+                {
                     deliverable: { project: { visibleToAll } },
                 },
             ],
         }
-        const artifact = await this.prisma.artifact.findUnique({
+        const artifact = await this.prisma.artifact.findFirst({
             where: visibleToAll ? filter : { id },
             include: {
                 project: {

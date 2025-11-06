@@ -38,11 +38,11 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
             include: {
                 Artifact: {
                     select: { id: true, name: true, groupId: true },
-                    where: { groupId },
+                    where: { groupId, deletedAt: null },
                 },
                 DeliverableContent: {
                     select: { id: true, content: true, groupId: true },
-                    where: { groupId },
+                    where: { groupId, deletedAt: null },
                 },
                 subject: {
                     select: { name: true },
@@ -96,11 +96,11 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
             include: {
                 Artifact: {
                     select: { id: true, name: true, groupId: true },
-                    where: { groupId: dto.groupId },
+                    where: { groupId: dto.groupId, deletedAt: null },
                 },
                 DeliverableContent: {
                     select: { id: true, content: true, groupId: true },
-                    where: { groupId: dto.groupId },
+                    where: { groupId: dto.groupId, deletedAt: null },
                 },
                 subject: {
                     select: { name: true },
