@@ -2,37 +2,31 @@
 
 import { use, useEffect, useState } from "react"
 import { useGroupDeliverables } from "../../../../../../hooks/use-group-deliverable"
-import {
-    DeliverableStatus,
-    DeliverableStatusMapped,
-    DeliverableWithContentAndArtifactRes,
-} from "@/types/deliverable.type"
+import { DeliverableStatus, DeliverableStatusMapped } from "@/types/deliverable.type"
 import SearchBar from "@/components/search-bar"
 import DeliverableListHorizontal from "@/components/deliverables/deliverable-group-list"
 import { Button } from "@/components/buttons/default.button"
 import BackButton from "@/components/buttons/back.button"
+import { useRouter } from "next/navigation"
+import { useRole } from "@/hooks/use-role"
+import { UserRole } from "@/types/user.type"
 
 export default function GroupDeliverablesPage({ params }: { params: Promise<{ id: string; groupId: string }> }) {
     const { id: projectId, groupId } = use(params)
-    const {
-        loading,
-        metadata,
-        formattedData,
-        rawData,
-        fetchDeliverables,
-        fetchUniqueGroup,
-        formattedDataGroup,
-        loadingGroup,
-    } = useGroupDeliverables()
+    const { userRole } = useRole()
+    const { loading, metadata, formattedData, fetchDeliverables, fetchUniqueGroup, formattedDataGroup, loadingGroup } =
+        useGroupDeliverables()
     const [page, setPage] = useState(1)
     const [statusFilter, setStatusFilter] = useState<DeliverableStatus>(DeliverableStatus.ACTIVE)
     const [nameFilter, setNameFilter] = useState<string>()
-    const [selectedForSubmit, setSelectedForSubmit] = useState<DeliverableWithContentAndArtifactRes | null>()
+    const router = useRouter()
 
-    const statusOptions = Object.entries(DeliverableStatus).map(([key, value]) => ({
-        label: DeliverableStatusMapped[key as keyof typeof DeliverableStatusMapped],
-        value,
-    }))
+    const statusOptions = Object.entries(DeliverableStatus)
+        .filter(([key]) => !(userRole === UserRole.STUDENT && key === "UPCOMING"))
+        .map(([key, value]) => ({
+            label: DeliverableStatusMapped[key as keyof typeof DeliverableStatusMapped],
+            value,
+        }))
 
     useEffect(() => {
         fetchUniqueGroup(groupId)
@@ -92,11 +86,7 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
                     totalItems={metadata.totalItems}
                     generalVision={false}
                     onPageChange={setPage}
-                    onClick={(row) => {
-                        const original = rawData.find((r) => r.id === row.id) || null
-                        setSelectedForSubmit(original)
-                        console.log(selectedForSubmit) //TODO: remove this
-                    }}
+                    onClick={(item) => router.push(`/projetos/${projectId}/grupos/${groupId}/entregaveis/${item.id}`)}
                 />
             )}
         </div>
