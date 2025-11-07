@@ -45,6 +45,9 @@ export class DeliverableWithContentAndArtifactResDto extends DeliverableResDto {
 
     @ApiPropertyOptional()
     subjectName?: string
+
+    @ApiPropertyOptional()
+    canUserManage?: boolean
 }
 
 class DeliverableContent {

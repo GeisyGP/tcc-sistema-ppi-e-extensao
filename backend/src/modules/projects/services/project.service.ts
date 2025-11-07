@@ -232,6 +232,7 @@ export class ProjectService {
                         status: [DeliverableStatus.ACTIVE, DeliverableStatus.UPCOMING],
                     },
                     currentCourseId,
+                    currentUserId,
                     role,
                 )
                 if (deliverables.metadata.totalItems > 0) throw new CannotUpdateProjectStatusException()

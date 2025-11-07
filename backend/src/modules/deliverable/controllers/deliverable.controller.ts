@@ -107,6 +107,7 @@ export class DeliverableController {
             param.projectId,
             queryParams,
             request.user.mainCourseId,
+            request.user.sub,
             request.user.mainRole,
         )
         return {

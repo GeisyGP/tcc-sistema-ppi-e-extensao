@@ -22,6 +22,7 @@ export class DeliverableResBuilder {
 
     static buildWithContentAndArtifact(
         data: DeliverableWithContentAndArtifact,
+        canUserManage?: boolean,
     ): DeliverableWithContentAndArtifactResDto {
         return {
             id: data.id,
@@ -38,17 +39,19 @@ export class DeliverableResBuilder {
             updatedBy: data.updatedBy,
             createdAt: data.createdAt,
             updatedAt: data.updatedAt,
+            canUserManage,
         }
     }
 
     static buildMany(
         deliverables: DeliverableWithContentAndArtifact[],
+        canUserManage: boolean,
         page: number,
         limit: number,
         totalItems: number,
     ): PaginationResDto<DeliverableResDto[]> {
         return {
-            items: deliverables.map((deliverable) => this.buildWithContentAndArtifact(deliverable)),
+            items: deliverables.map((deliverable) => this.buildWithContentAndArtifact(deliverable, canUserManage)),
             metadata: {
                 page,
                 itemsPerPage: limit,

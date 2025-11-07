@@ -13,6 +13,7 @@ import { UserRole } from "src/common/enums/user-role.enum"
 import { SubjectService } from "src/modules/subjects/services/subject.service"
 import { ProjectResDto } from "src/modules/projects/types/dtos/responses/project-res.dto"
 import { PPIService } from "src/modules/ppis/services/ppi.service"
+import { ProjectStatus } from "src/common/enums/project-status.enum"
 
 @Injectable()
 export class DeliverableService {
@@ -90,12 +91,20 @@ export class DeliverableService {
         projectId: string,
         dto: GetAllDeliverableReqDto,
         currentCourseId: string,
+        currentUserId: string,
         userRole: UserRole,
     ): Promise<PaginationResDto<DeliverableResDto[]>> {
         try {
             if (userRole === UserRole.STUDENT && !dto.groupId) {
                 throw new ForbiddenException()
             }
+
+            const project = await this.projectService.getById(projectId, currentCourseId)
+            const canUserManage =
+                userRole === UserRole.COORDINATOR && project.status === ProjectStatus.STARTED
+                    ? true
+                    : Boolean(await this.validateDefaultAccess(projectId, currentCourseId, currentUserId))
+
             const { deliverables, totalItems } = await this.deliverableRepository.getAllByProjectId(
                 {
                     ...dto,
@@ -110,7 +119,7 @@ export class DeliverableService {
                 projectId,
             )
 
-            return DeliverableResBuilder.buildMany(deliverables, dto.page, dto.limit, totalItems)
+            return DeliverableResBuilder.buildMany(deliverables, canUserManage, dto.page, dto.limit, totalItems)
         } catch (error) {
             this.loggerService.error(
                 this.constructor.name,
@@ -267,7 +276,7 @@ export class DeliverableService {
                     teacherId: userId,
                     status: "STARTED",
                     page: 1,
-                    limit: 1,
+                    limit: 50,
                 },
                 currentCourseId,
                 userId,
