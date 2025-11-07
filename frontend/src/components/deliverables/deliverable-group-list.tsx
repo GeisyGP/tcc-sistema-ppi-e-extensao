@@ -3,7 +3,6 @@
 import { Button } from "@/components/buttons/default.button"
 import { Card } from "../card"
 import { Deliverable } from "@/types/deliverable.type"
-import { DeleteButtonModal } from "../buttons/delete.button"
 
 type Props = {
     data: Deliverable[]
@@ -13,7 +12,6 @@ type Props = {
     generalVision: boolean
     onPageChange: (page: number) => void
     onClick: (item: Deliverable) => void
-    onDelete?: (id: string) => Promise<void>
 }
 
 const getEndDateClass = (endDateStr: string) => {
@@ -27,7 +25,7 @@ const getEndDateClass = (endDateStr: string) => {
         endDate.getFullYear() === today.getFullYear()
 
     const isPast = endDate < today && !isToday
-    if (isToday) return "bg-red-500 text-white"
+    if (isToday) return "bg-gray-100 text-red-600"
     if (isPast) return "bg-gray-100 text-gray-500"
     return "bg-gray-100 text-gray-800"
 }
@@ -40,7 +38,6 @@ export default function DeliverableListHorizontal({
     generalVision,
     onPageChange,
     onClick,
-    onDelete,
 }: Props) {
     return (
         <div className="space-y-6">
@@ -106,8 +103,6 @@ export default function DeliverableListHorizontal({
                                               return `${count} entrega${count > 1 ? "s" : ""}`
                                           })()}
                                 </span>
-
-                                <DeleteButtonModal id={deliverable.id} onDelete={onDelete} />
                             </div>
                         )}
                     </Card>

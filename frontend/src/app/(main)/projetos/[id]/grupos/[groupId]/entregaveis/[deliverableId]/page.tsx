@@ -13,6 +13,8 @@ import { useDeliverableContent } from "./hooks/use-deliverable-content"
 import { useRole } from "@/hooks/use-role"
 import { UserRole } from "@/types/user.type"
 import BackButton from "@/components/buttons/back.button"
+import { useGroupDeliverables } from "@/hooks/use-group-deliverable"
+import { abbreviateName } from "../../../../utils/format-group"
 
 export default function DeliverableSubmitPage({
     params,
@@ -20,21 +22,23 @@ export default function DeliverableSubmitPage({
     params: Promise<{ id: string; groupId: string; deliverableId: string }>
 }) {
     const { deliverableId, groupId } = use(params)
-    const { userRole } = useRole()
+    const { userRole, userId } = useRole()
     const [content, setContent] = useState<DeliverableContentSimple | null>(null)
     const [contentDraft, setContentDraft] = useState("")
     const { loading, formattedData, rawData, fetchDeliverableById } = useUniqueDeliverable()
+    const { fetchUniqueGroup, loadingGroup, formattedDataGroup } = useGroupDeliverables()
     const [fileInput, setFileInput] = useState<File | null>(null)
 
     const { handleCreate, handleDelete, handleUpdate } = useDeliverableContent()
     const { handleCreateDeliverableArtifact, handleUpdateArtifact, handleDownloadArtifact, handleViewArtifact } =
         useArtifacts()
 
-    const { formattedDataArtifact, fetchArtifactById } = useUniqueArtifact()
+    const { formattedDataArtifact, fetchArtifactById, loading: loadingArtifact } = useUniqueArtifact()
 
     useEffect(() => {
         fetchDeliverableById(deliverableId, groupId)
-    }, [fetchDeliverableById, deliverableId, groupId])
+        fetchUniqueGroup(groupId)
+    }, [fetchDeliverableById, deliverableId, groupId, fetchUniqueGroup])
 
     useEffect(() => {
         if (formattedData) {
@@ -52,7 +56,7 @@ export default function DeliverableSubmitPage({
 
     const handleAddArtifact = async () => {
         if (!fileInput) return
-        await handleCreateDeliverableArtifact(deliverableId, { name: fileInput.name, groupId }, fileInput)
+        await handleCreateDeliverableArtifact(deliverableId, { groupId }, fileInput)
         setFileInput(null)
     }
 
@@ -63,8 +67,12 @@ export default function DeliverableSubmitPage({
 
         if (userRole !== UserRole.STUDENT) return false
 
+        if (!formattedDataGroup?.users.find((user) => user.id === userId)) {
+            return false
+        }
+
         return true
-    } //TODO: validate user is from group
+    }
 
     return (
         <div className="w-full mx-auto p-6">
@@ -95,6 +103,20 @@ export default function DeliverableSubmitPage({
                                 <p>
                                     <strong>Data final:</strong> {new Date(formattedData.endDate).toLocaleString()}
                                 </p>
+                                <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1 mb-6">
+                                    {loadingGroup ? (
+                                        "Carregando grupo..."
+                                    ) : (
+                                        <>
+                                            <strong>Discentes do grupo:</strong>
+                                            {formattedDataGroup?.users.map((us, i) => (
+                                                <span key={i} className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">
+                                                    {abbreviateName(us.name)}
+                                                </span>
+                                            ))}
+                                        </>
+                                    )}
+                                </p>
                             </div>
 
                             {canEdit() && (
@@ -108,7 +130,9 @@ export default function DeliverableSubmitPage({
                             <div className="flex flex-col">
                                 <label className="text-sm font-medium text-gray-700">Arquivo</label>
 
-                                {formattedDataArtifact ? (
+                                {loadingArtifact ? (
+                                    <div className="text-gray-500 text-sm">Carregando...</div>
+                                ) : formattedDataArtifact ? (
                                     <div className="mt-2 flex items-center justify-between bg-gray-100 p-2 rounded">
                                         <div
                                             key={formattedDataArtifact.id}

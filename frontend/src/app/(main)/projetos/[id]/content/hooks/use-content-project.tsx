@@ -26,14 +26,12 @@ export function useContentProject() {
 
     const handleUpdate = useCallback(async (projectId: string, req: ProjectContentUpdateInput) => {
         try {
-            console.log(req)
             const updated = await updateProjectContentById(projectId, req)
             if (updated) {
                 setRawData(updated)
             }
             toast.success("Projeto atualizado com sucesso")
         } catch (error: any) {
-            console.log(error)
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
             toast.error(errorMessage)
         }

@@ -16,6 +16,7 @@ export interface DeliverableWithContentAndArtifactRes extends DeliverableRes {
     artifact: DeliverableArtifact[]
     content: DeliverableContentSimple[]
     subjectName?: string
+    canUserManage?: boolean
 }
 
 export interface DeliverableContentSimple {

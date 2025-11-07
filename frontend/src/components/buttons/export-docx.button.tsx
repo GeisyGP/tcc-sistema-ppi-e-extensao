@@ -30,8 +30,7 @@ export const ExportDocxButton = ({ projectData, projectId, theme }: Props) => {
                 .concat(".docx")
 
             await generateDocx(overviewData, projectData, cleanFileName)
-        } catch (error) {
-            console.error(error)
+        } catch {
             toast.error("Erro ao exportar DOCX")
         } finally {
             setLoading(false)

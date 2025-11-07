@@ -111,7 +111,6 @@ export function useUsers() {
 
             toast.success("Usuários criados com sucesso")
         } catch (error: any) {
-            console.log(error, error.message)
             const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
             toast.error(errorMessage)
         }

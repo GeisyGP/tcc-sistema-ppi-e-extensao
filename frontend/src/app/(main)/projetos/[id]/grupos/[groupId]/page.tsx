@@ -10,6 +10,7 @@ import BackButton from "@/components/buttons/back.button"
 import { useRouter } from "next/navigation"
 import { useRole } from "@/hooks/use-role"
 import { UserRole } from "@/types/user.type"
+import { abbreviateName } from "../../utils/format-group"
 
 export default function GroupDeliverablesPage({ params }: { params: Promise<{ id: string; groupId: string }> }) {
     const { id: projectId, groupId } = use(params)
@@ -45,9 +46,23 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
     return (
         <div className="w-full mx-auto p-6">
             <BackButton />
-            <h1 className="text-2xl font-semibold mt-4 mb-6">
+            <h1 className="text-2xl font-semibold mt-4">
                 {loadingGroup ? "Carregando grupo..." : `Entregáveis - ${formattedDataGroup?.name || "Sem nome"}`}
             </h1>
+            <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1 mb-6">
+                {loadingGroup ? (
+                    "Carregando grupo..."
+                ) : (
+                    <>
+                        Discentes do grupo:
+                        {formattedDataGroup?.users.map((us, i) => (
+                            <span key={i} className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">
+                                {abbreviateName(us.name)}
+                            </span>
+                        ))}
+                    </>
+                )}
+            </p>
 
             <div className="flex gap-2 mb-4">
                 {statusOptions.map((status) => (

@@ -10,7 +10,7 @@ import { Group, GroupRes } from "@/types/group.type"
 import { abbreviateName } from "./utils/format-group"
 import { useUniquePPI } from "./hooks/use-unique-ppi"
 import { DeleteButtonModal } from "@/components/buttons/delete.button"
-import { ProjectStatusMapped } from "@/types/project.type"
+import { ProjectStatus, ProjectStatusMapped } from "@/types/project.type"
 import { UserRole } from "@/types/user.type"
 import { ProjectModal } from "@/components/projects/project-modal"
 import { ProjectStatusModal } from "@/components/projects/project-status-modal"
@@ -234,7 +234,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                 Ver projeto
                             </Button>
 
-                            {canEdit() && (
+                            {canEdit() && rawData.status === ProjectStatus.STARTED && (
                                 <Button
                                     variant="secondary"
                                     className="px-2 py-1 text-sm"
