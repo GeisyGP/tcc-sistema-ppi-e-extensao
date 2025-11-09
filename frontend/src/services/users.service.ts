@@ -52,6 +52,20 @@ export async function getUserById(userId: string): Promise<UserWithCoursesRes | 
     return response.data?.data
 }
 
+export async function getCurrentUser(): Promise<UserWithCoursesRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.get(`/users/current`, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
+    return response.data?.data
+}
+
 export async function createUser(userRole: UserRole, body: CreateUserReq): Promise<UserRes | void> {
     const session = await getSession()
     if (!session?.accessToken) {
