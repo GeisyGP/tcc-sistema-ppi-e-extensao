@@ -1,5 +1,6 @@
 import { PaginationResDto } from "@/types/pagination.type"
 import {
+    ChangePasswordReq,
     ChangeRoleReq,
     CreateUserReq,
     GetAllUsersReq,
@@ -140,5 +141,19 @@ export async function createMany(file: File): Promise<void> {
         },
     })
 
+    return response.data?.data
+}
+
+export async function changePassword(body: ChangePasswordReq, userId: string): Promise<UserWithCoursesRes | void> {
+    const session = await getSession()
+    if (!session?.accessToken) {
+        return
+    }
+
+    const response = await backendApi.patch(`/users/${userId}/password`, body, {
+        headers: {
+            Authorization: `Bearer ${session.accessToken}`,
+        },
+    })
     return response.data?.data
 }

@@ -12,6 +12,7 @@ export interface AppJwtPayload extends JwtPayload {
     courses: CoursesJwt[]
     mainRole: string
     mainCourseId: string
+    changePasswordIsRequired: boolean
     iat: number
     exp: number
 }
@@ -25,6 +26,7 @@ declare module "next-auth" {
         courses?: CoursesJwt[]
         mainRole?: string
         mainCourseId?: string
+        changePasswordIsRequired?: boolean
     }
     interface Session {
         user: {
@@ -33,6 +35,7 @@ declare module "next-auth" {
             courses?: CoursesJwt[]
             mainRole?: string
             mainCourseId?: string
+            changePasswordIsRequired?: boolean
         }
         accessToken?: string
         exp: number
@@ -57,6 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         mainRole: decoded.mainRole,
                         mainCourseId: decoded.mainCourseId,
                         courses: decoded.courses,
+                        changePasswordIsRequired: decoded.changePasswordIsRequired,
                         accessToken: credentials.accessToken,
                         exp: decoded.exp,
                     }
@@ -86,6 +90,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         mainCourseId: decoded.mainCourseId,
                         courses: decoded.courses,
                         accessToken: data.accessToken,
+                        changePasswordIsRequired: data.changePasswordIsRequired,
                         exp: decoded.exp,
                     }
                 } catch {
@@ -97,13 +102,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.accessToken = user.accessToken
-                token.id = user.id
-                token.name = user.name
-                token.mainRole = user.mainRole
-                token.mainCourseId = user.mainCourseId
-                token.courses = user.courses
-                token.exp = user.exp
+                return {
+                    accessToken: user.accessToken,
+                    id: user.id,
+                    name: user.name,
+                    mainRole: user.mainRole,
+                    mainCourseId: user.mainCourseId,
+                    courses: user.courses,
+                    changePasswordIsRequired: user.changePasswordIsRequired,
+                    exp: user.exp,
+                }
             }
             return token
         },
@@ -114,6 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.name = token.name as string
                 session.user.mainCourseId = token.mainCourseId as string
                 session.user.courses = token.courses as CoursesJwt[]
+                session.user.changePasswordIsRequired = token.changePasswordIsRequired as boolean
                 session.accessToken = token.accessToken as string
                 session.exp = token.exp as number
             }
@@ -124,6 +133,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const expires = auth?.exp ? new Date(auth.exp * 1000).getTime() : 0
             const isLoggedIn = !!auth && expires > now
             const isRequiredAuth = !nextUrl.pathname.startsWith("/login") && !nextUrl.pathname.startsWith("/error")
+
+            if (isLoggedIn && auth?.user.changePasswordIsRequired && !nextUrl.pathname.startsWith("/change-password")) {
+                return Response.redirect(new URL("/change-password", nextUrl))
+            }
+
             if (isRequiredAuth) {
                 return isLoggedIn
             } else if (isLoggedIn) {

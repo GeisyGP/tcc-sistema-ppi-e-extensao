@@ -15,6 +15,9 @@ import {
     UserIcon,
 } from "@heroicons/react/20/solid"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { ChangePasswordModal } from "./users/change-password-modal"
+import { useRole } from "@/hooks/use-role"
 
 interface HomeLayoutInput {
     user: User
@@ -24,6 +27,8 @@ interface HomeLayoutInput {
 }
 
 export default function HomeLayout({ user, menuItens, shouldShowProjects, projects }: HomeLayoutInput) {
+    const { userId } = useRole()
+    const [openChangePassword, setOpenChangePassword] = useState(false)
     const router = useRouter()
     const allMenuItems = [
         { icon: AcademicCapIcon, label: "Cursos", href: "/cursos", type: MenuItens.COURSES },
@@ -73,7 +78,11 @@ export default function HomeLayout({ user, menuItens, shouldShowProjects, projec
                             </div>
 
                             <div className="flex justify-end mt-4">
-                                <Button variant="secondary" className="text-xs text-gray-600 hover:text-gray-800">
+                                <Button
+                                    variant="secondary"
+                                    className="text-xs text-gray-600 hover:text-gray-800"
+                                    onClick={() => setOpenChangePassword(true)}
+                                >
                                     Alterar senha
                                 </Button>
                             </div>
@@ -136,6 +145,12 @@ export default function HomeLayout({ user, menuItens, shouldShowProjects, projec
                     </div>
                 )}
             </Card>
+
+            <ChangePasswordModal
+                open={openChangePassword}
+                onClose={() => setOpenChangePassword(false)}
+                userId={userId as string}
+            />
         </main>
     )
 }

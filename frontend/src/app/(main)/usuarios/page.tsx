@@ -18,6 +18,7 @@ import { getAllCourses } from "@/services/courses.service"
 import { useRole } from "@/hooks/use-role"
 import { UserEditModal } from "@/components/users/user-edit-modal"
 import { UploadCsvModal } from "@/components/users/user-csv-modal"
+import { ChangePasswordModal } from "@/components/users/change-password-modal"
 
 const rolePermissions: Record<UserRole, UserRole[]> = {
     SYSADMIN: [UserRole.COORDINATOR, UserRole.TEACHER],
@@ -41,6 +42,7 @@ export default function UsersPage() {
     const [nameFilter, setNameFilter] = useState<string | undefined>()
     const [selected, setSelected] = useState<User | null>(null)
     const [creatingNew, setCreatingNew] = useState(false)
+    const [openChangePassword, setOpenChangePassword] = useState<User | undefined>(undefined)
     const [courseIdFilter, setCourseIdFilter] = useState<string>()
     const [selectedForEdit, setSelectedForEdit] = useState<UserWithCoursesRes | null>(null)
     const [uploading, setUploading] = useState(false)
@@ -182,6 +184,10 @@ export default function UsersPage() {
                             const original = rawData.find((r) => r.id === row.id) || null
                             setSelectedForEdit(original)
                         }}
+                        showChangePasswordAction={can(UserRole.COORDINATOR, UserRole.SYSADMIN)}
+                        onChangePassword={(item) => {
+                            setOpenChangePassword(item)
+                        }}
                     />
                 )}
 
@@ -230,6 +236,14 @@ export default function UsersPage() {
                         setUploading(false)
                     }}
                     role={activeRole}
+                />
+
+                <ChangePasswordModal
+                    open={!!openChangePassword}
+                    onClose={() => setOpenChangePassword(undefined)}
+                    userId={openChangePassword?.id as string}
+                    userName={openChangePassword?.name}
+                    shouldShowCurrentPassword={false}
                 />
             </div>
         </RoleGuard>

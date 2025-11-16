@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/buttons/default.button"
-import { ChevronLeftIcon, ChevronRightIcon, PencilSquareIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon, ChevronRightIcon, PencilSquareIcon, KeyIcon } from "@heroicons/react/24/outline"
 import { DeleteButtonModal } from "./buttons/delete.button"
 
 type Column<T> = {
@@ -22,6 +22,8 @@ type ListProps<T extends { id: string | number }> = {
     onDelete?: (id: string) => Promise<void>
     showEditAction?: boolean
     onEdit?: (item: T) => void
+    showChangePasswordAction?: boolean
+    onChangePassword?: (item: T) => void
 }
 
 export default function List<T extends { id: string }>({
@@ -36,6 +38,8 @@ export default function List<T extends { id: string }>({
     showEditAction = false,
     onEdit,
     onView,
+    showChangePasswordAction = false,
+    onChangePassword,
 }: ListProps<T>) {
     return (
         <div className="w-full p-8 space-y-6 rounded-xl bg-gray-50 shadow-md">
@@ -87,7 +91,16 @@ export default function List<T extends { id: string }>({
                                     ))}
 
                                     {(showEditAction || showDeleteAction) && (
-                                        <td className="px-4 py-3 text-sm text-right flex justify-end items-center gap-3">
+                                        <td className="px-4 py-3 text-sm flex justify-end items-center gap-3">
+                                            {showChangePasswordAction && (
+                                                <button
+                                                    onClick={() => onChangePassword?.(row)}
+                                                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-700 transition"
+                                                    title="Alterar senha"
+                                                >
+                                                    <KeyIcon className="h-5 w-5" />
+                                                </button>
+                                            )}
                                             {showEditAction && (
                                                 <button
                                                     onClick={() => onEdit?.(row)}

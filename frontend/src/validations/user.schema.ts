@@ -18,3 +18,18 @@ export const createUserSchema = z
         message: "As senhas precisam ser iguais",
         path: ["confirmPassword"],
     })
+
+export const changePasswordSchema = z
+    .object({
+        currentPassword: z.string().min(1, "Senha atual é obrigatória"),
+        newPassword: z.string().min(8, "Nova senha é obrigatória e deve ter no mínimo 8 dígitos"),
+        confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: "As senhas precisam ser iguais",
+        path: ["confirmPassword"],
+    })
+    .refine((data) => data.currentPassword !== data.newPassword, {
+        message: "A nova senha deve ser diferente da senha atual",
+        path: ["newPassword"],
+    })

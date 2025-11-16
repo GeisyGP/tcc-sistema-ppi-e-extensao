@@ -58,3 +58,14 @@ export interface UpdateUserReq {
     registration: string
     name: string
 }
+
+export interface ChangePasswordReq {
+    newPassword: string
+    currentPassword: string
+}
+
+export interface ChangePasswordValidationReq {
+    newPassword: string
+    confirmPassword: string
+    currentPassword: string
+}

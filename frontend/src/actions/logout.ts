@@ -1,7 +1,7 @@
-"use server"
-
-import { signOut } from "@/auth"
+"use client"
+import { serverLogout } from "./server-logout"
 
 export async function logout() {
-    await signOut()
+    await serverLogout()
+    window.location.href = "/login"
 }
