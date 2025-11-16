@@ -10,6 +10,7 @@ export const createUserSchema = z
             .max(100, "Máximo 100 caracteres")
             .trim(),
         registration: z.string().min(1, "Matrícula/SIAPE é obrigatória").max(36, "Máximo 36 caracteres").trim(),
+        email: z.email("Email inválido").min(1, "Email é obrigatório").trim(),
         courseId: z.string().min(1, "Selecione um curso").optional(),
         password: z.string().min(8, "Senha é obrigatória e deve ter no mínimo 8 dígitos"),
         confirmPassword: z.string().min(1, "Confirmação de senha é obrigatória"),

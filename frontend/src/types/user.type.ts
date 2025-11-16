@@ -2,6 +2,7 @@ export interface User {
     id: string
     registration: string
     name: string
+    email: string
     courses?: { name: string; role: string }[]
     createdAt: string
     updatedAt: string
@@ -11,6 +12,7 @@ export interface UserRes {
     id: string
     registration: string
     name: string
+    email: string
     createdAt: Date
     updatedAt: Date
 }
@@ -45,6 +47,7 @@ export interface GetAllUsersReq {
 export interface CreateUserReq {
     registration: string
     name: string
+    email: string
     password: string
     courseId?: string
 }

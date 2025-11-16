@@ -44,6 +44,7 @@ export function useUsers() {
                 password: newUser.password,
                 registration: newUser.registration,
                 courseId: newUser.courseId,
+                email: newUser.email,
             })
             if (created) setFormattedData((prev) => [...prev, formatUser(created)])
             toast.success("Usuário criado com sucesso")
@@ -59,6 +60,7 @@ export function useUsers() {
                 name: newUser.name,
                 password: newUser.password,
                 registration: newUser.registration,
+                email: newUser.email,
             })
             if (created) setFormattedData((prev) => [...prev, formatUser(created)])
             toast.success("Usuário criado com sucesso")

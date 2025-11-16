@@ -45,7 +45,7 @@ export function UploadCsvModal({ isOpen, onClose, onUpload, role }: UploadCsvMod
 
                 <p className="text-sm text-gray-600 mb-4">
                     Selecione um arquivo <b>.csv</b> ou <b>.txt</b> que contenha as colunas <b>name</b>,{" "}
-                    <b>registration</b> e <b>password</b> no cabeçalho do arquivo.
+                    <b>registration</b>, <b>email</b> e <b>password</b> no cabeçalho do arquivo.
                 </p>
 
                 <input

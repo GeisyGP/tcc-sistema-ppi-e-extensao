@@ -5,6 +5,7 @@ export function formatUser(res: UserRes): User {
         id: res.id,
         name: res.name,
         registration: res.registration,
+        email: res.email,
         createdAt: new Date(res.createdAt).toLocaleDateString(),
         updatedAt: new Date(res.updatedAt).toLocaleDateString(),
     }
@@ -15,6 +16,7 @@ export function formatUserWithCourses(res: UserWithCoursesRes): User {
         id: res.id,
         name: res.name,
         registration: res.registration,
+        email: res.email,
         courses: res.userCourse?.length
             ? res.userCourse.map((uc) => ({
                   name: uc.name,

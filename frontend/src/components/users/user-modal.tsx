@@ -24,6 +24,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
         registration: "",
         password: "",
         confirmPassword: "",
+        email: "",
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -44,6 +45,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
             name: formData.name,
             registration: formData.registration,
             password: formData.password,
+            email: formData.email,
         }
 
         setErrors({})
@@ -51,6 +53,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
         setFormData({
             name: "",
             registration: "",
+            email: "",
             courseId: "",
             password: "",
             confirmPassword: "",
@@ -102,6 +105,22 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
                             <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
                                 <ExclamationCircleIcon className="h-4 w-4" />
                                 <span>{errors.registration}</span>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        {errors.email && (
+                            <div className="flex items-center space-x-1 mt-1 text-red-500 text-sm">
+                                <ExclamationCircleIcon className="h-4 w-4" />
+                                <span>{errors.email}</span>
                             </div>
                         )}
                     </div>

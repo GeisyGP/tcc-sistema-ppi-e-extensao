@@ -9,6 +9,11 @@ export function UserDetails({ user }: { user: User }) {
             </div>
 
             <div className="py-2 flex">
+                <dt className="w-40 text-sm font-semibold text-gray-700">Email</dt>
+                <dd className="text-gray-800">{user.email}</dd>
+            </div>
+
+            <div className="py-2 flex">
                 <dt className="w-40 text-sm font-semibold text-gray-700">Vínculos</dt>
                 <dd className="space-y-1">
                     {user.courses && user.courses.length > 0 ? (
