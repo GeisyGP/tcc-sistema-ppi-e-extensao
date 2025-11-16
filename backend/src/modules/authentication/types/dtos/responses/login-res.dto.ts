@@ -6,4 +6,7 @@ export class LoginResDto {
 
     @ApiProperty()
     expiresIn: string
+
+    @ApiProperty()
+    changePasswordIsRequired: boolean
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
-import { IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator"
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator"
 
 export class CreateUserReqDto {
     @ApiProperty()
@@ -11,6 +11,11 @@ export class CreateUserReqDto {
     @IsString()
     @IsNotEmpty()
     name: string
+
+    @ApiProperty()
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
 
     @ApiProperty()
     @IsString()
@@ -34,6 +39,11 @@ export class CreateUserCoordinatorReqDto {
     @IsString()
     @IsNotEmpty()
     name: string
+
+    @ApiProperty()
+    @IsEmail()
+    @IsNotEmpty()
+    email: string
 
     @ApiProperty()
     @IsString()

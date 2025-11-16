@@ -17,7 +17,7 @@ export async function validateCsvContent(file: Express.Multer.File): Promise<{
 
     let header: string[] | null = null
     const data: Record<string, string>[] = []
-    const requiredColumns = ["name", "registration", "password"]
+    const requiredColumns = ["name", "registration", "email", "password"]
     let delimiter = ","
 
     for await (const line of rl) {

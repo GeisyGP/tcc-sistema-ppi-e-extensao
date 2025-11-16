@@ -6,6 +6,7 @@ import { jwtConstants } from "src/common/constants"
 import { Request } from "express"
 import { IS_PUBLIC_KEY } from "src/common/decorators/public.decorator"
 import { Reflector } from "@nestjs/core"
+import { RequestDto } from "./types/dtos/requests/request.dto"
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -28,11 +29,12 @@ export class AuthGuard implements CanActivate {
         if (!token) {
             throw new UnauthorizedException()
         }
+
         try {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret,
             })
-            request["user"] = payload
+            request["user"] = payload as RequestDto
         } catch {
             throw new UnauthorizedException()
         }

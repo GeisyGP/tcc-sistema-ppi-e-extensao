@@ -11,6 +11,12 @@ export class UserResDto {
     name: string
 
     @ApiProperty()
+    email: string
+
+    @ApiProperty()
+    changePasswordIsRequired: boolean
+
+    @ApiProperty()
     createdAt: Date
 
     @ApiProperty()

@@ -21,6 +21,7 @@ export class UserRepository implements UserRepositoryInterface {
             },
             create: {
                 name: dto.name,
+                email: dto.email,
                 registration: dto.registration,
                 password: dto.password,
                 UserCourse: {
@@ -172,7 +173,12 @@ export class UserRepository implements UserRepositoryInterface {
         })
     }
 
-    async changePassword(id: string, newPassword: string, currentCourseId: string): Promise<User | null> {
+    async changePassword(
+        id: string,
+        newPassword: string,
+        currentCourseId: string,
+        changePasswordIsRequired: boolean,
+    ): Promise<User | null> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         return await this.prisma.user.update({
             where: {
@@ -180,6 +186,7 @@ export class UserRepository implements UserRepositoryInterface {
             },
             data: {
                 password: newPassword,
+                changePasswordIsRequired,
             },
         })
     }
@@ -208,6 +215,7 @@ export class UserRepository implements UserRepositoryInterface {
                 data: dto.map((d) => ({
                     name: d.name,
                     registration: d.registration,
+                    email: d.email,
                     password: d.password,
                 })),
                 skipDuplicates: true,

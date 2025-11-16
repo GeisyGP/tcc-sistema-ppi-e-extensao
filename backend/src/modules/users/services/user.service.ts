@@ -137,18 +137,26 @@ export class UserService {
             }
 
             const userEntity = Object.assign(new UserEntity(), user)
-            if (!ability.can(Action.Update, userEntity)) {
+            if (!ability.can(Action.ChangePassword, userEntity)) {
                 throw new ForbiddenException()
             }
 
-            const isMatch = await bcrypt.compare(dto.currentPassword, user.password)
-            if (!isMatch) {
-                throw new InvalidInputException(["Current password is incorrect"])
+            const updateCurrentUser = id === currentUser.sub
+            if (updateCurrentUser) {
+                const isMatch = await bcrypt.compare(dto.currentPassword, user.password)
+                if (!isMatch) {
+                    throw new InvalidInputException(["Current password is incorrect"])
+                }
             }
 
             const hashedPassword = await bcrypt.hash(dto.newPassword, 10)
 
-            await this.userRepository.changePassword(id, hashedPassword, currentCourseId)
+            await this.userRepository.changePassword(
+                id,
+                hashedPassword,
+                currentCourseId,
+                updateCurrentUser ? false : true,
+            )
             return new UserResBuilder().build(user)
         } catch (error) {
             this.loggerService.error(

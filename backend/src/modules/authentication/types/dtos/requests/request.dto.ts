@@ -10,4 +10,5 @@ export class UserRequestDto {
     courses: Array<{ courseId: string; role: string }>
     mainRole: UserRole
     mainCourseId: string
+    changePasswordIsRequired: boolean
 }

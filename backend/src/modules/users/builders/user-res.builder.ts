@@ -10,6 +10,8 @@ export class UserResBuilder {
             id: user.id,
             name: user.name,
             registration: user.registration,
+            email: user.email,
+            changePasswordIsRequired: user.changePasswordIsRequired,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
         }
@@ -20,6 +22,8 @@ export class UserResBuilder {
             id: user.id,
             name: user.name,
             registration: user.registration,
+            email: user.email,
+            changePasswordIsRequired: user.changePasswordIsRequired,
             userCourse: user.UserCourse.map((uc) => ({
                 role: uc.role,
                 courseId: uc.courseId,

@@ -34,10 +34,12 @@ export class AuthenticationService {
             })),
             mainCourseId: user.UserCourse[0].courseId,
             mainRole: user.UserCourse[0].role,
+            changePasswordIsRequired: user.changePasswordIsRequired,
         }
         return {
             accessToken: await this.jwtService.signAsync(payload),
             expiresIn: jwtConstants.expiresTime,
+            changePasswordIsRequired: user.changePasswordIsRequired,
         }
     }
 
@@ -62,10 +64,12 @@ export class AuthenticationService {
             })),
             mainCourseId: course.courseId,
             mainRole: course.role,
+            changePasswordIsRequired: user.changePasswordIsRequired,
         }
         return {
             accessToken: await this.jwtService.signAsync(payload),
             expiresIn: jwtConstants.expiresTime,
+            changePasswordIsRequired: user.changePasswordIsRequired,
         }
     }
 }

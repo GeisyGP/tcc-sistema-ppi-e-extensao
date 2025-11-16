@@ -11,7 +11,12 @@ export interface UserRepositoryInterface {
     getByRegistration(registration: string, currentCourseId: string): Promise<UserWithCourses | null>
     getAll(dto: GetAllUsersReqDto, currentCourseId: string): Promise<{ users: UserWithCourses[]; totalItems: number }>
     delete(id: string, currentCourseId: string): Promise<void>
-    changePassword(id: string, newPassword: string, currentCourseId: string): Promise<User | null>
+    changePassword(
+        id: string,
+        newPassword: string,
+        currentCourseId: string,
+        changePasswordIsRequired: boolean,
+    ): Promise<User | null>
     updateById(userId: string, dto: UpdateByIdBodyReqDto, currentCourseId: string): Promise<UserWithCourses>
     createMany(dto: CreateUserReqDto[], role: UserRole, currentCourseId: string): Promise<void>
 }

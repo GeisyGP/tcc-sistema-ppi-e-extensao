@@ -2404,6 +2404,9 @@
           "name": {
             "type": "string"
           },
+          "email": {
+            "type": "string"
+          },
           "password": {
             "type": "string"
           },
@@ -2414,6 +2417,7 @@
         "required": [
           "registration",
           "name",
+          "email",
           "password"
         ]
       },
@@ -2430,6 +2434,12 @@
           "name": {
             "type": "string"
           },
+          "email": {
+            "type": "string"
+          },
+          "changePasswordIsRequired": {
+            "type": "boolean"
+          },
           "createdAt": {
             "format": "date-time",
             "type": "string"
@@ -2443,6 +2453,8 @@
           "id",
           "registration",
           "name",
+          "email",
+          "changePasswordIsRequired",
           "createdAt",
           "updatedAt"
         ]
@@ -2456,6 +2468,9 @@
           "name": {
             "type": "string"
           },
+          "email": {
+            "type": "string"
+          },
           "password": {
             "type": "string"
           },
@@ -2466,6 +2481,7 @@
         "required": [
           "registration",
           "name",
+          "email",
           "password",
           "courseId"
         ]
@@ -2530,8 +2546,7 @@
           }
         },
         "required": [
-          "newPassword",
-          "currentPassword"
+          "newPassword"
         ]
       },
       "ChangeRoleBodyReqDto": {
@@ -2691,11 +2706,15 @@
           },
           "expiresIn": {
             "type": "string"
+          },
+          "changePasswordIsRequired": {
+            "type": "boolean"
           }
         },
         "required": [
           "accessToken",
-          "expiresIn"
+          "expiresIn",
+          "changePasswordIsRequired"
         ]
       },
       "SelectCourseReqDto": {

@@ -33,16 +33,18 @@ model UserCourse {
 }
 
 model User {
-  id           String       @id @default(uuid())
-  registration String       @unique
-  name         String
-  password     String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-  deletedAt    DateTime?
-  subjects     Subject[]
-  UserCourse   UserCourse[]
-  groups       Group[]
+  id                       String       @id @default(uuid())
+  changePasswordIsRequired Boolean      @default(true)
+  email                    String
+  registration             String       @unique
+  name                     String
+  password                 String
+  createdAt                DateTime     @default(now())
+  updatedAt                DateTime     @updatedAt
+  deletedAt                DateTime?
+  subjects                 Subject[]
+  UserCourse               UserCourse[]
+  groups                   Group[]
 }
 
 enum UserRole {
