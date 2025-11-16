@@ -20,24 +20,18 @@ export default function Navbar() {
             roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER, UserRole.VIEWER],
         },
         { href: "/ppis", label: "PPIs", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
-        {
-            href: "/disciplinas",
-            label: "Disciplinas",
-            roles: [UserRole.COORDINATOR, UserRole.TEACHER],
-        },
+        { href: "/disciplinas", label: "Disciplinas", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
         { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR, UserRole.TEACHER] },
         { href: "/cursos", label: "Cursos", roles: [UserRole.SYSADMIN] },
     ]
 
     return (
-        <nav className="bg-green-900 p-4 fixed top-0 left-0 w-full h-16 z-10 rounded-lg grid grid-cols-3 items-center">
-            <div>
-                <Link href="/home" className="text-3xl font-bold text-white tracking-wide m-0">
-                    SISTEMA
-                </Link>
-            </div>
+        <nav className="bg-green-900 p-4 fixed top-0 left-0 w-full h-16 z-10 flex items-center justify-between">
+            <Link href="/home" className="text-3xl font-bold text-white tracking-wide">
+                Gestão PPI
+            </Link>
 
-            <ul className="hidden sm:flex justify-center space-x-8 text-white">
+            <ul className="hidden lg:flex justify-center space-x-8 text-white flex-1 mx-8">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
                     return (
@@ -57,13 +51,19 @@ export default function Navbar() {
                 })}
             </ul>
 
-            <div className="flex items-center justify-end space-x-4">
+            <div className="flex items-center space-x-3">
                 <RoleGuard roles={[UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER, UserRole.VIEWER]}>
-                    <CourseSelector />
+                    <div className="flex lg:hidden">
+                        <CourseSelector />
+                    </div>
+                    <div className="hidden lg:block">
+                        <CourseSelector />
+                    </div>
                 </RoleGuard>
+
                 <button
                     onClick={() => logout()}
-                    className="hidden sm:block bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition"
+                    className="hidden lg:block bg-green-700 hover:bg-green-900 text-white px-4 py-2 rounded transition"
                 >
                     Sair
                 </button>
@@ -71,14 +71,14 @@ export default function Navbar() {
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle menu"
-                    className="sm:hidden text-white text-2xl focus:outline-none"
+                    className="lg:hidden text-white text-2xl"
                 >
                     {menuOpen ? "✕" : "☰"}
                 </button>
             </div>
 
             {menuOpen && (
-                <ul className="sm:hidden bg-green-900 p-4 space-y-2 rounded-b-lg text-white absolute top-full left-0 w-full z-20">
+                <ul className="lg:hidden bg-green-900 p-4 space-y-4 rounded-b-lg text-white absolute top-full left-0 w-full z-20">
                     {navItems.map((item) => (
                         <RoleGuard key={item.href} roles={item.roles}>
                             <li>
@@ -92,6 +92,7 @@ export default function Navbar() {
                             </li>
                         </RoleGuard>
                     ))}
+
                     <li>
                         <button
                             onClick={() => {
