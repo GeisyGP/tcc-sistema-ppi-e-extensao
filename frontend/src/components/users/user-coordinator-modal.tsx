@@ -6,7 +6,7 @@ import { Button } from "@/components/buttons/default.button"
 import { CreateUserReq, UserRole } from "@/types/user.type"
 import { createUserSchema } from "@/validations/user.schema"
 import { getAllCourses } from "@/services/courses.service"
-import { roleMap } from "@/app/(main)/usuarios/utils/format-user"
+import { roleMap } from "@/app/(main)/users/utils/format-user"
 
 type ExtendedUserReq = CreateUserReq & {
     confirmPassword: string

@@ -1,6 +1,6 @@
 "use client"
 
-import { formatDeliverable } from "@/app/(main)/projetos/[id]/grupos/[groupId]/utils/format-deliverable"
+import { formatDeliverable } from "@/app/(main)/projects/[id]/groups/[groupId]/utils/format-deliverable"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
 import { ApiError } from "@/exceptions/api-error.exception"
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/types/deliverable.type"
 import { useState, useCallback } from "react"
 import toast from "react-hot-toast"
-import { formatGroup } from "../app/(main)/projetos/[id]/utils/format-group"
+import { formatGroup } from "../app/(main)/projects/[id]/utils/format-group"
 import { Group, GroupRes } from "@/types/group.type"
 
 export function useGroupDeliverables() {

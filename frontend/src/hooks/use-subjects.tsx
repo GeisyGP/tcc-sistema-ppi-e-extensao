@@ -4,7 +4,7 @@ import { useCallback, useState } from "react"
 import toast from "react-hot-toast"
 import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
-import { formatSubject } from "@/app/(main)/disciplinas/utils/format-subject"
+import { formatSubject } from "@/app/(main)/subjects/utils/format-subject"
 
 export function useSubjects() {
     const [rawData, setRawData] = useState<SubjectRes[]>([])

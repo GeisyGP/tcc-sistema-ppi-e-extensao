@@ -27,7 +27,7 @@ export default function ProjectListHorizontal({ data, page, totalPages, totalIte
                     >
                         <div
                             className="cursor-pointer flex flex-col"
-                            onClick={() => router.push(`/projetos/${project.id}`)}
+                            onClick={() => router.push(`/projects/${project.id}`)}
                         >
                             <div>
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">

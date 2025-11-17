@@ -3,7 +3,7 @@ import toast from "react-hot-toast"
 import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
 import { User, UserRes } from "@/types/user.type"
-import { formatUserWithCourses } from "../../usuarios/utils/format-user"
+import { formatUserWithCourses } from "../../users/utils/format-user"
 import { getCurrentUser } from "@/services/users.service"
 
 export function useCurrentUser() {

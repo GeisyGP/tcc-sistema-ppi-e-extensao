@@ -229,7 +229,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                             <Button
                                 variant="secondary"
                                 className="px-2 py-1 text-sm"
-                                onClick={() => router.push(`/projetos/${projectId}/content`)}
+                                onClick={() => router.push(`/projects/${projectId}/content`)}
                             >
                                 Ver projeto
                             </Button>
@@ -238,7 +238,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                 <Button
                                     variant="secondary"
                                     className="px-2 py-1 text-sm"
-                                    onClick={() => router.push(`/projetos/${projectId}/entregaveis`)}
+                                    onClick={() => router.push(`/projects/${projectId}/deliverables`)}
                                 >
                                     Gerenciar entregáveis
                                 </Button>
@@ -310,7 +310,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                             key={group.id}
                                             onClick={() => {
                                                 if (!isAccessible) return
-                                                router.push(`/projetos/${projectId}/grupos/${group.id}`)
+                                                router.push(`/projects/${projectId}/groups/${group.id}`)
                                             }}
                                             title={
                                                 isAccessible

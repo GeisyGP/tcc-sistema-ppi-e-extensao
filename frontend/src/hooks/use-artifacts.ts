@@ -18,7 +18,7 @@ import { useCallback, useState } from "react"
 import toast from "react-hot-toast"
 import { ApiError } from "@/exceptions/api-error.exception"
 import { GENERIC_ERROR_MESSAGE } from "@/constants"
-import { formatArtifact } from "@/app/(main)/projetos/[id]/utils/format-artifact"
+import { formatArtifact } from "@/app/(main)/projects/[id]/utils/format-artifact"
 
 export function useArtifacts() {
     const [rawDataProject, setRawDataProject] = useState<ArtifactRes[]>([])

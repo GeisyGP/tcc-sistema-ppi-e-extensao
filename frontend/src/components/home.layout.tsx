@@ -31,11 +31,11 @@ export default function HomeLayout({ user, menuItens, shouldShowProjects, projec
     const [openChangePassword, setOpenChangePassword] = useState(false)
     const router = useRouter()
     const allMenuItems = [
-        { icon: AcademicCapIcon, label: "Cursos", href: "/cursos", type: MenuItens.COURSES },
-        { icon: UserGroupIcon, label: "Usuários", href: "/usuarios", type: MenuItens.USERS },
-        { icon: BookOpenIcon, label: "Disciplinas", href: "/disciplinas", type: MenuItens.SUBJECTS },
+        { icon: AcademicCapIcon, label: "Cursos", href: "/courses", type: MenuItens.COURSES },
+        { icon: UserGroupIcon, label: "Usuários", href: "/users", type: MenuItens.USERS },
+        { icon: BookOpenIcon, label: "Disciplinas", href: "/subjects", type: MenuItens.SUBJECTS },
         { icon: ClipboardDocumentListIcon, label: "PPIs", href: "/ppis", type: MenuItens.PPIS },
-        { icon: Squares2X2Icon, label: "Projetos", href: "/projetos", type: MenuItens.PROJECTS },
+        { icon: Squares2X2Icon, label: "Projetos", href: "/projects", type: MenuItens.PROJECTS },
     ]
 
     const filteredMenu = allMenuItems.filter((item) => menuItens.includes(item.type))
@@ -125,7 +125,7 @@ export default function HomeLayout({ user, menuItens, shouldShowProjects, projec
                                 >
                                     <div
                                         className="cursor-pointer flex flex-col"
-                                        onClick={() => router.push(`/projetos/${project.id}`)}
+                                        onClick={() => router.push(`/projects/${project.id}`)}
                                     >
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">

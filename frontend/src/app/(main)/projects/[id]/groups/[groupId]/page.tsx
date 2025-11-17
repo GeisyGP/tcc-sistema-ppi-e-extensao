@@ -101,7 +101,7 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
                     totalItems={metadata.totalItems}
                     generalVision={false}
                     onPageChange={setPage}
-                    onClick={(item) => router.push(`/projetos/${projectId}/grupos/${groupId}/entregaveis/${item.id}`)}
+                    onClick={(item) => router.push(`/projects/${projectId}/groups/${groupId}/deliverables/${item.id}`)}
                 />
             )}
         </div>

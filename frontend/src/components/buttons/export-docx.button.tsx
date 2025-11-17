@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { generateDocx } from "@/app/(main)/projetos/[id]/utils/docx-generator"
+import { generateDocx } from "@/app/(main)/projects/[id]/utils/docx-generator"
 import { ArrowDownTrayIcon } from "@heroicons/react/20/solid"
 import toast from "react-hot-toast"
 import { getProjectOverviewById } from "@/services/projects.service"

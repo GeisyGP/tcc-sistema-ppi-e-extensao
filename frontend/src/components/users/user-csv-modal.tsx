@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/buttons/default.button"
 import { UserRole } from "@/types/user.type"
-import { roleMap } from "@/app/(main)/usuarios/utils/format-user"
+import { roleMap } from "@/app/(main)/users/utils/format-user"
 
 type UploadCsvModalProps = {
     isOpen: boolean

@@ -6,6 +6,7 @@ import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from "@heroicon
 import { ProjectRes } from "@/types/project.type"
 import { getAllPPIs } from "@/services/ppis.service"
 import { createProjectSchema } from "@/validations/project.schema"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 export type PPIOption = {
     label: string
@@ -26,6 +27,7 @@ export function ProjectModal({ isOpen, project, onClose, onSave }: EditProjectMo
     const [showPPISelect, setShowPPISelect] = useState(false)
     const [search, setSearch] = useState("")
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     const isEditing = !!project
 
@@ -89,8 +91,8 @@ export function ProjectModal({ isOpen, project, onClose, onSave }: EditProjectMo
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">{isEditing ? "Editar projeto" : "Novo projeto"}</h2>
 
                 <div className="space-y-3">

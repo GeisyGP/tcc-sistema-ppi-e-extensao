@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/buttons/default.button"
 import { ProjectStatus, ProjectStatusMapped } from "@/types/project.type"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 interface ProjectStatusModalProps {
     isOpen: boolean
@@ -13,6 +14,7 @@ interface ProjectStatusModalProps {
 
 export function ProjectStatusModal({ isOpen, currentStatus, onClose, onSave }: ProjectStatusModalProps) {
     const [selectedStatus, setSelectedStatus] = useState(currentStatus)
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     if (!isOpen) return null
 
@@ -23,8 +25,8 @@ export function ProjectStatusModal({ isOpen, currentStatus, onClose, onSave }: P
     ]
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-sm p-6 animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-xl shadow-xl border border-gray-200 w-full max-w-sm p-6 animate-fadeIn overflow-y-auto">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Alterar status</h2>
 
                 <div className="space-y-3">

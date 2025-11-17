@@ -15,14 +15,14 @@ export default function Navbar() {
     const navItems = [
         { href: "/home", label: "Início", roles: [] },
         {
-            href: "/projetos",
+            href: "/projects",
             label: "Projetos",
             roles: [UserRole.COORDINATOR, UserRole.STUDENT, UserRole.TEACHER, UserRole.VIEWER],
         },
         { href: "/ppis", label: "PPIs", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
-        { href: "/disciplinas", label: "Disciplinas", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
-        { href: "/usuarios", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR, UserRole.TEACHER] },
-        { href: "/cursos", label: "Cursos", roles: [UserRole.SYSADMIN] },
+        { href: "/subjects", label: "Disciplinas", roles: [UserRole.COORDINATOR, UserRole.TEACHER] },
+        { href: "/users", label: "Usuários", roles: [UserRole.SYSADMIN, UserRole.COORDINATOR, UserRole.TEACHER] },
+        { href: "/courses", label: "Cursos", roles: [UserRole.SYSADMIN] },
     ]
 
     return (

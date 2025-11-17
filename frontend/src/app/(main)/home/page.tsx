@@ -7,7 +7,7 @@ import { useRole } from "@/hooks/use-role"
 import { mapInitialPage } from "./utils/map-initial-page"
 import { InitialPage } from "@/types/initial-page.type"
 import HomeSkeleton from "@/components/home-skeleton"
-import { useProjects } from "../projetos/hooks/use-projects"
+import { useProjects } from "../projects/hooks/use-projects"
 import { GetAllProjectsReq, ProjectStatus } from "@/types/project.type"
 import { UserRole } from "@/types/user.type"
 
