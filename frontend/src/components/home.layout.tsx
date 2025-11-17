@@ -62,6 +62,11 @@ export default function HomeLayout({ user, menuItens, shouldShowProjects, projec
                             </div>
 
                             <div className="space-y-2">
+                                <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">E-mail</p>
+                                <p className="text-sm font-medium text-gray-800">{user.email}</p>
+                            </div>
+
+                            <div className="space-y-2">
                                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Vínculos</p>
 
                                 <div className="space-y-1">

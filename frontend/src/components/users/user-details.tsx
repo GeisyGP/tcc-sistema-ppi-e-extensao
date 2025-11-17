@@ -9,7 +9,7 @@ export function UserDetails({ user }: { user: User }) {
             </div>
 
             <div className="py-2 flex">
-                <dt className="w-40 text-sm font-semibold text-gray-700">Email</dt>
+                <dt className="w-40 text-sm font-semibold text-gray-700">E-mail</dt>
                 <dd className="text-gray-800">{user.email}</dd>
             </div>
 

@@ -110,7 +110,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium text-gray-700">Email</label>
+                        <label className="text-sm font-medium text-gray-700">E-mail</label>
                         <input
                             type="email"
                             value={formData.email}
