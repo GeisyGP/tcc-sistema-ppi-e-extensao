@@ -7,6 +7,7 @@ import { GetAllUsersReqDto } from "../types/dtos/requests/get-all-users-req.dto"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { ChangeRoleBodyReqDto } from "../types/dtos/requests/change-role-req.dto"
 import { UpdateByIdBodyReqDto } from "../types/dtos/requests/update-by-id-req.dto"
+import { ROOT_COURSE_ID } from "src/common/constants"
 
 @Injectable()
 export class UserRepository implements UserRepositoryInterface {
@@ -209,7 +210,7 @@ export class UserRepository implements UserRepositoryInterface {
     }
 
     async createMany(dto: CreateUserReqDto[], role: UserRole, currentCourseId: string): Promise<void> {
-        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
+        await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${ROOT_COURSE_ID}'`)
         await this.prisma.$transaction(async (prisma) => {
             await prisma.user.createMany({
                 data: dto.map((d) => ({
