@@ -5,6 +5,7 @@ import { Button } from "@/components/buttons/default.button"
 import { CourseRes, DegreeEnum, EducationLevelEnum, ModalityEnum, ShiftEnum } from "@/types/course.type"
 import { createCourseSchema } from "@/validations/course.schema"
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type CourseModalProps = {
     isOpen: boolean
@@ -16,6 +17,7 @@ type CourseModalProps = {
 export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProps) {
     const [formData, setFormData] = useState<CourseRes | null>(null)
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     useEffect(() => {
         if (course) {
@@ -61,8 +63,8 @@ export function CourseModal({ isOpen, course, onClose, onSave }: CourseModalProp
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">{course ? "Editar curso" : "Novo curso"}</h2>
 
                 <div className="space-y-3">

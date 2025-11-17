@@ -6,6 +6,7 @@ import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from "@heroicon
 import { PPIRes } from "@/types/ppi.type"
 import { createPPISchema } from "@/validations/ppi.schema"
 import { getAllSubjects } from "@/services/subjects.service"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type PPIModalProps = {
     isOpen: boolean
@@ -27,6 +28,7 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
     const [search, setSearch] = useState("")
     const [allSubjects, setAllSubjects] = useState<SubjectOption[]>([])
     const [subjectsLoaded, setSubjectsLoaded] = useState(false)
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     useEffect(() => {
         if (PPI) {
@@ -127,8 +129,8 @@ export function PPIModal({ isOpen, PPI, onClose, onSave }: PPIModalProps) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">{PPI ? "Editar PPI" : "Nova PPI"}</h2>
 
                 <div className="space-y-3">

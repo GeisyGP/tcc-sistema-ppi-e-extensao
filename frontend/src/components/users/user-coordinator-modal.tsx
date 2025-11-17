@@ -7,6 +7,7 @@ import { CreateUserReq, UserRole } from "@/types/user.type"
 import { createUserSchema } from "@/validations/user.schema"
 import { getAllCourses } from "@/services/courses.service"
 import { roleMap } from "@/app/(main)/users/utils/format-user"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type ExtendedUserReq = CreateUserReq & {
     confirmPassword: string
@@ -30,6 +31,7 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
         email: "",
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     const fetchCourses = useCallback(async () => {
         const data = await getAllCourses({})
@@ -89,8 +91,8 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">Novo {roleMap[UserRole.COORDINATOR]}</h2>
 
                 <div className="space-y-3">

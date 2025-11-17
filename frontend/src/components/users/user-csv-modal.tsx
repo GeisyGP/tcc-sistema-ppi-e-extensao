@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/buttons/default.button"
 import { UserRole } from "@/types/user.type"
 import { roleMap } from "@/app/(main)/users/utils/format-user"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type UploadCsvModalProps = {
     isOpen: boolean
@@ -15,6 +16,7 @@ type UploadCsvModalProps = {
 export function UploadCsvModal({ isOpen, onClose, onUpload, role }: UploadCsvModalProps) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [loading, setLoading] = useState(false)
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     if (!isOpen) return null
 
@@ -37,8 +39,11 @@ export function UploadCsvModal({ isOpen, onClose, onUpload, role }: UploadCsvMod
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            onClick={handleBackdropClick}
+        >
+            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     Importar {roleMap[role].toLowerCase()}s via arquivo
                 </h2>

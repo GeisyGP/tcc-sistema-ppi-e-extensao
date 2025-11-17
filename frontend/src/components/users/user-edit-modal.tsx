@@ -5,6 +5,7 @@ import { ChangeRoleReq, UpdateUserReq, UserRole, UserWithCoursesRes } from "@/ty
 import { useState, useEffect } from "react"
 import { UserField } from "./user-field"
 import { RoleGuard } from "../role-guard"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type UserEditModalProps = {
     isOpen: boolean
@@ -20,6 +21,7 @@ export function UserEditModal({ isOpen, onClose, user, onChangeRole, onUpdate }:
         name: user.name,
         registration: user.registration,
     })
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     useEffect(() => {
         if (user?.userCourse) {
@@ -67,8 +69,11 @@ export function UserEditModal({ isOpen, onClose, user, onChangeRole, onUpdate }:
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl max-h-[80vh] overflow-y-auto">
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+            onClick={handleBackdropClick}
+        >
+            <div className="bg-white rounded-lg p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Editar usuário</h2>
 
                 <div className="space-y-4 mb-6">

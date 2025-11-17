@@ -12,6 +12,7 @@ import { UserRole } from "@/types/user.type"
 import { getSubjectById } from "@/services/subjects.service"
 import toast from "react-hot-toast"
 import { DeleteButtonModal } from "../buttons/delete.button"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type DeliverableModalProps = {
     isOpen: boolean
@@ -38,6 +39,7 @@ export function DeliverableModal({ isOpen, deliverable, projectId, onClose, onSa
     const [subjectsLoaded, setSubjectsLoaded] = useState(false)
     const { fetchProject, rawData: projectRawData } = useUniqueProject()
     const [shouldRender, setShouldRender] = useState(false)
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     useEffect(() => {
         if (deliverable) {
@@ -149,8 +151,8 @@ export function DeliverableModal({ isOpen, deliverable, projectId, onClose, onSa
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 {!shouldRender ? (
                     <>Carregando...</>
                 ) : (

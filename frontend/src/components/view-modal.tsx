@@ -1,5 +1,6 @@
 "use client"
 
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 import { ReactNode } from "react"
 
 type ViewModalProps<T> = {
@@ -11,13 +12,14 @@ type ViewModalProps<T> = {
 }
 
 export function ViewModal<T>({ isOpen, item, onClose, renderContent, title }: ViewModalProps<T>) {
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
     if (!isOpen || !item) return null
 
     const renderedTitle = typeof title === "function" ? title(item) : title
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 {renderedTitle && (
                     <div className="flex items-center gap-2 mb-4">
                         <h2 className="text-lg font-bold text-gray-900">{renderedTitle}</h2>

@@ -6,6 +6,7 @@ import { Button } from "@/components/buttons/default.button"
 import { CreateUserReq, UserRole } from "@/types/user.type"
 import { createUserSchema } from "@/validations/user.schema"
 import { roleMap } from "@/app/(main)/users/utils/format-user"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 type ExtendedUserReq = CreateUserReq & {
     confirmPassword: string
@@ -27,6 +28,7 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
         email: "",
     })
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     if (!isOpen) return null
 
@@ -72,8 +74,8 @@ export function UserModal({ isOpen, onClose, onSave, role }: UserModalProps) {
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">Novo {roleMap[role]}</h2>
 
                 <div className="space-y-3">

@@ -6,6 +6,7 @@ import { getAllUsers } from "@/services/users.service"
 import { ChevronDownIcon, ChevronUpIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline"
 import { createGroupSchema } from "@/validations/group.schema"
 import { GroupRes, GroupCreateInput } from "@/types/group.type"
+import { useModalBehavior } from "@/hooks/use-modal-baheavior"
 
 export type StudentOption = {
     label: string
@@ -31,6 +32,7 @@ export function GroupModal({ isOpen, group, projectId, onClose, onSave }: GroupM
     const [showStudentSelect, setShowStudentSelect] = useState(false)
     const [search, setSearch] = useState("")
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const { handleBackdropClick } = useModalBehavior(isOpen, onClose)
 
     useEffect(() => {
         if (group) {
@@ -83,8 +85,8 @@ export function GroupModal({ isOpen, group, projectId, onClose, onSave }: GroupM
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={handleBackdropClick}>
+            <div className="max-h-[90vh] bg-white rounded-lg p-6 w-full max-w-xl overflow-y-auto">
                 <h2 className="text-lg font-semibold mb-4">{group ? "Editar grupo" : "Novo grupo"}</h2>
 
                 <div className="space-y-3">
