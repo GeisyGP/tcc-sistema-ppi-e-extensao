@@ -21,7 +21,7 @@ async function bootstrap() {
     )
     app.enableCors({ exposedHeaders: ["Content-Disposition"] })
 
-    const options = new DocumentBuilder().setTitle("SIPPIE").setVersion("1.0").build()
+    const options = new DocumentBuilder().setTitle("Gestão PPI").setVersion("1.0").build()
     const document = SwaggerModule.createDocument(app, options)
     writeFileSync("./swagger.json", JSON.stringify(document, null, 2))
 

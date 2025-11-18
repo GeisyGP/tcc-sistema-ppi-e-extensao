@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: "SIPPIE",
+    title: "Gestão PPI",
     description: "Sistema Integrado de PPI e Extensão",
 }
 
