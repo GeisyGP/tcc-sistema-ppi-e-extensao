@@ -86,7 +86,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
 
     const handleAddArtifact = async () => {
         if (!fileInput) return
-        await handleCreateProjectArtifact(projectId, { name: fileInput.name }, fileInput)
+        await handleCreateProjectArtifact(projectId, fileInput)
         setFileInput(null)
     }
 

@@ -8,12 +8,7 @@ import {
     getAllArtifactsByGroupId,
     deleteArtifactById,
 } from "@/services/artifact.service"
-import {
-    ArtifactRes,
-    Artifact,
-    ArtifactProjectCreateInput,
-    ArtifactDeliverableCreateInput,
-} from "@/types/artifact.type"
+import { ArtifactRes, Artifact, ArtifactDeliverableCreateInput } from "@/types/artifact.type"
 import { useCallback, useState } from "react"
 import toast from "react-hot-toast"
 import { ApiError } from "@/exceptions/api-error.exception"
@@ -74,26 +69,23 @@ export function useArtifacts() {
         }
     }, [])
 
-    const handleCreateProjectArtifact = useCallback(
-        async (projectId: string, body: ArtifactProjectCreateInput, file: File) => {
-            setLoadingProject(true)
-            try {
-                const artifact = await createArtifactProject(projectId, body, file)
-                if (artifact) {
-                    setRawDataProject((prev) => [...prev, artifact])
-                    setFormattedDataProject((prev) => [...prev, formatArtifact(artifact)])
-                }
-                toast.success("Artefato criado com sucesso")
-                return artifact
-            } catch (error: any) {
-                const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
-                toast.error(errorMessage)
-            } finally {
-                setLoadingProject(false)
+    const handleCreateProjectArtifact = useCallback(async (projectId: string, file: File) => {
+        setLoadingProject(true)
+        try {
+            const artifact = await createArtifactProject(projectId, file)
+            if (artifact) {
+                setRawDataProject((prev) => [...prev, artifact])
+                setFormattedDataProject((prev) => [...prev, formatArtifact(artifact)])
             }
-        },
-        [],
-    )
+            toast.success("Artefato criado com sucesso")
+            return artifact
+        } catch (error: any) {
+            const errorMessage = error instanceof ApiError ? error.message : GENERIC_ERROR_MESSAGE
+            toast.error(errorMessage)
+        } finally {
+            setLoadingProject(false)
+        }
+    }, [])
 
     const handleCreateDeliverableArtifact = useCallback(
         async (deliverableId: string, body: ArtifactDeliverableCreateInput, file: File) => {
