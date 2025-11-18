@@ -3,12 +3,14 @@ import { makeMockFile } from "../mocks/user.mock"
 
 describe("validateCsvContent", () => {
     it("should validate a correct CSV with comma", async () => {
-        const file = makeMockFile("name,registration,password\nJohn,123,abc\nJane,456,def")
+        const file = makeMockFile(
+            "name,registration,password,email\nJohn,123,abc,user@email.com\nJane,456,def,user@email.com",
+        )
         const result = await validateCsvContent(file)
         expect(result.valid).toBe(true)
         expect(result.data).toEqual([
-            { name: "John", registration: "123", password: "abc" },
-            { name: "Jane", registration: "456", password: "def" },
+            { name: "John", registration: "123", password: "abc", email: "user@email.com" },
+            { name: "Jane", registration: "456", password: "def", email: "user@email.com" },
         ])
     })
 
@@ -27,9 +29,9 @@ describe("validateCsvContent", () => {
     })
 
     it("should validate a correct CSV with semicolon", async () => {
-        const file = makeMockFile("name;registration;password\nJohn;123;abc")
+        const file = makeMockFile("name;registration;password;email\nJohn;123;abc;user@email.com")
         const result = await validateCsvContent(file)
         expect(result.valid).toBe(true)
-        expect(result.data).toEqual([{ name: "John", registration: "123", password: "abc" }])
+        expect(result.data).toEqual([{ name: "John", registration: "123", password: "abc", email: "user@email.com" }])
     })
 })

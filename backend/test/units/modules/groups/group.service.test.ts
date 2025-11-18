@@ -22,6 +22,8 @@ import { UserRole } from "src/common/enums/user-role.enum"
 import { projectResMock } from "../projects/mocks/project.mock"
 import { GroupNotFoundException } from "src/common/exceptions/group-not-found.exception"
 import { GroupResDto } from "src/modules/groups/types/dtos/responses/group-res.dto"
+import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
+import { DeliverableRepository } from "src/modules/deliverable/repositories/deliverable.repository"
 
 describe("GroupService", () => {
     let userService: UserService
@@ -46,6 +48,8 @@ describe("GroupService", () => {
                 UserRepository,
                 CourseService,
                 CourseRepository,
+                DeliverableService,
+                DeliverableRepository,
                 PrismaService,
                 CaslAbilityFactory,
                 {
@@ -79,7 +83,12 @@ describe("GroupService", () => {
             jest.spyOn(userService, "getById").mockResolvedValueOnce(userWithCoursesResponseMock(UserRole.STUDENT))
             jest.spyOn(groupRepository, "create").mockResolvedValueOnce(groupMock)
 
-            const result = await groupService.create(dto, requestMock.user.mainCourseId)
+            const result = await groupService.create(
+                dto,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
 
             expect(result).toEqual(groupResMock)
             expect(groupRepository.create).toHaveBeenCalledWith(dto, requestMock.user.mainCourseId)
@@ -133,7 +142,13 @@ describe("GroupService", () => {
             jest.spyOn(groupService, "getById").mockResolvedValueOnce(groupMock)
             jest.spyOn(groupRepository, "updateById").mockResolvedValueOnce(groupMock)
 
-            const result = await groupService.updateById(groupMock.id, dto, requestMock.user.mainCourseId)
+            const result = await groupService.updateById(
+                groupMock.id,
+                dto,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
 
             expect(result).toEqual(groupResMock)
         })
@@ -144,7 +159,12 @@ describe("GroupService", () => {
             jest.spyOn(groupService, "getById").mockResolvedValueOnce(groupMock)
             jest.spyOn(groupRepository, "deleteById").mockResolvedValueOnce()
 
-            const result = await groupService.deleteById(groupMock.id, requestMock.user.mainCourseId)
+            const result = await groupService.deleteById(
+                groupMock.id,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
 
             expect(result).toBeUndefined()
             expect(groupService.getById).toHaveBeenCalledWith(groupMock.id, requestMock.user.mainCourseId)

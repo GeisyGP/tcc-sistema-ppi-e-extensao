@@ -65,6 +65,7 @@ describe("UserService", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(null)
             jest.spyOn(userRepository, "create").mockResolvedValueOnce(userMock)
@@ -94,6 +95,7 @@ describe("UserService", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(userService, "getByRegistration").mockResolvedValueOnce(userWithCoursesMock)
 
@@ -243,15 +245,17 @@ describe("UserService", () => {
             jest.spyOn(userRepository, "createMany").mockResolvedValueOnce()
 
             const result = await userService.createUserStudentByCsv(
-                makeMockFile("name,registration,password\nJohn,123,abc\nJane,456,def"),
+                makeMockFile(
+                    "name,registration,password,email\nJohn,123,abc,user@email.com\nJane,456,def,user@email.com",
+                ),
                 requestMock.user.mainCourseId,
             )
 
             expect(result).toBeUndefined()
             expect(userRepository.createMany).toHaveBeenCalledWith(
                 [
-                    { name: "John", registration: "123", password: "hashedPassword" },
-                    { name: "Jane", registration: "456", password: "hashedPassword" },
+                    { name: "John", registration: "123", password: "hashedPassword", email: "user@email.com" },
+                    { name: "Jane", registration: "456", password: "hashedPassword", email: "user@email.com" },
                 ],
                 userWithCoursesMock.UserCourse[0].role,
                 requestMock.user.mainCourseId,

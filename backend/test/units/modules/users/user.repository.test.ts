@@ -52,6 +52,7 @@ describe("UserRepository", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(prismaService.user, "upsert").mockResolvedValueOnce(userMock)
 
@@ -67,6 +68,7 @@ describe("UserRepository", () => {
                     registration: dto.registration,
                 },
                 create: {
+                    email: dto.email,
                     name: dto.name,
                     registration: dto.registration,
                     password: dto.password,
@@ -311,11 +313,13 @@ describe("UserRepository", () => {
                     name: userMock.name,
                     registration: userMock.registration,
                     password: userMock.password,
+                    email: userMock.email,
                 },
                 {
                     name: userMock.name,
                     registration: userMock.registration,
                     password: userMock.password,
+                    email: userMock.email,
                 },
             ]
             const result = await userRepository.createMany(dto, "STUDENT", requestMock.user.mainCourseId)

@@ -73,6 +73,7 @@ describe("AuthenticationService", () => {
             expect(jwtService.signAsync).toHaveBeenCalledWith({
                 sub: userWithCoursesMock.id,
                 name: userWithCoursesMock.name,
+                changePasswordIsRequired: false,
                 courses: userWithCoursesMock.UserCourse.map((uc) => ({
                     courseId: uc.courseId,
                     role: uc.role,
@@ -118,6 +119,7 @@ describe("AuthenticationService", () => {
             expect(jwtService.signAsync).toHaveBeenCalledWith({
                 sub: user.id,
                 name: user.name,
+                changePasswordIsRequired: false,
                 courses: user.userCourse.map((uc) => ({
                     courseId: uc.courseId,
                     role: uc.role,

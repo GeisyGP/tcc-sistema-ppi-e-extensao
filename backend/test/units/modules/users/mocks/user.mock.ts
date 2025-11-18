@@ -7,9 +7,11 @@ import { UserWithCourses } from "src/modules/users/repositories/user.repository.
 export const userResponseMock = {
     id: faker.string.uuid(),
     name: faker.person.fullName(),
+    email: "user@email",
     registration: faker.string.numeric(),
     createdAt: new Date(),
     updatedAt: new Date(),
+    changePasswordIsRequired: false,
 }
 
 export const userWithCoursesResponseMock = (
@@ -24,12 +26,16 @@ export const userWithCoursesResponseMock = (
             name: "Course",
         },
     ],
+    email: "user@email",
+    changePasswordIsRequired: false,
 })
 
 export const userMock: User = {
     ...userResponseMock,
     password: faker.internet.password(),
     deletedAt: new Date(),
+    changePasswordIsRequired: false,
+    email: "user@email",
 }
 
 export const userWithCoursesMock: UserWithCourses = {

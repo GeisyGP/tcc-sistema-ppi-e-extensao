@@ -6,6 +6,7 @@ import { LoginResDto } from "src/modules/authentication/types/dtos/responses/log
 export const loginResMock: LoginResDto = {
     accessToken: "token",
     expiresIn: "43200s",
+    changePasswordIsRequired: false,
 }
 
 const courseId = faker.string.uuid()
@@ -16,5 +17,6 @@ export const requestMock: RequestDto = {
         courses: [{ courseId, role: "COORDINATOR" }],
         mainRole: UserRole.COORDINATOR,
         mainCourseId: courseId,
+        changePasswordIsRequired: false,
     },
 }

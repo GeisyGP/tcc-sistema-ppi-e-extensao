@@ -19,6 +19,8 @@ import { CourseService } from "src/modules/courses/services/course.service"
 import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 import { groupResMock } from "./mocks/group.mock"
 import { GroupResDto } from "src/modules/groups/types/dtos/responses/group-res.dto"
+import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
+import { DeliverableRepository } from "src/modules/deliverable/repositories/deliverable.repository"
 
 describe("GroupController", () => {
     let groupService: GroupService
@@ -43,6 +45,8 @@ describe("GroupController", () => {
                 CourseService,
                 CourseRepository,
                 PrismaService,
+                DeliverableService,
+                DeliverableRepository,
                 CaslAbilityFactory,
                 {
                     provide: CustomLoggerService,
@@ -74,7 +78,12 @@ describe("GroupController", () => {
             const result = await groupController.create(dto, requestMock)
 
             expect(result).toEqual(baseResponseMock<GroupResDto>("Group created successfully", groupResMock))
-            expect(groupService.create).toHaveBeenCalledWith(dto, requestMock.user.mainCourseId)
+            expect(groupService.create).toHaveBeenCalledWith(
+                dto,
+                requestMock.user.mainCourseId,
+                requestMock.user.sub,
+                requestMock.user.mainRole,
+            )
         })
     })
 

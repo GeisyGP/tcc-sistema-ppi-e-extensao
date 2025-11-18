@@ -18,6 +18,8 @@ import { UserRepository } from "src/modules/users/repositories/user.repository"
 import { CourseService } from "src/modules/courses/services/course.service"
 import { CourseRepository } from "src/modules/courses/repositories/course-repository"
 import { ProjectOverviewResDto } from "src/modules/projects/types/dtos/responses/project-overview.dto"
+import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
+import { DeliverableRepository } from "src/modules/deliverable/repositories/deliverable.repository"
 
 describe("ProjectController", () => {
     let projectService: ProjectService
@@ -39,6 +41,8 @@ describe("ProjectController", () => {
                 UserRepository,
                 CourseService,
                 CourseRepository,
+                DeliverableService,
+                DeliverableRepository,
                 PrismaService,
                 CaslAbilityFactory,
                 {

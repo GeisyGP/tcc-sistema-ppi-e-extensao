@@ -61,6 +61,7 @@ describe("UserController", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userMock.email,
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
 
@@ -85,6 +86,7 @@ describe("UserController", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
 
@@ -102,6 +104,7 @@ describe("UserController", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
 
@@ -126,6 +129,7 @@ describe("UserController", () => {
                 password: userWithCoursesMock.password,
                 registration: userWithCoursesMock.registration,
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
+                email: userWithCoursesMock.email,
             }
             jest.spyOn(userService, "create").mockResolvedValueOnce(userResponseMock)
 

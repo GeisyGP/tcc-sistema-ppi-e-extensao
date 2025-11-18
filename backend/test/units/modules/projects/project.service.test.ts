@@ -29,6 +29,8 @@ import { ProjectStatus } from "src/common/enums/project-status.enum"
 import { UserRole } from "src/common/enums/user-role.enum"
 import { ForbiddenException } from "@nestjs/common"
 import { subjectResMock } from "../subjects/mocks/subject.mock"
+import { DeliverableService } from "src/modules/deliverable/services/deliverable.service"
+import { DeliverableRepository } from "src/modules/deliverable/repositories/deliverable.repository"
 
 describe("ProjectService", () => {
     let ppiService: PPIService
@@ -51,6 +53,8 @@ describe("ProjectService", () => {
                 UserRepository,
                 CourseService,
                 CourseRepository,
+                DeliverableService,
+                DeliverableRepository,
                 PrismaService,
                 CaslAbilityFactory,
                 {
