@@ -59,6 +59,7 @@ export class ArtifactRepository implements ArtifactRepositoryInterface {
             where: visibleToAll ? filter : { id },
             include: {
                 project: {
+                    where: { deletedAt: null },
                     select: { visibleToAll: true },
                 },
             },

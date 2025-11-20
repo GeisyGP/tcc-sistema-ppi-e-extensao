@@ -45,6 +45,7 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
                     where: { groupId, deletedAt: null },
                 },
                 subject: {
+                    where: { deletedAt: null },
                     select: { name: true },
                 },
             },
@@ -105,6 +106,7 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
                     where: { groupId: dto.groupId, deletedAt: null },
                 },
                 subject: {
+                    where: { deletedAt: null },
                     select: { name: true },
                 },
             },

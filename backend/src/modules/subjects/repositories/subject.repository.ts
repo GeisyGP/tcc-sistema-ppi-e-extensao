@@ -27,6 +27,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             },
             include: {
                 teachers: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -42,6 +43,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             where: { id },
             include: {
                 teachers: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -75,6 +77,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             orderBy: [{ name: "asc" }],
             include: {
                 teachers: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -112,6 +115,7 @@ export class SubjectRepository implements SubjectRepositoryInterface {
             },
             include: {
                 teachers: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,

@@ -29,6 +29,7 @@ export class PPIRepository implements PPIRepositoryInterface {
             },
             include: {
                 SubjectPPI: {
+                    where: { deletedAt: null },
                     include: {
                         subject: { select: { name: true } },
                     },

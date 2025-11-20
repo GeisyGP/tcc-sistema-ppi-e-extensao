@@ -22,6 +22,7 @@ export class GroupRepository implements GroupRepositoryInterface {
             },
             include: {
                 users: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -38,6 +39,7 @@ export class GroupRepository implements GroupRepositoryInterface {
             where: { id },
             include: {
                 users: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -69,6 +71,7 @@ export class GroupRepository implements GroupRepositoryInterface {
             orderBy: [{ name: "asc" }],
             include: {
                 users: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,
@@ -106,6 +109,7 @@ export class GroupRepository implements GroupRepositoryInterface {
             },
             include: {
                 users: {
+                    where: { deletedAt: null },
                     select: {
                         id: true,
                         name: true,

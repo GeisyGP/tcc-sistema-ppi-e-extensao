@@ -73,6 +73,7 @@ describe("PPIRepository", () => {
                 },
                 include: {
                     SubjectPPI: {
+                        where: { deletedAt: null },
                         include: {
                             subject: { select: { name: true } },
                         },

@@ -101,17 +101,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     ],
     callbacks: {
         async jwt({ token, user }) {
+            const now = Date.now()
+            if (token.exp && token.exp * 1000 < now) {
+                return {}
+            }
             if (user) {
-                return {
-                    accessToken: user.accessToken,
-                    id: user.id,
-                    name: user.name,
-                    mainRole: user.mainRole,
-                    mainCourseId: user.mainCourseId,
-                    courses: user.courses,
-                    changePasswordIsRequired: user.changePasswordIsRequired,
-                    exp: user.exp,
-                }
+                token.accessToken = user.accessToken
+                token.id = user.id
+                token.name = user.name
+                token.mainRole = user.mainRole
+                token.mainCourseId = user.mainCourseId
+                token.courses = user.courses
+                token.changePasswordIsRequired = user.changePasswordIsRequired
+                token.exp = user.exp
             }
             return token
         },
@@ -140,8 +142,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
             if (isRequiredAuth) {
                 return isLoggedIn
-            } else if (isLoggedIn) {
-                return Response.redirect(new URL("/home", nextUrl))
             }
             return true
         },

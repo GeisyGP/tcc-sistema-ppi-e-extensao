@@ -354,6 +354,7 @@ export class ProjectRepository implements ProjectRepositoryInterface {
                         classPeriod: true,
                         workload: true,
                         SubjectPPI: {
+                            where: { deletedAt: null },
                             select: {
                                 subject: { select: { name: true } },
                                 subjectId: true,

@@ -72,6 +72,7 @@ describe("SubjectRepository", () => {
                 },
                 include: {
                     teachers: {
+                        where: { deletedAt: null },
                         select: {
                             id: true,
                             name: true,
@@ -93,6 +94,7 @@ describe("SubjectRepository", () => {
                 where: { id: subjectMock.id },
                 include: {
                     teachers: {
+                        where: { deletedAt: null },
                         select: {
                             id: true,
                             name: true,
@@ -133,6 +135,7 @@ describe("SubjectRepository", () => {
                 orderBy: [{ name: "asc" }],
                 include: {
                     teachers: {
+                        where: { deletedAt: null },
                         select: {
                             id: true,
                             name: true,
@@ -175,6 +178,7 @@ describe("SubjectRepository", () => {
                 },
                 include: {
                     teachers: {
+                        where: { deletedAt: null },
                         select: {
                             id: true,
                             name: true,
