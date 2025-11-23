@@ -32,7 +32,7 @@ export default function SubjectsPage() {
     }, [page, nameFilter, teacherIdFilter, fetchSubjects])
 
     const fetchTeacherOptions = useCallback(async () => {
-        const data = await getAllUsers({ role: ["TEACHER"] })
+        const data = await getAllUsers({ role: ["TEACHER", "COORDINATOR"] })
         return (
             data?.items.map((u) => ({
                 label: `${u.name} (${u.registration})`,

@@ -46,6 +46,11 @@ backendApi.interceptors.response.use(
             return Promise.reject(new ApiError("Arquivo inválido"))
         }
 
+        const errorStatus = error?.response?.data?.error
+        if (errorStatus === "CANNOT_UPDATE_PROJECT") {
+            return Promise.reject(new ApiError("Não é possível finalizar projeto com entregáveis em aberto"))
+        }
+
         return Promise.reject(new ApiError(GENERIC_ERROR_MESSAGE))
     },
 )
