@@ -16,31 +16,38 @@ export class UserRepository implements UserRepositoryInterface {
     async create(dto: CreateUserReqDto, role: UserRole, currentCourseId: string): Promise<User> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
 
-        return await this.prisma.user.upsert({
-            where: {
-                registration: dto.registration,
-            },
-            create: {
-                name: dto.name,
-                email: dto.email,
-                registration: dto.registration,
-                password: dto.password,
-                UserCourse: {
-                    create: {
-                        courseId: dto?.courseId || currentCourseId,
-                        role,
+        return await this.prisma.$transaction(async (prisma) => {
+            const user = await prisma.user.upsert({
+                where: {
+                    registration: dto.registration,
+                },
+                create: {
+                    name: dto.name,
+                    email: dto.email,
+                    registration: dto.registration,
+                    password: dto.password,
+                },
+                update: {
+                    deletedAt: null,
+                },
+            })
+
+            await prisma.userCourse.upsert({
+                where: {
+                    userId_courseId: {
+                        userId: user.id,
+                        courseId: dto.courseId || currentCourseId,
                     },
                 },
-            },
-            update: {
-                UserCourse: {
-                    create: {
-                        courseId: dto?.courseId || currentCourseId,
-                        role,
-                    },
+                create: {
+                    userId: user.id,
+                    courseId: dto.courseId || currentCourseId,
+                    role,
                 },
-                deletedAt: null,
-            },
+                update: { role },
+            })
+
+            return user
         })
     }
 

@@ -21,7 +21,7 @@ export interface UpdateArtifactFileInput {
 }
 
 export type ArtifactWithVisibleToAll = Artifact & {
-    Project?: { visibleToAll: boolean }
+    project?: { visibleToAll: boolean } | null
 }
 
 export interface ArtifactRepositoryInterface {

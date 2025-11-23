@@ -224,7 +224,7 @@ export class UserController {
     async deleteStudent(@Param() param: GetUserByIdReqDto, @Request() request: RequestDto): Promise<void> {
         this.loggerService.info(this.constructor.name, this.deleteStudent.name, `user: ${request.user.sub}`)
 
-        await this.userService.delete(param.id, request.user.mainCourseId)
+        await this.userService.removeFromCourse(param.id, request.user.mainCourseId)
     }
 
     @Delete("/viewer/:id")

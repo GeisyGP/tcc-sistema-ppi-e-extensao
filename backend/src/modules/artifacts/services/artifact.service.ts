@@ -119,7 +119,7 @@ export class ArtifactService {
                 throw new ArtifactNotFoundException()
             }
 
-            if (currentUserRole === UserRole.STUDENT && artifact.projectId && !artifact.Project?.visibleToAll) {
+            if (currentUserRole === UserRole.STUDENT && artifact.projectId && !artifact.project?.visibleToAll) {
                 const groups = await this.groupService.getAllByProjectId(
                     artifact.projectId,
                     {
