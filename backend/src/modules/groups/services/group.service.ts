@@ -193,7 +193,7 @@ export class GroupService {
                     teacherId: userId,
                     status: "STARTED",
                     page: 1,
-                    limit: 1,
+                    limit: 100,
                 },
                 currentCourseId,
                 userId,

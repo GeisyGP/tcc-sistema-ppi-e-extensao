@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { Transform } from "class-transformer"
-import { IsDate, IsNotEmpty, IsOptional, IsString, MinDate } from "class-validator"
-import { IsAfterStartDate } from "src/common/utils/date-validator.util"
+import { IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsAfterStartDate, IsFutureDate } from "src/common/utils/date-validator.util"
 import { removeTimezoneOffset } from "src/modules/deliverable/utils/timezone.util"
 
 export class CreateDeliverableReqDto {
@@ -21,14 +21,12 @@ export class CreateDeliverableReqDto {
     projectId: string
 
     @ApiProperty()
-    @IsDate()
     @IsNotEmpty()
     @Transform(removeTimezoneOffset)
-    @MinDate(new Date())
+    @IsFutureDate()
     startDate: Date
 
     @ApiProperty()
-    @IsDate()
     @IsNotEmpty()
     @Transform(removeTimezoneOffset)
     @IsAfterStartDate()

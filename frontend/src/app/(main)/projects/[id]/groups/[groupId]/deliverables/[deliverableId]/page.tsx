@@ -30,8 +30,13 @@ export default function DeliverableSubmitPage({
     const [fileInput, setFileInput] = useState<File | null>(null)
 
     const { handleCreate, handleDelete, handleUpdate } = useDeliverableContent()
-    const { handleCreateDeliverableArtifact, handleUpdateArtifact, handleDownloadArtifact, handleViewArtifact } =
-        useArtifacts()
+    const {
+        loadingProject: loadingArtifactProject,
+        handleCreateDeliverableArtifact,
+        handleUpdateArtifact,
+        handleDownloadArtifact,
+        handleViewArtifact,
+    } = useArtifacts()
 
     const { formattedDataArtifact, fetchArtifactById, loading: loadingArtifact } = useUniqueArtifact()
 
@@ -57,6 +62,7 @@ export default function DeliverableSubmitPage({
     const handleAddArtifact = async () => {
         if (!fileInput) return
         await handleCreateDeliverableArtifact(deliverableId, { groupId }, fileInput)
+        await fetchDeliverableById(deliverableId, groupId)
         setFileInput(null)
     }
 
@@ -172,6 +178,10 @@ export default function DeliverableSubmitPage({
                                                                             deliverableId,
                                                                             newFile,
                                                                         )
+                                                                        await fetchDeliverableById(
+                                                                            deliverableId,
+                                                                            groupId,
+                                                                        )
                                                                     }
                                                                 }}
                                                             />
@@ -214,12 +224,19 @@ export default function DeliverableSubmitPage({
                                 {canEdit() && fileInput && (
                                     <div className="w-24 h-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl cursor-pointer p-1">
                                         <p className="text-xs truncate w-full text-center">{fileInput.name}</p>
-                                        <button
-                                            onClick={handleAddArtifact}
-                                            className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
-                                        >
-                                            Enviar
-                                        </button>
+                                        {loadingArtifactProject ? (
+                                            <div className="flex flex-col items-center">
+                                                <div className="animate-spin h-5 w-5 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+                                                <p className="text-xs mt-1">Enviando...</p>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={handleAddArtifact}
+                                                className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
+                                            >
+                                                Enviar
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>

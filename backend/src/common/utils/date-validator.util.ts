@@ -22,3 +22,26 @@ export function IsAfterStartDate(validationOptions?: ValidationOptions) {
         })
     }
 }
+
+export function IsFutureDate(validationOptions?: ValidationOptions) {
+    return function (object: object, propertyName: string) {
+        registerDecorator({
+            name: "isFutureDate",
+            target: object.constructor,
+            propertyName,
+            options: validationOptions,
+            validator: {
+                validate(value: any, args: ValidationArguments) {
+                    const validatedObject = args.object as { startDate?: Date }
+                    if (!(value instanceof Date) || !(validatedObject.startDate instanceof Date)) {
+                        return false
+                    }
+                    return new Date() < validatedObject.startDate
+                },
+                defaultMessage(args: ValidationArguments) {
+                    return `${args.property} must be a future date`
+                },
+            },
+        })
+    }
+}

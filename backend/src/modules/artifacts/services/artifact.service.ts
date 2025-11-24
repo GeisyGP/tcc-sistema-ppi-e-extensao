@@ -293,7 +293,7 @@ export class ArtifactService {
                     teacherId: userId,
                     status: "STARTED",
                     page: 1,
-                    limit: 1,
+                    limit: 100,
                 },
                 currentCourseId,
                 userId,

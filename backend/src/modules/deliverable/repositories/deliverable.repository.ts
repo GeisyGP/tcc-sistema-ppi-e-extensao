@@ -63,7 +63,6 @@ export class DeliverableRepository implements DeliverableRepositoryInterface {
     ): Promise<{ deliverables: DeliverableWithContentAndArtifact[]; totalItems: number }> {
         await this.prisma.$executeRawUnsafe(`SET app.current_course_id = '${currentCourseId}'`)
         const now = new Date()
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
 
         const orConditions: any[] = []
         dto.status?.forEach((status) => {

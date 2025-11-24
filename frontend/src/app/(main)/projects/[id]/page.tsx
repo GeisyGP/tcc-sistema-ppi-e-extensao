@@ -58,6 +58,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
     const { fetchPPI, ppiFormattedData, ppiLoading } = useUniquePPI()
 
     const {
+        loadingProject: loadingArtifactProject,
         fetchArtifactsProjects,
         formattedDataProject,
         handleCreateProjectArtifact,
@@ -451,12 +452,19 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                 {canEdit() && fileInput && (
                                     <div className="w-24 h-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl cursor-pointer p-1">
                                         <p className="text-xs truncate w-full text-center">{fileInput.name}</p>
-                                        <button
-                                            onClick={handleAddArtifact}
-                                            className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
-                                        >
-                                            Enviar
-                                        </button>
+                                        {loadingArtifactProject ? (
+                                            <div className="flex flex-col items-center">
+                                                <div className="animate-spin h-5 w-5 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+                                                <p className="text-xs mt-1">Enviando...</p>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={handleAddArtifact}
+                                                className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
+                                            >
+                                                Enviar
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
