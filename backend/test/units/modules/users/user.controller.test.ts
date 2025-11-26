@@ -215,7 +215,7 @@ describe("UserController", () => {
 
     describe("deleteStudent", () => {
         it("should delete an user", async () => {
-            jest.spyOn(userService, "delete").mockResolvedValueOnce()
+            jest.spyOn(userService, "removeFromCourse").mockResolvedValueOnce()
 
             const result = await userController.deleteStudent({ id: userMock.id }, requestMock)
 

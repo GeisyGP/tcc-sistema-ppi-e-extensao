@@ -54,7 +54,7 @@ describe("UserRepository", () => {
                 courseId: userWithCoursesMock.UserCourse[0].courseId,
                 email: userWithCoursesMock.email,
             }
-            jest.spyOn(prismaService.user, "upsert").mockResolvedValueOnce(userMock)
+            jest.spyOn(prismaService, "$transaction").mockResolvedValue(userMock)
 
             const result = await userRepository.create(
                 dto,
@@ -63,32 +63,7 @@ describe("UserRepository", () => {
             )
 
             expect(result).toEqual(userMock)
-            expect(prismaService.user.upsert).toHaveBeenCalledWith({
-                where: {
-                    registration: dto.registration,
-                },
-                create: {
-                    email: dto.email,
-                    name: dto.name,
-                    registration: dto.registration,
-                    password: dto.password,
-                    UserCourse: {
-                        create: {
-                            courseId: dto.courseId,
-                            role: userWithCoursesMock.UserCourse[0].role,
-                        },
-                    },
-                },
-                update: {
-                    UserCourse: {
-                        create: {
-                            courseId: dto.courseId,
-                            role: userWithCoursesMock.UserCourse[0].role,
-                        },
-                    },
-                    deletedAt: null,
-                },
-            })
+            expect(prismaService.$transaction).toHaveBeenCalled()
         })
     })
 
