@@ -49,7 +49,7 @@ export default function GroupDeliverablesPage({ params }: { params: Promise<{ id
             <h1 className="text-2xl font-semibold mt-4">
                 {loadingGroup ? "Carregando grupo..." : `Entregáveis - ${formattedDataGroup?.name || "Sem nome"}`}
             </h1>
-            <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1 mb-6">
+            <p className="text-sm text-gray-700 flex flex-wrap gap-x-1 gap-y-1 mb-6 mt-2">
                 {loadingGroup ? (
                     "Carregando grupo..."
                 ) : (

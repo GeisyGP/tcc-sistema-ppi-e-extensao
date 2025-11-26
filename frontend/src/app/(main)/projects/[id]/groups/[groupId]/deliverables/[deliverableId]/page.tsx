@@ -28,6 +28,7 @@ export default function DeliverableSubmitPage({
     const { loading, formattedData, rawData, fetchDeliverableById } = useUniqueDeliverable()
     const { fetchUniqueGroup, loadingGroup, formattedDataGroup } = useGroupDeliverables()
     const [fileInput, setFileInput] = useState<File | null>(null)
+    const [fileToUpdate, setFileToUpdate] = useState<File | null>(null)
 
     const { handleCreate, handleDelete, handleUpdate } = useDeliverableContent()
     const {
@@ -170,18 +171,10 @@ export default function DeliverableSubmitPage({
                                                             <input
                                                                 type="file"
                                                                 className="hidden"
-                                                                onChange={async (e) => {
+                                                                onChange={(e) => {
                                                                     const newFile = e.target.files?.[0]
                                                                     if (newFile) {
-                                                                        await handleUpdateArtifact(
-                                                                            formattedDataArtifact.id,
-                                                                            deliverableId,
-                                                                            newFile,
-                                                                        )
-                                                                        await fetchDeliverableById(
-                                                                            deliverableId,
-                                                                            groupId,
-                                                                        )
+                                                                        setFileToUpdate(newFile)
                                                                     }
                                                                 }}
                                                             />
@@ -219,6 +212,27 @@ export default function DeliverableSubmitPage({
                                             <div className="text-gray-500 text-sm italic">Nenhum arquivo enviado</div>
                                         )}
                                     </>
+                                )}
+
+                                {fileToUpdate && formattedDataArtifact && canEdit() && (
+                                    <div className="w-24 h-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-1 mt-3">
+                                        <p className="text-xs truncate w-full text-center">{fileToUpdate.name}</p>
+
+                                        <button
+                                            onClick={async () => {
+                                                await handleUpdateArtifact(
+                                                    formattedDataArtifact.id,
+                                                    deliverableId,
+                                                    fileToUpdate,
+                                                )
+                                                await fetchDeliverableById(deliverableId, groupId)
+                                                setFileToUpdate(null)
+                                            }}
+                                            className="mt-1 px-2 py-1 bg-green-700 text-white rounded hover:bg-green-900 text-xs"
+                                        >
+                                            Confirmar alteração
+                                        </button>
+                                    </div>
                                 )}
 
                                 {canEdit() && fileInput && (

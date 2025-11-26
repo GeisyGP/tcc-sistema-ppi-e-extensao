@@ -96,6 +96,11 @@ export function UserCoordinatorModal({ isOpen, onClose, onSave }: UserModalProps
                 <h2 className="text-lg font-semibold mb-4">Novo {roleMap[UserRole.COORDINATOR]}</h2>
 
                 <div className="space-y-3">
+                    <p className="mt-4 text-sm text-gray-600 leading-snug border-l-2 border-green-400 pl-2">
+                        O usuário é identificado por sua matrícula. Ao realizar o cadastro, caso seja verificado que ele
+                        já está vinculado a outro curso, ele será apenas associado ao novo curso, sem que suas
+                        informações sejam alteradas.
+                    </p>
                     <div className="flex flex-col">
                         <label className="text-sm font-medium text-gray-700">Nome do usuário</label>
                         <input

@@ -12,7 +12,7 @@ const toLocalDate = (value: string) => {
 
 export const createDeliverableSchema = z
     .object({
-        name: z.string().min(1, "Nome é obrigatório").max(25, "Máximo 25 caracteres").trim(),
+        name: z.string().min(1, "Nome é obrigatório").max(50, "Máximo 50 caracteres").trim(),
         description: z.string().min(1, "Descrição é obrigatória").trim(),
         startDate: z
             .string({ error: "Data inicial é obrigatória" })
@@ -30,7 +30,7 @@ export const createDeliverableSchema = z
 
 export const updateDeliverableSchema = z
     .object({
-        name: z.string().min(1, "Nome é obrigatório").max(25, "Máximo 25 caracteres").trim(),
+        name: z.string().min(1, "Nome é obrigatório").max(50, "Máximo 50 caracteres").trim(),
         description: z.string().min(1, "Descrição é obrigatória").trim(),
         startDate: z.string({ error: "Data inicial é obrigatória" }).transform(toLocalDate),
         endDate: z.string({ error: "Data final é obrigatória" }).transform(toLocalDate),

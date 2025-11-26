@@ -60,7 +60,7 @@ export default function UsersPage() {
         rawData,
     } = useUsers()
     const { data: session } = useSession()
-    const { can } = useRole()
+    const { can, userRole } = useRole()
 
     const fetchCourseOptions = useCallback(async () => {
         const data = await getAllCourses({})
@@ -141,15 +141,17 @@ export default function UsersPage() {
                         />
                     </RoleGuard>
 
-                    <Button
-                        onClick={() => {
-                            setCreatingNew(true)
-                        }}
-                        className="flex items-center gap-1 shadow-sm"
-                    >
-                        <PlusIcon className="h-6 w-5" />
-                        Criar
-                    </Button>
+                    {!(activeRole === UserRole.TEACHER && userRole === UserRole.SYSADMIN) && (
+                        <Button
+                            onClick={() => {
+                                setCreatingNew(true)
+                            }}
+                            className="flex items-center gap-1 shadow-sm"
+                        >
+                            <PlusIcon className="h-6 w-5" />
+                            Criar
+                        </Button>
+                    )}
 
                     {activeRole == UserRole.STUDENT && (
                         <Button

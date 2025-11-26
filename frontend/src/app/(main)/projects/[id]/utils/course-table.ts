@@ -178,7 +178,7 @@ export const generateProjectOverviewTable = (data: ProjectOverview) => {
                             new Paragraph({
                                 children: [
                                     new TextRun({
-                                        text: "Diretor (a) de Ensino: ",
+                                        text: "Diretor(a) de Ensino: ",
                                         bold: true,
                                         size: 24,
                                     }),

@@ -187,8 +187,7 @@ export function DeliverableModal({ isOpen, deliverable, projectId, onClose, onSa
 
                             <div className="flex flex-col">
                                 <label className="text-sm font-medium text-gray-700">Descrição</label>
-                                <input
-                                    type="text"
+                                <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     className="mt-1 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
