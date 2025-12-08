@@ -10,7 +10,7 @@ Sistema Web para Registro e Controle das Práticas Profissionais Integradas e Ex
 
 Clone o repositorio com o seguinte comando:
 ```
-git clone https://github.com/GeisyGP/
+git clone https://github.com/GeisyGP/tcc-sistema-ppi-e-extensao.git
 ```
 
 ## Configurando o ambiente
