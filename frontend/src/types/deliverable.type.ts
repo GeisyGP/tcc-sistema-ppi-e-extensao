@@ -73,6 +73,8 @@ export interface Deliverable {
     description: string
     startDate: string
     endDate: string
+    startDateFormatted: string
+    endDateFormatted: string
     projectId: string
     subjectId?: string
     subjectName?: string

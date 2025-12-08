@@ -7,6 +7,8 @@ export function formatDeliverable(res: DeliverableWithContentAndArtifactRes): De
         description: res.description,
         startDate: toLocalInputValue(res.startDate),
         endDate: toLocalInputValue(res.endDate),
+        startDateFormatted: new Date(toLocalInputValue(res.startDate)).toLocaleString(),
+        endDateFormatted: new Date(toLocalInputValue(res.endDate)).toLocaleString(),
         subjectId: res.subjectId,
         subjectName: res.subjectName,
         artifact: res.artifact,
@@ -18,7 +20,7 @@ export function formatDeliverable(res: DeliverableWithContentAndArtifactRes): De
     }
 }
 
-function toLocalInputValue(dateString: Date) {
+function toLocalInputValue(dateString: Date): string {
     const date = new Date(dateString)
     const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
     return local.toISOString().slice(0, 16)

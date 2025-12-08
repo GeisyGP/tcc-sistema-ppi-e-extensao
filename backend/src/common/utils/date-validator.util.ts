@@ -36,10 +36,13 @@ export function IsFutureDate(validationOptions?: ValidationOptions) {
                     if (!(value instanceof Date) || !(validatedObject.startDate instanceof Date)) {
                         return false
                     }
-                    return new Date() < validatedObject.startDate
+
+                    const checkDate = new Date(validatedObject.startDate.getTime())
+
+                    return new Date().setHours(0, 0, 0, 0) <= checkDate.setHours(0, 0, 0, 0)
                 },
                 defaultMessage(args: ValidationArguments) {
-                    return `${args.property} must be a future date`
+                    return `${args.property} must be today or a future date`
                 },
             },
         })

@@ -9,7 +9,7 @@ cd backend
 
 Instale as dependências:
 ```bash
-$ npm ci
+npm ci
 ```
 
  Copie e ajuste variáveis de ambiente:

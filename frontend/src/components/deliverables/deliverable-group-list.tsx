@@ -55,7 +55,7 @@ export default function DeliverableListHorizontal({
                             </h3>
 
                             <div className="text-sm text-gray-500 mt-1">
-                                <span className="font-medium">Data Inicial:</span> {deliverable.startDate}
+                                <span className="font-medium">Data Inicial:</span> {deliverable.startDateFormatted}
                             </div>
 
                             <div className="text-sm text-gray-500 flex items-center gap-1 mt-1">
@@ -65,7 +65,7 @@ export default function DeliverableListHorizontal({
                                         deliverable.endDate,
                                     )}`}
                                 >
-                                    {deliverable.endDate}
+                                    {deliverable.endDateFormatted}
                                 </span>
                             </div>
 
