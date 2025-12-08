@@ -1,40 +1,57 @@
-## Description
+# Backend - Gestão PPI
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
+Acesse o diretório:
 ```bash
-$ npm install
+cd backend
 ```
 
-## Compile and run the project
+## Configurando ambiente
 
+Instale as dependências:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ npm ci
 ```
 
-## Run tests
-
+ Copie e ajuste variáveis de ambiente:
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .example.env .env
+# editar .env conforme necessário (DATABASE_URL, AUTH_SECRET, NEXTAUTH_SECRET, ...)
 ```
 
-## Observações
+Inicie o container do docker:
+```bash
+docker compose up
+```
 
-- Se usuário já existir em outro curso (registration), ele apenas ficará visível no curso quando for "criado". Ou seja, suas informações não serão alteradas (nome e senha).
-- Quando um professor ou consultor é deletado, ele na verdade é removido de um curso. O usuario continua a existir
+Em seguida, execute as migrações do Prisma:
+```bash
+npm run migrate
+```
+
+## Testes
+
+Inicie a aplicação em modo de desenvolvimento:
+```bash
+npm run start:dev
+```
+
+Em desenvolvimento, no momento de inicializar a aplicação pela primeira vez, é criado no banco de dados o usuário root. 
+Suas credenciais são:
+```json
+{
+    "registration": "000000",
+    "password": "root123"
+}
+```
+
+### Teste Unitário
+
+Execute os testes:
+```bash
+npm run test:unit
+```
+
+## Gerar imagem Docker
+```bash
+docker build -t gestao-ppi-backend .
+```
