@@ -23,6 +23,7 @@ import { InfoTooltip } from "@/components/info-tooltip"
 import { useRouter } from "next/navigation"
 import { useArtifacts } from "@/hooks/use-artifacts"
 import { FileIcon } from "@/components/file-icon"
+import { ExportDocxLazyButton } from "@/components/buttons/export-docx-lazy.button"
 
 export default function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter()
@@ -227,6 +228,8 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                         </div>
 
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2">
+                            <ExportDocxLazyButton projectId={projectId} theme={formattedData.theme} />
+
                             <Button
                                 variant="secondary"
                                 className="px-2 py-1 text-sm"
@@ -235,7 +238,7 @@ export default function ProjectPage({ params }: { params: Promise<{ id: string }
                                 Ver projeto
                             </Button>
 
-                            {canEdit() && rawData.status === ProjectStatus.STARTED && (
+                            {canEdit() && rawData.status !== ProjectStatus.FINISHED && (
                                 <Button
                                     variant="secondary"
                                     className="px-2 py-1 text-sm"

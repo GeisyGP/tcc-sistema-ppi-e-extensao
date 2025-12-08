@@ -21,7 +21,7 @@ export const ExportDocxButton = ({ projectData, projectId, theme }: Props) => {
 
             const overviewData = await getProjectOverviewById(projectId)
 
-            if (!overviewData) throw new Error("Project overview not found")
+            if (!overviewData) throw new Error("Dados do projeto não encontrados")
 
             const cleanFileName = theme
                 .replace(/[^\w\s]/gi, "")
