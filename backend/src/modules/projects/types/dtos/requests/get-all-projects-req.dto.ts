@@ -50,3 +50,15 @@ export class GetAllProjectsReq extends PaginationReqDto {
     studentId?: string
     visibleToAll?: boolean
 }
+
+export class GetAllProjectsWithMultipleStatusReqDto extends PaginationReqDto {
+    @ApiPropertyOptional({ enum: ProjectStatus })
+    @IsEnum(ProjectStatus)
+    @IsOptional()
+    status?: ProjectStatus[]
+
+    @ApiPropertyOptional()
+    @IsString()
+    @IsOptional()
+    teacherId?: string
+}

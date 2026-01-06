@@ -288,16 +288,14 @@ export class ArtifactService {
         userId: string,
     ): Promise<boolean> {
         try {
-            const projectsByTeacher = await this.projectService.getAll(
+            const projectsByTeacher = await this.projectService.getAllWithMultipleStatus(
                 {
                     teacherId: userId,
-                    status: "STARTED",
+                    status: ["STARTED", "NOT_STARTED"],
                     page: 1,
                     limit: 100,
                 },
                 currentCourseId,
-                userId,
-                UserRole.TEACHER,
             )
 
             const project = projectsByTeacher.items.find((i) => i.id === projectId)

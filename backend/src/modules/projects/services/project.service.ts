@@ -1,6 +1,10 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common"
 import { PaginationResDto } from "src/common/types/dtos/pagination-res.dto"
-import { GetAllProjectsReq, GetAllProjectsReqDto } from "../types/dtos/requests/get-all-projects-req.dto"
+import {
+    GetAllProjectsReq,
+    GetAllProjectsReqDto,
+    GetAllProjectsWithMultipleStatusReqDto,
+} from "../types/dtos/requests/get-all-projects-req.dto"
 import { UpdateProjectReqDto } from "../types/dtos/requests/update-project-req.dto"
 import { CustomLoggerService } from "src/common/logger"
 import { ProjectFullResDto, ProjectResDto } from "../types/dtos/responses/project-res.dto"
@@ -153,6 +157,25 @@ export class ProjectService {
             return ProjectResBuilder.buildMany(projects, dto.page, dto.limit, totalItems)
         } catch (error) {
             this.loggerService.error(this.constructor.name, this.getAll.name, `error: ${error.message}`, error.stack)
+            throw error
+        }
+    }
+
+    async getAllWithMultipleStatus(
+        dto: GetAllProjectsWithMultipleStatusReqDto,
+        currentCourseId: string,
+    ): Promise<PaginationResDto<ProjectResDto[]>> {
+        try {
+            const { projects, totalItems } = await this.projectRepository.getAll(dto, currentCourseId)
+
+            return ProjectResBuilder.buildMany(projects, dto.page, dto.limit, totalItems)
+        } catch (error) {
+            this.loggerService.error(
+                this.constructor.name,
+                this.getAllWithMultipleStatus.name,
+                `error: ${error.message}`,
+                error.stack,
+            )
             throw error
         }
     }

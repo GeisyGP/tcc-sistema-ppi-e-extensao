@@ -63,7 +63,9 @@ export default function ProjectsPage() {
     }, [])
 
     return (
-        <RoleGuard roles={[UserRole.COORDINATOR, UserRole.TEACHER, UserRole.STUDENT, UserRole.SYSADMIN]}>
+        <RoleGuard
+            roles={[UserRole.COORDINATOR, UserRole.TEACHER, UserRole.STUDENT, UserRole.SYSADMIN, UserRole.VIEWER]}
+        >
             <div className="w-full mx-auto p-6">
                 <h1 className="text-2xl font-semibold mb-6">Projetos</h1>
                 <div className="flex items-center gap-2 mb-4">

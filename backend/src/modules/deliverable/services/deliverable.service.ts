@@ -187,7 +187,7 @@ export class DeliverableService {
 
             if (role === UserRole.COORDINATOR) {
                 const project = await this.projectService.getById(deliverable.projectId, currentCourseId)
-                if (project.status != "STARTED") throw new ForbiddenException()
+                if (project.status === ProjectStatus.FINISHED) throw new ForbiddenException()
                 return
             }
 
@@ -216,7 +216,7 @@ export class DeliverableService {
         try {
             if (role === UserRole.COORDINATOR) {
                 const project = await this.projectService.getById(projectId, currentCourseId)
-                if (project.status != "STARTED") throw new ForbiddenException()
+                if (project.status === ProjectStatus.FINISHED) throw new ForbiddenException()
 
                 if (subjectId) {
                     const ppi = await this.ppiService.getById(project.ppiId, currentCourseId)
@@ -271,16 +271,14 @@ export class DeliverableService {
         userId: string,
     ): Promise<ProjectResDto | void> {
         try {
-            const projectsByPPIAndTeacher = await this.projectService.getAll(
+            const projectsByPPIAndTeacher = await this.projectService.getAllWithMultipleStatus(
                 {
                     teacherId: userId,
-                    status: "STARTED",
+                    status: ["STARTED", "NOT_STARTED"],
                     page: 1,
-                    limit: 50,
+                    limit: 100,
                 },
                 currentCourseId,
-                userId,
-                UserRole.TEACHER,
             )
 
             const project = projectsByPPIAndTeacher.items.find((i) => i.id === projectId)
